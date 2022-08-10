@@ -88,15 +88,19 @@ int* flag = (int*)malloc((L + 1) * sizeof(int));
 
 #include<unordered_map>
 
-### {}初始化
+### 初始化
 
+```
 unordered_map<int, string> myMap={{ 5, "张大" },{ 6, "李五" }};
+```
 
 ## 插入
 
+```
 myMap[2] = "李四";
 
 myMap.insert(pair<int, string>(3, "陈二"));//使用insert和pair插入
+```
 
 ## 判断键存在
 
