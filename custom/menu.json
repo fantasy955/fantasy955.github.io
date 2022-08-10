@@ -1,0 +1,13 @@
+{
+    "categories": [
+        {
+            "sname": "Vue",
+            "aname": "Vue Stories",
+            "path": "./blogs/vue"
+        },{
+            "sname": "leetcode", 
+            "aname": "",
+            "path": "./blogs/vue"
+        }
+    ]
+}
