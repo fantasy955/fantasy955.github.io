@@ -91,7 +91,7 @@ int* flag = (int*)malloc((L + 1) * sizeof(int));
 ### 初始化
 
 ```
-unordered_map<int, string> myMap={{ 5, "张大" },{ 6, "李五" }};
+unordered_map<int, string> myMap=[[5, "张大"] ,[6, "李五"]];
 ```
 
 ## 插入
