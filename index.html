@@ -81,7 +81,7 @@ HEADER
 MAIN
 --------------------------------------->
 	<div id="main">
-		<div class="container jumbotron jumbotron-fluid mb-3 pt-0 pb-0 bg-lightblue position-relative"
+		<div class="container jumbotron jumbotron-fluid mb-3 pt-0 pb-0 bg-gray position-relative"
 			style="margin-bottom: 5px;" v-for="item in items" v-bind:id="['div-'+item.sname]">
 			<h5 class="mt-1 btn btn-dark font-weight-bold"><span style="padding-bottom: 5px">{{item.aname}}</span></h5>
 			<div class="mb-1 d-flex justify-content-center border-bottom"></div>
@@ -94,9 +94,7 @@ MAIN
 				</li>
 			</ol>
 			<div class="row">
-				<div class="col-md-12">
-					<h5><a href="#">View ALL</a></h5>
-				</div>
+				<h5 class="pl-3"><a href="#">View ALL</a></h5>
 			</div>
 		</div>
 	</div>
@@ -204,6 +202,7 @@ code highlight
 								}
 							}
 							resolve({
+								code: 200,
 								categoryIndex: t,
 								files: filteredFiles,
 							});
@@ -211,14 +210,22 @@ code highlight
 							reject(res);
 						}
 					});
+				}).catch(function (error){
+					return {
+								code: 201,
+								categoryIndex: t,
+								files: [],
+							};
 				});
 				filesPromises.push(filesPromise);
 			}
 			Promise.all(filesPromises).then((results) => {
 				for (x in results) {
-					let i = results[x].categoryIndex;
-					let files = results[x].files;
-					categories[i].files = files;
+					if (results[x].code == 200){
+						let i = results[x].categoryIndex;
+						let files = results[x].files;
+						categories[i].files = files;
+					}
 				}
 				const MainComponent = {
 					data() {
@@ -229,6 +236,8 @@ code highlight
 				};
 				const mainApp = Vue.createApp(MainComponent);
 				mainApp.mount('#main');
+			}, (res) => {
+				console.log(res);
 			})
 		});
 
