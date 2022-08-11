@@ -1,1 +1,1 @@
- skip_render: *.md
+skip_render: '*.md'
