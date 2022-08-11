@@ -188,10 +188,10 @@ code highlight
 			for (x in categories) {
 				categoryInfo = categories[x];
 				const t = x;
-				let filesPromise = axios.get(categoryInfo.path).then((res) => {
+				let filesPromise = axios.get(categoryInfo.path+"/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
-							let datas = res.data;
+							let datas = res.data.files;
 							filteredFiles = [];
 							let add = 0;
 							for (let i = 0; i < datas.length && add < 5; i++) {
