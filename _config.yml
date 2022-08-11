@@ -2,3 +2,4 @@ skip_render:
   - 'blogs/**'
   - '**/*.md'
   - '*.md'
+  - 'blogs/**/*.md'
