@@ -6,8 +6,8 @@
             "path": "./blogs/vue"
         },{
             "sname": "leetcode", 
-            "aname": "",
-            "path": "./blogs/vue"
+            "aname": "leetcode",
+            "path": "./blogs/leetcode"
         }
     ]
 }
