@@ -39,8 +39,8 @@ NAVBAR
 --------------------------------------->
 	<nav class="container topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
 		<div class="container" id="top">
-			<div class="col-md-1"><img id="img-profile-photo" src="custom/figures/progile_photo.png" class="img-fluid img-responsive"
-					v-bind:alt="personName"></div>
+			<div class="col-md-1"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
+					class="img-fluid img-responsive" v-bind:alt="personName"></div>
 			<a class="navbar-brand nav-link" onclick="toTop()"><strong>{{personName}}</strong></a>
 			<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
 				data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
@@ -210,18 +210,19 @@ code highlight
 							reject(res);
 						}
 					});
-				}).catch(function (error){
+				}).catch(function (error) {
 					return {
-								code: 201,
-								categoryIndex: t,
-								files: [],
-							};
+						code: 201,
+						categoryIndex: t,
+						files: [],
+					};
 				});
 				filesPromises.push(filesPromise);
 			}
 			Promise.all(filesPromises).then((results) => {
+				console.log(results);
 				for (x in results) {
-					if (results[x].code == 200){
+					if (results[x].code == 200) {
 						let i = results[x].categoryIndex;
 						let files = results[x].files;
 						categories[i].files = files;
