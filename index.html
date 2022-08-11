@@ -93,7 +93,7 @@ MAIN
 					</span>
 				</li>
 			</ol>
-			<div class="row">
+			<div class="row" v-if="item.more">
 				<h5 class="pl-3"><a href="#">View ALL</a></h5>
 			</div>
 		</div>
@@ -194,7 +194,12 @@ code highlight
 							let datas = res.data.files;
 							filteredFiles = [];
 							let add = 0;
-							for (let i = 0; i < datas.length && add < 5; i++) {
+							let more = false;
+							for (let i = 0; i < datas.length; i++) {
+								if (add >= 5){
+									more = true;
+									break;
+								}
 								let name = datas[i];
 								if (name.endsWith('.md')) {
 									filteredFiles.push({ name: name });
@@ -202,9 +207,10 @@ code highlight
 								}
 							}
 							resolve({
-								code: 200,
-								categoryIndex: t,
-								files: filteredFiles,
+								'code': 200,
+								'categoryIndex': t,
+								'more': more,
+								'files': filteredFiles,
 							});
 						} else {
 							reject(res);
@@ -212,20 +218,22 @@ code highlight
 					});
 				}).catch(function (error) {
 					return {
-						code: 201,
-						categoryIndex: t,
-						files: [],
+						'code': 201,
+						'categoryIndex': t,
+						'more': false,
+						'files': [],
 					};
 				});
 				filesPromises.push(filesPromise);
 			}
 			Promise.all(filesPromises).then((results) => {
-				console.log(results);
 				for (x in results) {
 					if (results[x].code == 200) {
 						let i = results[x].categoryIndex;
 						let files = results[x].files;
+						let more = results[x].more;
 						categories[i].files = files;
+						categories[i].more = more;
 					}
 				}
 				const MainComponent = {
