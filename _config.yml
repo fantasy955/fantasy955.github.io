@@ -1,1 +1,4 @@
-skip_render: 'blogs/*.md'
+skip_render: 
+  - 'blogs/**'
+  - '**/*.md'
+  - '*.md'
