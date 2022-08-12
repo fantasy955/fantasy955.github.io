@@ -41,6 +41,7 @@ NAVBAR
                 <ol class="breadcrumb" style="margin-top: 1rem;">
                     <li class="breadcrumb-item"><a href="../">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ category}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ blogName}}</li>
                 </ol>
             </nav>
         </div>
@@ -50,7 +51,7 @@ NAVBAR
     <!--------------------------------------
 MAIN
 --------------------------------------->
-    <div class="container pt-4 pb-4">
+    <div class="container pt-4 pb-4" id="main-article">
         <div class="row justify-content-center">
             <div class="col-lg-2 pr-4 mb-4 col-md-12">
                 <div class="sticky-top text-center">
@@ -69,8 +70,8 @@ MAIN
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-8 border">
-                <p id="myarticle"></p>
+            <div class="col-md-12 col-lg-8 border" id="myarticle">
+                <span v-html="html"></span>
             </div>
         </div>
     </div>
@@ -165,6 +166,8 @@ code highlight
                 data() {
                     return {
                         category: category,
+                        blogName: blogName.split('.md')[0],
+                        personName: user_name,
                     }
                 }, methods: {
 
@@ -173,19 +176,30 @@ code highlight
             const topApp = Vue.createApp(TopComponent);
             topApp.mount('#top');
 
-            axios.get(`${realDir}/${blogName}`).then((res) => {
+            let getBlogDetail = axios.get(`https://fantasy995.github.io/blogs/${realDir}/${blogName.split('.md')[0]}.html`);
+            // let getBlogDetail = axios.get(`${realDir}/${blogName}`);
+            getBlogDetail.then((res) => {
                 let html = res.data;
                 let el = document.getElementById('myarticle');
-                html = html.replaceAll('](assets', `](${realDir}/assets`);
-                MathJax.Hub.Config({
-                    tex2jax: {
-                        inlineMath: [['$', '$'], ["\(", "\)"]],
-                        displayMath: [['$$', '$$'], ["\[", "\]"]]
+                // html = html.replaceAll('](assets', `](${realDir}/assets`);
+                // MathJax.Hub.Config({
+                //     tex2jax: {
+                //         inlineMath: [['$', '$'], ["\(", "\)"]],
+                //         displayMath: [['$$', '$$'], ["\[", "\]"]]
+                //     }
+                // });
+                // MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+                // html = marked.parse(html);
+
+                const ArticleComponent = {
+                    data() {
+                        return {
+                            html: html,
+                        }
                     }
-                });
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-                html = marked.parse(html);
-                el.innerHTML = html;
+                }
+                const articleApp = Vue.createApp(ArticleComponent);
+                articleApp.mount(el);
             });
         });
 
