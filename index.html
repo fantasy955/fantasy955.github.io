@@ -41,7 +41,8 @@ NAVBAR
 		<div class="container" id="top">
 			<div class="col-md-1 d-none d-md-block"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
 					class="img-fluid img-responsive" v-bind:alt="personName"></div>
-			<a class="navbar-brand nav-link" style="margin-right: 0;" onclick="toTop()"><strong>{{personName}}</strong></a>
+			<a class="navbar-brand nav-link" style="margin-right: 0;"
+				onclick="toTop()"><strong>{{personName}}</strong></a>
 			<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
 				data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
 				aria-label="Toggle navigation">
@@ -50,7 +51,8 @@ NAVBAR
 			<div class="navbar-collapse collapse" id="navbarColor02">
 				<ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
 					<li class="nav-item" v-for="item in items">
-						<a class="nav-link" style="padding-right: 0rem;" v-on:click="scrollIntoView" v-bind:name="item.sname">{{item.sname}}</a>
+						<a class="nav-link" style="padding-right: 0rem;" v-on:click="scrollIntoView"
+							v-bind:name="item.sname">{{item.sname}}</a>
 					</li>
 				</ul>
 			</div>
@@ -88,16 +90,27 @@ MAIN
 			<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
 				<li v-for="file in item.pages[item.currentpage].files">
 					<div class="pl-3">
-						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark" style="cursor: pointer;" v-bind:href="file.relapath">{{file.name}}</a></h6>
+						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
+								style="cursor: pointer;" v-bind:href="file.relapath">{{file.name}}</a></h6>
 						<div class="card-text text-muted small">
 							Fantasy955
 						</div>
-						<small class="text-muted">{{file.updatetime.year}}年{{file.updatetime.mon}}月{{file.updatetime.day}}日 更新</small>
+						<small
+							class="text-muted">{{file.updatetime.year}}年{{file.updatetime.mon}}月{{file.updatetime.day}}日
+							更新</small>
 					</div>
 				</li>
 			</ol>
-			<div class="row" v-if="item.more">
-				<h5 class="pl-3"><a class="btn" v-on:click="(event) => changePage(item.sname, event)">View ALL</a></h5>
+			<div class="row pl-3 justify-content-center">
+				<div class="card-text small">
+					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.currentpage+1}} 页</p>
+				</div>
+				<div class="ml-lg-1 card-text small">
+					<p class="c-pointer bg-white" v-if="item.currentpage>0" v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
+				</div>
+				<div class="ml-lg-1 card-text small">
+					<p class="c-pointer badge-white" v-if="item.currentpage+1<item.totalPage" v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -195,16 +208,17 @@ code highlight
 				categories[t]['filecode'] = 200;
 				categories[t]['pages'] = [];
 				categories[t]['currentpage'] = 0;
-				let filesPromise = axios.get(categoryInfo.path+"/list.json").then((res) => {
+				let filesPromise = axios.get(categoryInfo.path + "/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
 							let datas = res.data;
 							let pages = res.data.pages;
 							let totalPage = datas.totalPage;
-							if (totalPage > 1){
+							if (totalPage > 1) {
 								categories[t]['more'] = true;
 							}
 							categories[t]['pages'] = pages;
+							categories[t]['totalPage'] = totalPage;
 							resolve(categories[t]);
 						} else {
 							reject(res);
@@ -220,7 +234,7 @@ code highlight
 				console.log(categories);
 			}, (error) => {
 				console.log(error);
-			}).then(()=>{
+			}).then(() => {
 				const MainComponent = {
 					data() {
 						return {
@@ -228,8 +242,11 @@ code highlight
 						}
 					},
 					methods: {
-						changePage(message, event) {
-							this.items[message].currentpage = 1;
+						nextPage(message, event) {
+							this.items[message].currentpage += 1;
+						},
+						prePage(message, event) {
+							this.items[message].currentpage -= 1;
 						}
 					}
 				};
