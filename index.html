@@ -91,7 +91,7 @@ MAIN
 				<li v-for="file in item.pages[item.currentpage].files">
 					<div class="pl-3 justify-content-center">
 						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
-								style="cursor: pointer;" v-bind:href="file.relapath">{{file.name}}</a></h6>
+								style="cursor: pointer;" v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a></h6>
 						<div class="card-text text-muted small">
 							Fantasy955
 						</div>
@@ -116,11 +116,6 @@ MAIN
 			</div>
 		</div>
 	</div>
-
-	<div class="container">
-		<p id="output">test 1</p>
-	</div>
-
 	<!-- End MAIN -->
 
 	<!--------------------------------------
@@ -250,6 +245,13 @@ code highlight
 						},
 						prePage(message, event) {
 							this.items[message].currentpage -= 1;
+						},
+						toBlogDetailsPage(categoryName, fileName, realDir, event){
+							let tmp = realDir.split('/');
+							window.localStorage.setItem('categoryPath', tmp[tmp.length-1]);
+							let target = `./blogs/?ca=${categoryName}&n=${fileName}`;
+							console.log(target);
+							window.location.href = target;
 						}
 					}
 				};
@@ -290,43 +292,6 @@ code highlight
 		};
 		const headerApp = Vue.createApp(HeaderComponent);
 		headerApp.mount('#header');
-
-		axios.get("./custom/menu.json").then((res) => {
-			// console.log(res.data);
-		});
-
-		// var converter = new showdown.Converter();
-		var rendererMD = new marked.Renderer();
-		marked.setOptions({
-			renderer: rendererMD,
-			gfm: true,
-			tables: true,
-			breaks: false,
-			pedantic: false,
-			sanitize: false,
-			smartLists: true,
-			smartypants: false
-		});//基本设置
-		marked.setOptions({
-			highlight: function (code) {
-				return hljs.highlightAuto(code).value;
-			}
-		});
-
-		axios.get("./blogs/leetcode/动态规划：最近买卖股票时机.md").then((res) => {
-			let html = res.data;
-			let el = document.getElementById('output');
-			html = html.replaceAll('](assets', '](./blogs/leetcode/assets');
-			MathJax.Hub.Config({
-				tex2jax: {
-					inlineMath: [['$', '$'], ["\(", "\)"]],
-					displayMath: [['$$', '$$'], ["\[", "\]"]]
-				}
-			});
-			MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-			html = marked.parse(html);
-			el.innerHTML = html;
-		});
 	</script>
 </body>
 

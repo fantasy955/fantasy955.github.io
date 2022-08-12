@@ -6,7 +6,7 @@ window， document
 
 Window 对象表示一个浏览器窗口或一个框架。在客户端 JavaScript 中，Window 对象是全局对象，所有的[表达式](https://so.csdn.net/so/search?q=表达式&spm=1001.2101.3001.7020)都在当前的环境中计算。也就是说，要引用当前窗口根本不需要特殊的语法，可以把那个窗口的属性作为全局变量来使用。例如，可以只写 document，而不必写 window.document。
 
-```
+```javascript
 $(document).scrollTop(0);
 ```
 
@@ -20,7 +20,7 @@ document.Element是DOM element，
 
 通过DOM element我们可以调用scrollTo方法，这种方式可以实现类似手动滚动的效果。
 
-```
+```javascript
 document.documentElement.scrollTo({top: 0, behavior: 'smooth'})
 ```
 
@@ -123,4 +123,10 @@ var定义的变量会进行预解析（可以先使用后定义，写的时候�
 
 # 页面跳转和传参
 
+- 接受路径参数
+
 [js页面跳转并传值的常用方法 - ZJTL - 博客园 (cnblogs.com)](https://www.cnblogs.com/ZJTL/p/12161707.html)
+
+- 借助浏览器保存参数
+
+[(70条消息) js携带参数实现页面跳转_颖儿♡＾▽＾♡的博客-CSDN博客_js跳转页面传递参数](https://blog.csdn.net/qq_52126119/article/details/125154677)

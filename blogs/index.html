@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="../custom/figures/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enjoy Today! QaQ</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+        name='viewport' />
+    <!-- Costum -->
+    <link rel="dns-prefetch" href="//cdn.mathjax.org" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700"
+        rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+        integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="../assets/css/main.css" rel="stylesheet" />
+
+    <style>
+        .navbar>.container {
+            justify-content: start;
+        }
+    </style>
+</head>
+
+<body>
+    <!--------------------------------------
+NAVBAR
+--------------------------------------->
+    <nav class="container topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
+        <div class="container" id="top">
+            <div class="col-md-1 d-none d-md-block"><img id="img-profile-photo"
+                    src="../custom/figures/progile_photo.png" class="img-fluid img-responsive" v-bind:alt="personName">
+            </div>
+            <nav class="pl-5" aria-label="breadcrumb">
+                <ol class="breadcrumb" style="margin-top: 1rem;">
+                    <li class="breadcrumb-item"><a href="../">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ category}}</li>
+                </ol>
+            </nav>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <!--------------------------------------
+MAIN
+--------------------------------------->
+    <div class="container pt-4 pb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-2 pr-4 mb-4 col-md-12">
+                <div class="sticky-top text-center">
+                    <div class="text-muted">
+                        Share this
+                    </div>
+                    <div class="share d-inline-block">
+                        <!-- AddToAny BEGIN -->
+                        <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+                            <a class="a2a_button_facebook"></a>
+                            <a class="a2a_button_twitter"></a>
+                        </div>
+                        <script async src="https://static.addtoany.com/menu/page.js"></script>
+                        <!-- AddToAny END -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8 border">
+                <p id="myarticle"></p>
+            </div>
+        </div>
+    </div>
+    <!-- End Main -->
+
+    <!--------------------------------------
+FOOTER
+--------------------------------------->
+    <div class="container mt-5">
+        <footer class="bg-white border-top p-3 text-muted small">
+            <div class="row align-items-center justify-content-between">
+                <div>
+                    <span class="navbar-brand mr-2"><strong>WeiJL</strong></span> Copyright &copy;
+                    <script>document.write(new Date().getFullYear())</script>
+                    . All rights reserved.
+                </div>
+                <div>
+                    Made with <a target="_blank" class="text-secondary font-weight-bold"
+                        href="https://www.wowthemes.net/mundana-free-html-bootstrap-template/">Mundana Theme</a> by
+                    WowThemes.net.
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- End Footer -->
+
+    <script src="../assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+    <script src="../assets/js/vendor/popper.min.js" type="text/javascript"></script>
+    <script src="../assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../assets/js/functions.js" type="text/javascript"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js" type="text/javascript"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js"></script>
+    <script src="../custom/config.js"></script>
+    <!--------------------------------------
+code highlight
+--------------------------------------->
+    <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- math parser -->
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <script type="text/javascript">
+        var rendererMD = new marked.Renderer();
+        marked.setOptions({
+            renderer: rendererMD,
+            gfm: true,
+            tables: true,
+            breaks: false,
+            pedantic: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false
+        });//基本设置
+        marked.setOptions({
+            highlight: function (code) {
+                return hljs.highlightAuto(code).value;
+            }
+        });
+
+
+        var category;
+        var blogName;
+        var realDir;
+        new Promise((resolve, reject) => {
+            var loc = location.href; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+            // console.log("我的地址" + loc);
+            var n1 = loc.length;//地址的总长
+            var n2 = loc.indexOf("?");//取得=号的位置
+            var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+            var parameters = parameter.split("&");//从&处拆分，返回字符串数组
+            // console.log("参数列表" + parameters);
+            var paValue = new Array();//创建一个用于保存具体值得数组
+            for (var i = 0; i < parameters.length; i++) {
+                // console.log("参数键值对值" + i + ":" + parameters[i]);
+                var m1 = parameters[i].length;//获得每个键值对的长度
+                var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+                var value = parameters[i].substr(m2 + 1, m1 - m2);//获取每个键值对=号后面具体的值
+                paValue[i] = value;
+                // console.log("参数值" + i + ":" + value);
+            }
+            console.log("具体参数数组：" + paValue);
+            category = paValue[0];
+            blogName = paValue[1];
+            realDir = window.localStorage.getItem('categoryPath');
+            resolve();
+        }).then((res) => {
+            document.title = `Fantasy.${category}`;
+            const TopComponent = {
+                data() {
+                    return {
+                        category: category,
+                    }
+                }, methods: {
+
+                }
+            }
+            const topApp = Vue.createApp(TopComponent);
+            topApp.mount('#top');
+
+            axios.get(`${realDir}/${blogName}`).then((res) => {
+                let html = res.data;
+                let el = document.getElementById('myarticle');
+                html = html.replaceAll('](assets', `](${realDir}/assets`);
+                MathJax.Hub.Config({
+                    tex2jax: {
+                        inlineMath: [['$', '$'], ["\(", "\)"]],
+                        displayMath: [['$$', '$$'], ["\[", "\]"]]
+                    }
+                });
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+                html = marked.parse(html);
+                el.innerHTML = html;
+            });
+        });
+
+    </script>
+</body>
+
+</html>
