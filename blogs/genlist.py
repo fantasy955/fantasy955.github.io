@@ -24,7 +24,14 @@ if __name__ == '__main__':
             'totalPage': 0
         }
         addFile = 0
-        for fileName in files:
+        filesWithTime = [{
+            'name': file,
+            'modtime': os.path.getmtime(blog_dir + '/' + file)
+            } for file in files]
+        filesWithTime.sort(key=cmp_to_key(lambda x,y : y['modtime']-x['modtime']), reverse=False)
+        for kv in filesWithTime:
+            fileName = kv['name']
+            lastModifiedTimeStamp = kv['modtime']
             if fileName.endswith('.md'):
                 currentPage = math.floor(addFile / max_file_items) + 1
                 if addFile % max_file_items == 0:
@@ -33,7 +40,6 @@ if __name__ == '__main__':
                         'page': currentPage,
                         'files': []
                     })
-                lastModifiedTimeStamp =  os.path.getmtime(blog_dir + '/' + fileName)
                 struct_time = time.localtime(lastModifiedTimeStamp)
                 fileInfo = {}
                 fileInfo['name'] = fileName
