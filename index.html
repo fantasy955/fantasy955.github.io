@@ -246,10 +246,11 @@ code highlight
 						prePage(message, event) {
 							this.items[message].currentpage -= 1;
 						},
-						toBlogDetailsPage(categoryName, fileName, realDir, event){
-							let tmp = realDir.split('/');
+						toBlogDetailsPage(categoryName, fileName, realPath, event){
+							let tmp = realPath.split('/');
 							window.localStorage.setItem('categoryPath', tmp[tmp.length-1]);
-							let target = `./blogs/?ca=${categoryName}&n=${fileName}`;
+							let realDir = tmp[tmp.length-1];
+							let target = `./blogs/?ca=${categoryName}&n=${fileName}&r=${realDir}`;
 							console.log(target);
 							window.location.href = target;
 						}

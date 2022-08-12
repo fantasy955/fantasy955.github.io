@@ -157,7 +157,7 @@ code highlight
             console.log("具体参数数组：" + paValue);
             category = paValue[0];
             blogName = paValue[1];
-            realDir = window.localStorage.getItem('categoryPath');
+            realDir = paValue[2];
             resolve();
         }).then((res) => {
             document.title = `Fantasy.${category}`;
