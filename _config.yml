@@ -1,2 +1,2 @@
-source: 
-  - 'blogs'
+include: - 'node_modules'
+skip_render: - 'node_modules/**'

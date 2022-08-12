@@ -89,7 +89,7 @@ MAIN
 			<div class="mb-1 d-flex justify-content-center border-bottom"></div>
 			<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
 				<li v-for="file in item.pages[item.currentpage].files">
-					<div class="pl-3">
+					<div class="pl-3 justify-content-center">
 						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
 								style="cursor: pointer;" v-bind:href="file.relapath">{{file.name}}</a></h6>
 						<div class="card-text text-muted small">
@@ -106,10 +106,12 @@ MAIN
 					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.currentpage+1}} 页</p>
 				</div>
 				<div class="ml-lg-1 card-text small">
-					<p class="c-pointer bg-white" v-if="item.currentpage>0" v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
+					<p class="c-pointer bg-white" v-if="item.currentpage>0"
+						v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
 				</div>
 				<div class="ml-lg-1 card-text small">
-					<p class="c-pointer badge-white" v-if="item.currentpage+1<item.totalPage" v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
+					<p class="c-pointer badge-white" v-if="item.currentpage+1<item.totalPage"
+						v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
 				</div>
 			</div>
 		</div>
@@ -149,8 +151,8 @@ JAVASCRIPTS
 	<script src="./assets/js/vendor/popper.min.js" type="text/javascript"></script>
 	<script src="./assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
 	<script src="./assets/js/functions.js" type="text/javascript"></script>
-	<!-- <script src="./node_modules/vue/dist/vue.global.js"></script> -->
-	<script src="https://unpkg.com/vue@3"></script>
+	<script src="./node_modules/vue/dist/vue.global.js"></script>
+	<!-- <script src="https://unpkg.com/vue@3"></script> -->
 	<!-- <script src="./node_modules/axios/dist/axios.js" type="text/javascript"></script> -->
 	<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js" type="text/javascript"></script>
 	<!-- <script src="./node_modules/showdown/dist/showdown.js" type="text/javascript"></script> -->
