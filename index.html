@@ -88,7 +88,7 @@ MAIN
 			<ol class="list-featured">
 				<li v-for="file in item.files">
 					<span>
-						<h6 class="font-weight-bold"><a href="./article.html" class="text-dark">{{file.name}}</a></h6>
+						<h6 class="font-weight-bold"><a v-bind:href="file.relapath" class="text-dark nav-link">{{file.name}}</a></h6>
 						<p class="text-muted">Fantasy955</p>
 					</span>
 				</li>
@@ -180,7 +180,6 @@ code highlight
 			const topApp = Vue.createApp(TopComponent);
 			topApp.mount('#top');
 
-			console.log('categories:', categories)
 			let n = categories.length;
 			console.log(n);
 
@@ -188,29 +187,26 @@ code highlight
 			for (x in categories) {
 				categoryInfo = categories[x];
 				const t = x;
+				categories[t]['more'] = false;
 				let filesPromise = axios.get(categoryInfo.path+"/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
 							let datas = res.data.files;
-							filteredFiles = [];
+							categories[t]['files'] = [];
 							let add = 0;
-							let more = false;
 							for (let i = 0; i < datas.length; i++) {
 								if (add >= 5){
-									more = true;
+									categories[t]['more'] = true;
 									break;
 								}
-								let name = datas[i];
+								let name = datas[i].name;
 								if (name.endsWith('.md')) {
-									filteredFiles.push({ name: name });
+									categories[t]['files'].push(datas[i]);
 									add++;
 								}
 							}
 							resolve({
 								'code': 200,
-								'categoryIndex': t,
-								'more': more,
-								'files': filteredFiles,
 							});
 						} else {
 							reject(res);
@@ -219,23 +215,12 @@ code highlight
 				}).catch(function (error) {
 					return {
 						'code': 201,
-						'categoryIndex': t,
-						'more': false,
-						'files': [],
 					};
 				});
 				filesPromises.push(filesPromise);
 			}
 			Promise.all(filesPromises).then((results) => {
-				for (x in results) {
-					if (results[x].code == 200) {
-						let i = results[x].categoryIndex;
-						let files = results[x].files;
-						let more = results[x].more;
-						categories[i].files = files;
-						categories[i].more = more;
-					}
-				}
+				console.log(categories);
 				const MainComponent = {
 					data() {
 						return {

@@ -8,6 +8,10 @@
             "sname": "leetcode", 
             "aname": "leetcode",
             "path": "./blogs/leetcode"
+        },{
+            "sname": "python", 
+            "aname": "python",
+            "path": "./blogs/python"
         }
     ]
 }
