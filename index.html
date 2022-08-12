@@ -39,9 +39,9 @@ NAVBAR
 --------------------------------------->
 	<nav class="container topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
 		<div class="container" id="top">
-			<div class="col-md-1"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
+			<div class="col-md-1 d-none d-md-block"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
 					class="img-fluid img-responsive" v-bind:alt="personName"></div>
-			<a class="navbar-brand nav-link" onclick="toTop()"><strong>{{personName}}</strong></a>
+			<a class="navbar-brand nav-link" style="margin-right: 0;" onclick="toTop()"><strong>{{personName}}</strong></a>
 			<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
 				data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
 				aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ NAVBAR
 			<div class="navbar-collapse collapse" id="navbarColor02">
 				<ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
 					<li class="nav-item" v-for="item in items">
-						<a class="nav-link" v-on:click="scrollIntoView" v-bind:name="item.sname">{{item.sname}}</a>
+						<a class="nav-link" style="padding-right: 0rem;" v-on:click="scrollIntoView" v-bind:name="item.sname">{{item.sname}}</a>
 					</li>
 				</ul>
 			</div>
@@ -85,16 +85,19 @@ MAIN
 			style="margin-bottom: 5px;" v-for="item in items" v-bind:id="['div-'+item.sname]">
 			<h5 class="mt-1 btn btn-dark font-weight-bold"><span style="padding-bottom: 5px">{{item.aname}}</span></h5>
 			<div class="mb-1 d-flex justify-content-center border-bottom"></div>
-			<ol class="list-featured">
-				<li v-for="file in item.files">
-					<span>
-						<h6 class="font-weight-bold"><a v-bind:href="file.relapath" class="text-dark nav-link">{{file.name}}</a></h6>
-						<p class="text-muted">Fantasy955</p>
-					</span>
+			<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
+				<li v-for="file in item.pages[item.currentpage].files">
+					<div class="pl-3">
+						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark" style="cursor: pointer;" v-bind:href="file.relapath">{{file.name}}</a></h6>
+						<div class="card-text text-muted small">
+							Fantasy955
+						</div>
+						<small class="text-muted">{{file.updatetime.year}}年{{file.updatetime.mon}}月{{file.updatetime.day}}日 更新</small>
+					</div>
 				</li>
 			</ol>
 			<div class="row" v-if="item.more">
-				<h5 class="pl-3"><a href="#">View ALL</a></h5>
+				<h5 class="pl-3"><a class="btn" v-on:click="(event) => changePage(item.sname, event)">View ALL</a></h5>
 			</div>
 		</div>
 	</div>
@@ -141,6 +144,7 @@ JAVASCRIPTS
 	<!-- <script src="./node_modules/marked/marked.min.js"></script> -->
 	<script src="https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js"></script>
 	<!-- <script src="./index.js" type="module"></script> -->
+	<script src="./custom/config.js"></script>
 
 	<!--------------------------------------
 code highlight
@@ -154,10 +158,13 @@ code highlight
 
 	<script type="text/javascript">
 		axios.get("./custom/menu.json").then((res) => {
-			var menuData = res.data;
-			var categories = menuData['categories'];
-			for (x in categories) {
-				categoryInfo = categories[x];
+			var menuData = res.data['categories'];
+			var categories = {};
+			var currentpageDict = {};
+			for (x in menuData) {
+				let categoryInfo = menuData[x];
+				categories[categoryInfo['sname']] = categoryInfo;
+				currentpageDict[categoryInfo['sname']] = 0;
 			}
 			const TopComponent = {
 				data() {
@@ -180,58 +187,54 @@ code highlight
 			const topApp = Vue.createApp(TopComponent);
 			topApp.mount('#top');
 
-			let n = categories.length;
-			console.log(n);
-
 			let filesPromises = []
 			for (x in categories) {
 				categoryInfo = categories[x];
 				const t = x;
 				categories[t]['more'] = false;
+				categories[t]['filecode'] = 200;
+				categories[t]['pages'] = [];
+				categories[t]['currentpage'] = 0;
 				let filesPromise = axios.get(categoryInfo.path+"/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
-							let datas = res.data.files;
-							categories[t]['files'] = [];
-							let add = 0;
-							for (let i = 0; i < datas.length; i++) {
-								if (add >= 5){
-									categories[t]['more'] = true;
-									break;
-								}
-								let name = datas[i].name;
-								if (name.endsWith('.md')) {
-									categories[t]['files'].push(datas[i]);
-									add++;
-								}
+							let datas = res.data;
+							let pages = res.data.pages;
+							let totalPage = datas.totalPage;
+							if (totalPage > 1){
+								categories[t]['more'] = true;
 							}
-							resolve({
-								'code': 200,
-							});
+							categories[t]['pages'] = pages;
+							resolve(categories[t]);
 						} else {
 							reject(res);
 						}
 					});
 				}).catch(function (error) {
-					return {
-						'code': 201,
-					};
+					categories[t]['filecode'] = 201;
+					return categories[t];
 				});
 				filesPromises.push(filesPromise);
 			}
 			Promise.all(filesPromises).then((results) => {
 				console.log(categories);
+			}, (error) => {
+				console.log(error);
+			}).then(()=>{
 				const MainComponent = {
 					data() {
 						return {
 							items: categories,
 						}
+					},
+					methods: {
+						changePage(message, event) {
+							this.items[message].currentpage = 1;
+						}
 					}
 				};
 				const mainApp = Vue.createApp(MainComponent);
 				mainApp.mount('#main');
-			}, (res) => {
-				console.log(res);
 			})
 		});
 
