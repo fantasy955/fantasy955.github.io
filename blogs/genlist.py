@@ -10,7 +10,7 @@ max_file_items = 5
 
 
 if __name__ == '__main__':
-    with open(menu_config,'r') as load_f:
+    with open(menu_config,'r', encoding='utf-8') as load_f:
         load_dict = json.load(load_f)
 
     for category in load_dict['categories']:
