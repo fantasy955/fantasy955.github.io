@@ -40,8 +40,6 @@ $(document.querySelector('.editormd-markdown-toc')).addClass('toc')
 
 # marked.js
 
-<script src="https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js"></script>
-
 ```javascript
 <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js"></script>
 <!--------------------------------------
@@ -50,10 +48,6 @@ code highlight
     <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-
-    <!-- math parser -->
-    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 
 // 配置
 var rendererMD = new marked.Renderer();
@@ -72,10 +66,18 @@ var rendererMD = new marked.Renderer();
                 return hljs.highlightAuto(code).value;
             }
         });
-
 // res是md文件请求
 let mdcontent = res.data;
 
+// 解析生成html
+html = marked.parse(mdcontent);
+```
+
+# 内联公式解析
+
+```javascript
+<!-- math parser -->
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 // 配合 MathJax 显示行内公式
 MathJax.Hub.Config({
 	tex2jax: {
@@ -85,7 +87,6 @@ MathJax.Hub.Config({
 });
 // 指定生效的element
 MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-// 解析生成html
-html = marked.parse(mdcontent);
+
 ```
 

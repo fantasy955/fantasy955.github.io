@@ -115,6 +115,9 @@ FOOTER
             <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
             <script>hljs.initHighlightingOnLoad();</script>
 
+            <!-- math parser -->
+            <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
             <!-- 引入editor.md相关样式 -->
             <link rel="stylesheet" href="../assets/editor.md/css/editormd.preview.css" />
 
@@ -174,13 +177,23 @@ FOOTER
                         let el = document.getElementById('article-body');
                         mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
 
+                        // 配合 MathJax 显示行内公式
+                        MathJax.Hub.Config({
+                            tex2jax: {
+                                inlineMath: [['$', '$'], ["\(", "\)"]],
+                                displayMath: [['$$', '$$'], ["\[", "\]"]]
+                            }
+                        });
+                        // 指定生效的element
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+
                         let editor = editormd.markdownToHTML('article-body', {
                             markdown: mdcontent,
                             tocContainer: '#article-toc',
                             tocDropown: false,
                             // htmlDecode: "style,script,iframe", // 不解析这些内容，会导致浏览器加载js标签等
-                            emoji: true,
-                            taskList: true,
+                            // emoji: true,
+                            // taskList: true,
                             tex: true,  // 默认不解析
                         });
 
