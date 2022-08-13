@@ -1,9 +1,9 @@
 {
     "categories": [
         {
-            "sname": "Vue",
-            "aname": "Vue Stories",
-            "path": "./blogs/vue"
+            "sname": "前端",
+            "aname": "前端开发",
+            "path": "./blogs/BrowserSide"
         },{
             "sname": "leetcode", 
             "aname": "leetcode",
