@@ -66,12 +66,12 @@ HEADER
 --------------------------------------->
 	<div class="container" id="header">
 		<div class="row justify-content-center">
-			<div class="col-md-2" id="cityINFO">
+			<div class="col-2" id="cityINFO">
 				<h5 style="height: auto;">
 					<p class="text-center">{{cityName}}<br>Weather</p>
 				</h5>
 			</div>
-			<div class="col-md-2 mb-0">
+			<div class="col-2 mb-0">
 				<img src="./custom/qweather-icons/icons/100.svg" fill="#1C242C" alt="QWeather" width="32" height="32">
 			</div>
 		</div>
@@ -88,7 +88,7 @@ MAIN
 			<h5 class="mt-1 btn btn-dark font-weight-bold"><span style="padding-bottom: 5px">{{item.aname}}</span></h5>
 			<div class="mb-1 d-flex justify-content-center border-bottom"></div>
 			<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
-				<li v-for="file in item.currentpage.files">
+				<li class="mb-md-2" v-for="file in item.currentpage.files">
 					<div class="pl-3 justify-content-center">
 						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
 								style="cursor: pointer;" v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a></h6>
@@ -101,15 +101,21 @@ MAIN
 					</div>
 				</li>
 			</ol>
+			<div class="card-text mr-1" v-if="item.more" v-on:click="(event) => showAll(item.sname, event)">
+				<p class="pl-md-1 pr-md-1 c-pointer text-primary">View All</p>
+			</div>
+			<div class="card-text mr-1" v-if="item.layaside" v-on:click="(event) => layAside(item.sname, event)">
+				<p class="pl-md-1 pr-md-1 c-pointer text-primary">收起</p>
+			</div>
 			<div class="row pl-3 justify-content-center">
-				<div class="card-text small">
+				<div class="card-text small" v-if="!item.layaside">
 					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.pageindex+1}} 页</p>
 				</div>
-				<div class="ml-md-1 card-text small">
+				<div class="ml-md-1 card-text small" v-if="!item.layaside">
 					<p class="c-pointer bg-white" v-if="item.pageindex>0"
 						v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
 				</div>
-				<div class="ml-md-1 card-text small">
+				<div class="ml-md-1 card-text small" v-if="!item.layaside">
 					<p class="c-pointer badge-white" v-if="item.pageindex+1<item.totalPage"
 						v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
 				</div>
@@ -197,6 +203,7 @@ JAVASCRIPTS
 				categories[t]['filecode'] = 200;
 				categories[t]['pages'] = [];
 				categories[t]['pageindex'] = 0;
+				categories[t]['layaside'] = false;
 				let filesPromise = axios.get(categoryInfo.path + "/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
@@ -209,7 +216,7 @@ JAVASCRIPTS
 							categories[t]['files'] = datas.files;
 							categories[t]['pages'] = pages;
 							categories[t]['totalPage'] = totalPage;
-							categories[t]['currentpage'] = pages[0];
+							categories[t]['currentpage'] = JSON.parse(JSON.stringify(pages[0])); // 需要进行深拷贝，否则会与pages[0]绑定
 							resolve(categories[t]);
 						} else {
 							reject(res);
@@ -241,13 +248,29 @@ JAVASCRIPTS
 							this.items[categorySName].pageindex -= 1;
 							this.items[categorySName].currentpage = this.items[categorySName].pages[this.items[categorySName].pageindex];
 						},
-						toBlogDetailsPage(categoryName, fileName, realPath, event){
+						toBlogDetailsPage(categorySName, fileName, realPath, event){
 							let tmp = realPath.split('/');
 							window.localStorage.setItem('categoryPath', tmp[tmp.length-1]);
 							let realDir = tmp[tmp.length-1];
-							let target = `./blogs/?ca=${categoryName}&n=${fileName}&r=${realDir}`;
+							let target = `./blogs/?ca=${categorySName}&n=${fileName}&r=${realDir}`;
 							console.log(target);
 							window.location.href = target;
+						},
+						showAll(categorySName, event){
+							this.items[categorySName].currentpage.files = this.items[categorySName].files;
+							this.items[categorySName].more = false;
+							this.items[categorySName].layaside = true;
+							console.log(this.items[categorySName]);
+						},
+						layAside(categorySName, event){
+							this.items[categorySName].currentpage.files = this.items[categorySName].pages[0].files;
+							this.items[categorySName].more = true;
+							this.items[categorySName].layaside = false;
+							console.log(this.items[categorySName].currentpage);
+							let el = document.getElementById(`div-${categorySName}`);
+							if (el) {
+								el.scrollIntoView({ behavior: 'smooth' });
+							}
 						}
 					}
 				};
