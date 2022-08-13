@@ -6,7 +6,33 @@
 
 [(70条消息) 使用editor.md渲染markdown并自定义目录_前端corner的博客-CSDN博客_editor目录](https://blog.csdn.net/laplacepoisson/article/details/124416320)
 
-目前效果最好的，集成度最高
+目前效果最好的，集成度最高;
+
+在bootsrap模板下，我们在右边生成目录：
+
+![image-20220813091350384](assets/image-20220813091350384.png)
+
+栅栏结构：
+
+![image-20220813091421941](assets/image-20220813091421941.png)
+
+但是这个目录不是固定的，为了方便浏览，这个目录最后固定位置，但直接对`article-toc`添加`position:fixed`属性的话，目录在页面中的位置会改变；
+
+- 解决方案：
+
+editor.md会在这个div下面生成新的div内容放置目录：
+
+![image-20220813091642753](assets/image-20220813091642753.png)
+
+目录生成后，我们将子div的属性添加上`position:fixed`。
+
+```javascript
+$(document.querySelector('.editormd-markdown-toc')).addClass('toc')
+```
+
+- 问题
+
+仍然没有适配手机
 
 # showdown.js
 

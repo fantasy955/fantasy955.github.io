@@ -25,6 +25,10 @@
         .navbar>.container {
             justify-content: start;
         }
+
+        .toc {
+            position: fixed;
+        }
     </style>
 </head>
 
@@ -53,7 +57,7 @@ MAIN
 --------------------------------------->
     <div class="container pt-4 pb-4" id="main-article">
         <div class="row justify-content-center">
-            <div class="col-lg-1 pr-4 mb-4 col-md-6">
+            <div class="col-mb-1 pr-4 mb-4 ">
                 <div class="sticky-top text-center">
                     <div class="text-muted">
                         Share this
@@ -70,8 +74,8 @@ MAIN
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-8 border" id="article-body"></div>
-            <div class="col-lg-1 pr-4 mb-4 col-md-6" id="article-toc"></div>
+            <div class="col-md-8 border" id="article-body"></div>
+            <div class="col-md-3 pr-4 mb-4" id="article-toc"></div>
         </div>
     </div>
     <!-- End Main -->
@@ -118,7 +122,7 @@ FOOTER
     <script src="../assets/editor.md/lib/prettify.min.js"></script>
 
     <script type="text/javascript">
-        
+
 
         var category;
         var blogName;
@@ -167,10 +171,10 @@ FOOTER
                 let mdcontent = res.data;
                 let el = document.getElementById('article-body');
                 mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
-                
+
                 let editor = editormd.markdownToHTML('article-body', {
                     markdown: mdcontent,
-                    toCantainer: '#article-toc',
+                    tocContainer: '#article-toc',
                     tocDropown: false
                 });
 
@@ -183,6 +187,7 @@ FOOTER
                 }
                 const articleApp = Vue.createApp(ArticleComponent);
                 articleApp.mount(el);
+                $(document.querySelector('.editormd-markdown-toc')).addClass('toc')
             });
         });
 
