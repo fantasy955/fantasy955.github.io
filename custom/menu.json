@@ -1,0 +1,21 @@
+{
+    "categories": [
+        {
+            "sname": "Vue",
+            "aname": "Vue Stories",
+            "path": "./blogs/vue"
+        },{
+            "sname": "leetcode", 
+            "aname": "leetcode",
+            "path": "./blogs/leetcode"
+        },{
+            "sname": "python", 
+            "aname": "python",
+            "path": "./blogs/python"
+        },{
+            "sname": "Git", 
+            "aname": "Git协作",
+            "path": "./blogs/git"
+        }
+    ]
+}
