@@ -99,7 +99,42 @@ console.log(bar);  //456
 let {foo, bar} = {a: '123', n: '456'};
 console.log(foo);  //undefined
 console.log(bar);  //undefined
+ 
+// 从对象中取值
+let user = {name: 'wjl', age: 23};
+let {name: a} = user;
+console.log(a);  // wjl
 </script>
 ```
 
 1-1对应，
+
+- 函数结构赋值
+
+  - 方便交换变量
+
+    ```html
+    <script type="text/javascript">
+    let x=1; let y=2;
+    [x, y] = [y, x];
+    </script>
+    ```
+
+  - 提取json数据
+
+    ```html
+    <script type="text/javascript">
+    let json_data = {
+        name: 'wjl',
+        age: 20,
+        data: [123, 456]
+    };
+      // 属性名和变量名一致可以省去 key_name: p_name 
+    let {name, age, data: num} = json_data;
+    console.log(name, age, num);  // wjl 20 [123, 456]
+    
+    </script>
+    ```
+
+    
+
