@@ -20,6 +20,7 @@ if __name__ == '__main__':
             os.remove(target)
         files = os.listdir(blog_dir)
         json_dict = {
+            'files': [],
             'pages': [],
             'totalPage': 0
         }
@@ -52,6 +53,7 @@ if __name__ == '__main__':
                 fileInfo['updatetime']['min'] = struct_time.tm_min
                 fileInfo['updatetime']['sec'] = struct_time.tm_sec
                 json_dict['pages'][currentPage-1]['files'].append(fileInfo)
+                json_dict['files'].append(fileInfo)
                 addFile += 1
 
         json_str = json.dumps(json_dict, ensure_ascii=False) 
