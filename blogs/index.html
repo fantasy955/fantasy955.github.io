@@ -53,7 +53,7 @@ MAIN
 --------------------------------------->
     <div class="container pt-4 pb-4" id="main-article">
         <div class="row justify-content-center">
-            <div class="col-lg-2 pr-4 mb-4 col-md-12">
+            <div class="col-lg-1 pr-4 mb-4 col-md-6">
                 <div class="sticky-top text-center">
                     <div class="text-muted">
                         Share this
@@ -70,9 +70,8 @@ MAIN
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-8 border" id="myarticle">
-                <span v-html="html"></span>
-            </div>
+            <div class="col-md-12 col-lg-8 border" id="article-body"></div>
+            <div class="col-lg-1 pr-4 mb-4 col-md-6" id="article-toc"></div>
         </div>
     </div>
     <!-- End Main -->
@@ -104,42 +103,28 @@ FOOTER
     <script src="../assets/js/functions.js" type="text/javascript"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js" type="text/javascript"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js"></script>
     <script src="../custom/config.js"></script>
-    <!--------------------------------------
-code highlight
---------------------------------------->
+
     <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <!-- math parser -->
-    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- 引入editor.md相关样式 -->
+    <link rel="stylesheet" href="../assets/editor.md/css/editormd.preview.css" />
+
+    <!-- 引入editor.md js文件 -->
+    <script src="../assets/editor.md/editormd.js"></script>
+    <script src="../assets/editor.md/lib/marked.min.js"></script>
+    <script src="../assets/editor.md/lib/prettify.min.js"></script>
 
     <script type="text/javascript">
-        var rendererMD = new marked.Renderer();
-        marked.setOptions({
-            renderer: rendererMD,
-            gfm: true,
-            tables: true,
-            breaks: false,
-            pedantic: false,
-            sanitize: false,
-            smartLists: true,
-            smartypants: false
-        });//基本设置
-        marked.setOptions({
-            highlight: function (code) {
-                return hljs.highlightAuto(code).value;
-            }
-        });
-
+        
 
         var category;
         var blogName;
         var realDir;
         new Promise((resolve, reject) => {
-            var loc = location.href; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+            var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
             // console.log("我的地址" + loc);
             var n1 = loc.length;//地址的总长
             var n2 = loc.indexOf("?");//取得=号的位置
@@ -176,25 +161,23 @@ code highlight
             const topApp = Vue.createApp(TopComponent);
             topApp.mount('#top');
 
-            let getBlogDetail = axios.get(`https://fantasy995.github.io/blogs/${realDir}/${blogName.split('.md')[0]}.html`);
-            // let getBlogDetail = axios.get(`${realDir}/${blogName}`);
+            // let getBlogDetail = axios.get(`https://fantasy995.github.io/blogs/${realDir}/${blogName.split('.md')[0]}.html`);
+            let getBlogDetail = axios.get(`${realDir}/${blogName}`);
             getBlogDetail.then((res) => {
-                let html = res.data;
-                let el = document.getElementById('myarticle');
-                // html = html.replaceAll('](assets', `](${realDir}/assets`);
-                // MathJax.Hub.Config({
-                //     tex2jax: {
-                //         inlineMath: [['$', '$'], ["\(", "\)"]],
-                //         displayMath: [['$$', '$$'], ["\[", "\]"]]
-                //     }
-                // });
-                // MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-                // html = marked.parse(html);
+                let mdcontent = res.data;
+                let el = document.getElementById('article-body');
+                mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
+                
+                let editor = editormd.markdownToHTML('article-body', {
+                    markdown: mdcontent,
+                    toCantainer: '#article-toc',
+                    tocDropown: false
+                });
 
                 const ArticleComponent = {
                     data() {
                         return {
-                            html: html,
+                            // html: html,
                         }
                     }
                 }
