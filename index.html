@@ -88,7 +88,7 @@ MAIN
 			<h5 class="mt-1 btn btn-dark font-weight-bold"><span style="padding-bottom: 5px">{{item.aname}}</span></h5>
 			<div class="mb-1 d-flex justify-content-center border-bottom"></div>
 			<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
-				<li v-for="file in item.pages[item.currentpage].files">
+				<li v-for="file in item.currentpage.files">
 					<div class="pl-3 justify-content-center">
 						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
 								style="cursor: pointer;" v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a></h6>
@@ -103,14 +103,14 @@ MAIN
 			</ol>
 			<div class="row pl-3 justify-content-center">
 				<div class="card-text small">
-					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.currentpage+1}} 页</p>
+					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.pageindex+1}} 页</p>
 				</div>
-				<div class="ml-lg-1 card-text small">
-					<p class="c-pointer bg-white" v-if="item.currentpage>0"
+				<div class="ml-md-1 card-text small">
+					<p class="c-pointer bg-white" v-if="item.pageindex>0"
 						v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
 				</div>
-				<div class="ml-lg-1 card-text small">
-					<p class="c-pointer badge-white" v-if="item.currentpage+1<item.totalPage"
+				<div class="ml-md-1 card-text small">
+					<p class="c-pointer badge-white" v-if="item.pageindex+1<item.totalPage"
 						v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
 				</div>
 			</div>
@@ -164,11 +164,9 @@ JAVASCRIPTS
 		axios.get("./custom/menu.json").then((res) => {
 			var menuData = res.data['categories'];
 			var categories = {};
-			var currentpageDict = {};
 			for (x in menuData) {
 				let categoryInfo = menuData[x];
 				categories[categoryInfo['sname']] = categoryInfo;
-				currentpageDict[categoryInfo['sname']] = 0;
 			}
 			const TopComponent = {
 				data() {
@@ -198,7 +196,7 @@ JAVASCRIPTS
 				categories[t]['more'] = false;
 				categories[t]['filecode'] = 200;
 				categories[t]['pages'] = [];
-				categories[t]['currentpage'] = 0;
+				categories[t]['pageindex'] = 0;
 				let filesPromise = axios.get(categoryInfo.path + "/list.json").then((res) => {
 					return new Promise(function (resolve, reject) {
 						if (res) {
@@ -210,6 +208,7 @@ JAVASCRIPTS
 							}
 							categories[t]['pages'] = pages;
 							categories[t]['totalPage'] = totalPage;
+							categories[t]['currentpage'] = pages[0];
 							resolve(categories[t]);
 						} else {
 							reject(res);
@@ -233,11 +232,13 @@ JAVASCRIPTS
 						}
 					},
 					methods: {
-						nextPage(message, event) {
-							this.items[message].currentpage += 1;
+						nextPage(categorySName, event) {
+							this.items[categorySName].pageindex += 1;
+							this.items[categorySName].currentpage = this.items[categorySName].pages[this.items[categorySName].pageindex];
 						},
-						prePage(message, event) {
-							this.items[message].currentpage -= 1;
+						prePage(categorySName, event) {
+							this.items[categorySName].pageindex -= 1;
+							this.items[categorySName].currentpage = this.items[categorySName].pages[this.items[categorySName].pageindex];
 						},
 						toBlogDetailsPage(categoryName, fileName, realPath, event){
 							let tmp = realPath.split('/');
