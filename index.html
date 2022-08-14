@@ -91,7 +91,9 @@ MAIN
 				<li class="mb-md-2" v-for="file in item.currentpage.files">
 					<div class="pl-3 justify-content-center">
 						<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
-								style="cursor: pointer;" v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a></h6>
+								style="cursor: pointer;"
+								v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a>
+						</h6>
 						<div class="card-text text-muted small">
 							Fantasy955
 						</div>
@@ -111,11 +113,11 @@ MAIN
 				<div class="card-text small" v-if="!item.layaside">
 					<p class="text-muted">总共 {{item.totalPage}} 页, 当前第 {{item.pageindex+1}} 页</p>
 				</div>
-				<div class="ml-md-1 card-text small" v-if="!item.layaside">
+				<div class="ml-1 card-text small" v-if="!item.layaside">
 					<p class="c-pointer bg-white" v-if="item.pageindex>0"
 						v-on:click="(event)=>prePage(item.sname, event)">上一页</p>
 				</div>
-				<div class="ml-md-1 card-text small" v-if="!item.layaside">
+				<div class="ml-1 card-text small" v-if="!item.layaside">
 					<p class="c-pointer badge-white" v-if="item.pageindex+1<item.totalPage"
 						v-on:click="(event)=>nextPage(item.sname, event)">下一页</p>
 				</div>
@@ -239,31 +241,36 @@ JAVASCRIPTS
 					methods: {
 						nextPage(categorySName, event) {
 							this.items[categorySName].pageindex += 1;
-							this.items[categorySName].currentpage = this.items[categorySName].pages[this.items[categorySName].pageindex];
+							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
+								this.items[categorySName].pages[this.items[categorySName].pageindex]));
 						},
 						prePage(categorySName, event) {
 							this.items[categorySName].pageindex -= 1;
-							this.items[categorySName].currentpage = this.items[categorySName].pages[this.items[categorySName].pageindex];
+							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
+								this.items[categorySName].pages[this.items[categorySName].pageindex]));
 						},
-						toBlogDetailsPage(categorySName, fileName, realPath, event){
+						toBlogDetailsPage(categorySName, fileName, realPath, event) {
 							let tmp = realPath.split('/');
-							window.localStorage.setItem('categoryPath', tmp[tmp.length-1]);
-							let realDir = tmp[tmp.length-1];
+							window.localStorage.setItem('categoryPath', tmp[tmp.length - 1]);
+							let realDir = tmp[tmp.length - 1];
 							let target = `./blogs/?ca=${categorySName}&n=${fileName}&r=${realDir}`;
 							console.log(target);
 							window.location.href = target;
 						},
-						showAll(categorySName, event){
-							this.items[categorySName].currentpage.files = this.items[categorySName].files;
+						showAll(categorySName, event) {
+							this.items[categorySName].prePage = JSON.parse(JSON.stringify(
+								this.items[categorySName].currentpage));
+							this.items[categorySName].currentpage.files = JSON.parse(JSON.stringify(
+								this.items[categorySName].files));
 							this.items[categorySName].more = false;
 							this.items[categorySName].layaside = true;
 							console.log(this.items[categorySName]);
 						},
-						layAside(categorySName, event){
-							this.items[categorySName].currentpage.files = this.items[categorySName].pages[0].files;
+						layAside(categorySName, event) {
+							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
+								this.items[categorySName].prePage));
 							this.items[categorySName].more = true;
 							this.items[categorySName].layaside = false;
-							console.log(this.items[categorySName].currentpage);
 							let el = document.getElementById(`div-${categorySName}`);
 							if (el) {
 								el.scrollIntoView({ behavior: 'smooth' });
