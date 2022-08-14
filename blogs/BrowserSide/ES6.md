@@ -513,16 +513,24 @@ var users=(function(){
 
 问题: 对外部全局变量依赖大,比如window和jquery
 
+不能用它来组织和拆分代码,因此产生了模块化规范.
+
 ## 已有规范
+
+模块定义后也得暴露;
 
 `commonJS`  `AMD` `CMD` `ES6`
 
 ### COMMONJS
-服务器端模块规范
+**服务器端模块规范**
 
-(便于划分noodejs中各种服务器端功能,比如文件读写,网络通信,HTTP支持等)
+(便于划分noodejs中各种服务器端功能,比如文件读写,网络通信,HTTP支持等) 需要node.js环境
 
-规定:
+**服务端目录结构:**
+
+![image-20220814164400910](assets/image-20220814164400910.png)
+
+**规定:**
 
 -一个单独的js文件就是一个模块,js文件中,module对象,代表当前模块本身
 
@@ -530,7 +538,37 @@ var users=(function(){
 
 -require方法使用单例模式创建该模块
 
+#### 暴露模块
+
+```javascript
+// 方法1
+var arr = [];
+module.exports = {
+  setArr: function(param){
+    arr = param;
+  }
+} // 暴露对象
+module.exports = function(){
+  console.log();
+} // 暴露函数
+
+// 方法2  在一个文件暴露多个模块
+module.exports.xxx = value
+```
+
+#### 引入模块
+
+```javascript
+var md1 = require(xx)  //本地模块 必须写路径, 同级加./
+```
+
+#### node.js -> 浏览器环境
+
+使用`browserify`工具.
+
 ### AMD (异步模块加载)
+
+**浏览器端规范**
 
 **优点**
 
@@ -635,6 +673,10 @@ require.async()异步加载,后续代码放在回调函数中按需执行
 require()在代码分析阶段就加载多有模块js,没起到优化带宽的作用
 
 require.async()在执行阶段,真正按需加载,按需执行
+
+## ES6模块化
+
+
 
 # 闭包
 
