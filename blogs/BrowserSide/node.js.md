@@ -11,3 +11,11 @@ node.js相当于服务器环境，负责解析js代码，实现了java等后端�
 ## 中文文档
 
 [使用 Node.js 需要了解多少 JavaScript (kik.cn)](http://kik.cn/learn/how-much-javascript-do-you-need-to-know-to-use-nodejs)
+
+
+
+# npm
+
+--save 
+
+会把下载的库添加到package.json文件夹中.

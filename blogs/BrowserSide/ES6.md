@@ -541,19 +541,22 @@ var users=(function(){
 #### 暴露模块
 
 ```javascript
-// 方法1
+// 方法1 一个文件只能有一个exports
 var arr = [];
 module.exports = {
   setArr: function(param){
     arr = param;
   }
+  fun2 : function(){}
 } // 暴露对象
+
 module.exports = function(){
   console.log();
 } // 暴露函数
 
 // 方法2  在一个文件暴露多个模块
-module.exports.xxx = value
+exports.xxx1 = value1
+exports.xxx2 = value2
 ```
 
 #### 引入模块
@@ -565,6 +568,8 @@ var md1 = require(xx)  //本地模块 必须写路径, 同级加./
 #### node.js -> 浏览器环境
 
 使用`browserify`工具.
+
+bug: [(70条消息) 【bug】browserify:无法加载文件D:\nodejs\node global\browserify.psl，因为在此系统上禁止运行脚本_霜霖❀的博客-CSDN博客](https://blog.csdn.net/xueyinglys/article/details/124427585)
 
 ### AMD (异步模块加载)
 
@@ -581,15 +586,17 @@ var md1 = require(xx)  //本地模块 必须写路径, 同级加./
 第一步:定义子模块
 
 ```javascript
-define("模块名", ['其它模块名',...], function (参数,...){
+define("模块名", ['其它模块名(依赖)',...], function (参数,...){
   //成员: 变量/方法
   return {
-     要抛出的成员
+     要抛出的成员  // 暴露的函数\对象或变量
   }
 }); //其中，参数指代前面数组中引入的模块
 ```
 
 第二步:在主js文件中引入子模块
+
+![image-20220814184616125](assets/image-20220814184616125.png)
 
 ```javascript
 require(["子模块",...], function(参数, ...){
@@ -598,7 +605,7 @@ require(["子模块",...], function(参数, ...){
 })
 ```
 
-第三步:在HTML中,先引入require.js,并引入主js文件
+第三步:在HTML中,先引入require.js,并引入主js文件(最基础的一步)
 
 1.普通引入
 
@@ -675,6 +682,69 @@ require()在代码分析阶段就加载多有模块js,没起到优化带宽的�
 require.async()在执行阶段,真正按需加载,按需执行
 
 ## ES6模块化
+
+### 工具
+
+`babel-cli `: es6->es5, 
+
+```cmd
+babel [a:src_dir] -d [b:out_dir]
+```
+
+`browserify`: 服务器 -> 浏览器
+
+```
+browserify [src.js] -o [target.js] 
+```
+
+### 导出模块
+
+- 常规暴露
+
+创建 es6模块化/userApi.js
+
+```javascript
+export function getList() {
+ console.log('获取数据列表') 
+}
+export function save() {
+ console.log('保存数据')
+}
+```
+
+- 默认暴露
+
+创建 es6模块化/userApi2.js
+
+```javascript
+export default {
+ getList() {
+ console.log('获取数据列表2')
+ },
+ save() {
+ console.log('保存数据2')
+ }
+}
+```
+
+### 导入模块
+
+创建 es6模块化/userComponent.js
+
+```javascript
+//只取需要的方法即可，多个方法用逗号分隔
+import { getList, save } from "./userApi.js"
+getList()
+save()
+```
+
+创建 es6模块化/userComponent2.js
+
+```javascript
+import user from "./userApi2.js"
+user.getList()
+user.save()
+```
 
 
 
