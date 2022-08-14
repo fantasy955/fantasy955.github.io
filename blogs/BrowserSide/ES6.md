@@ -1,3 +1,5 @@
+[TOC]
+
 # 块级作用域
 
 `var`  声明的变量是全局作用域；
@@ -301,3 +303,345 @@ console.log(Object.is(NaN, NaN)); //t
 console.log(typeof(NaN));  //number object
 ```
 
+# Set 对象
+
+```javascript
+var set = new Set();
+//添加属性
+set[0] = '123';
+//添加值
+set.add('456');
+set.add('789');
+console.log(set);
+```
+
+![image-20220814132012264](assets/image-20220814132012264.png)
+
+```javascript
+Array.from(set)
+```
+
+![image-20220814132111694](assets/image-20220814132111694.png)
+
+![image-20220814132135814](assets/image-20220814132135814.png)
+
+# 类继承
+
+es5和es6继承的区别是：es5是先**创建子类**，**实例化父类**并添加到子类this中实现继承；而es6是先创建父类，实例化子类中通过调用super方法访问父类后，通过修改this实现继承。
+
+ES5的继承实质上是先创建子类的实例对象，然后再将父类的方法添加到this上（`Parent.apply(this)`）.
+
+ES6的继承机制完全不同，实质上是先创建父类的实例对象this（所以必须先调用父类的super()方法），然后再用子类的构造函数修改this。
+
+ES5的继承时**通过原型或构造函数机制来实现**。
+
+ES6通过class关键字定义类，里面有构造方法，类之间通过extends关键字实现继承。子类必须在constructor方法中调用super方法，否则新建实例报错。因为子类没有自己的this对象，而是继承了父类的this对象，然后对其进行加工。如果不调用super方法，子类得不到this对象。
+
+## ES5
+
+- 只继承属性
+
+```javascript
+function Father(name,age){// Father构造函数是父类
+    this.name = name;
+    this.age = age;
+    this.say = function(){
+        console.log('好好学习');
+    }
+}
+//构造函数继承的方式，子类继承不到父类原型上的属性和方法
+Father.prototype.getName=function(){console.log('原型上的方法')}
+
+function Son(name,age,sourse){// Son构造函数是子类
+    // 执行父类构造方法并绑定子类的this, 使得父类中的属性能够赋到子类的this上
+    Father.call(this,name,age);// 子类继承父类的属性
+    this.sourse = sourse;// 子类可以拥有自己的特有属性
+}
+var f1 = new Father('张三',45);
+var s1 = new Son('李四',18,60);
+console.log(f1);
+console.log(s1);
+f1.getName();
+s1.say();
+// s1.getName();//报错，原因是继承不到父类的原型上的属性。
+```
+
+![image-20220814153308151](assets/image-20220814153308151.png)
+
+![image-20220814153901119](assets/image-20220814153901119.png)
+
+**原型是Son**
+
+- 继承原型
+
+```javascript
+function Father(name,age){// Father构造函数是父类
+    this.name = name;
+    this.age = age;
+    this.say = function(){
+        console.log('好好学习');
+    }
+}
+Father.prototype.getName=function(){console.log('原型上的方法')}
+function Son(name,age,sourse){// Son构造函数是子类
+    // 执行父类构造方法并绑定子类的this, 使得父类中的属性能够赋到子类的this上
+    Father.call(this,name,age);// 子类继承父类的属性
+    Father.call(this, [name,age]);// 子类可以拥有自己的特有属性
+  Son.prototype.__proto__ = Father.prototype;
+}
+```
+
+![image-20220814153834081](assets/image-20220814153834081.png)
+
+原型是Father
+
+## ES6
+
+```javascript
+class Person{
+    constructor(name, age){
+        this.name = name;
+        this.age = age;
+    }
+    run(){
+        console.log("i'm running");
+    }
+}
+class Player extends Person{
+    constructor(name, age, job){
+        super(name, age);
+        this.job = job;
+    }
+    do(){
+        console.log(`i can play ${this.job}`);
+    }
+}
+
+```
+
+![image-20220814154505666](assets/image-20220814154505666.png)
+
+![image-20220814154527307](assets/image-20220814154527307.png)
+
+- 父类添加原型函数
+
+```javascript
+class Person{
+    constructor(name, age){
+        this.name = name;
+        this.age = age;
+    }
+    run(){
+        console.log("i'm running");
+    }
+}
+Person.prototype.say('我是父类的原型函数');
+class Player extends Person{
+    constructor(name, age, job){
+        super(name, age);
+        this.job = job;
+    }
+    do(){
+        console.log(`i can play ${this.job}`);
+    }
+}
+```
+
+![image-20220814154927445](assets/image-20220814154927445.png)
+
+# 模块化编程
+
+模块化编程就是,程序中都是模块先分类组织方法,再按需引入并使用模块中的方法.
+
+模块编程是为了
+
+-便于按业务划分逻辑和维护程序结构
+
+-便于团队分工协作
+
+## 原始的模块化编程
+
+使用js文件实现
+
+```javascript
+//users.js文件
+var uname="..."
+function signin(){....}
+```
+
+但不同js导入后,由于名称冲突等,导致变量的值发生改变.
+
+## 使用面向对象实现
+
+```javascript
+//users.js
+var users={
+    属性:值
+    }
+```
+
+优点:一定程度上减少了全局污染
+
+问题:将整个对象,暴露在其他程序中,易被篡改
+
+## 使用匿名函数自调用实现, 闭包
+
+```javascript
+var users=(function(){
+    let _count=1//保存当前在线人数
+    function signin(){
+        console.log("登录...")
+    }
+    function signup(){
+        console.log('注册...')
+    }
+    function getById(){
+        console.log("按id查找用户")
+    }
+    function getCount(){
+        console.log("在线人数:"+_count)
+    }
+   return {
+    signin,signup,getCount,getById
+   }
+})();
+```
+
+通过返回闭包内函数,实现访问内部变量.
+
+进步:外部程序中,只能获得返回的对象中的函数,而未包含在返回对象中的变量或函数,则被封装在形成的闭包中,不会被篡改.
+
+问题: 对外部全局变量依赖大,比如window和jquery
+
+## 已有规范
+
+`commonJS`  `AMD` `CMD` `ES6`
+
+### COMMONJS
+服务器端模块规范
+
+(便于划分noodejs中各种服务器端功能,比如文件读写,网络通信,HTTP支持等)
+
+规定:
+
+-一个单独的js文件就是一个模块,js文件中,module对象,代表当前模块本身
+
+-加载模块使用require方法.require方法读取一个js文件并执行,最后返回文件内部的module对象的exports对象的属性的内容
+
+-require方法使用单例模式创建该模块
+
+### AMD (异步模块加载)
+
+**优点**
+
+既能异步加载多个js文件,减少网页加载的等待
+
+又能设置某两个js文件前后顺序加载,管理模块间的依赖性
+
+**步骤**
+
+第一步:定义子模块
+
+```javascript
+define("模块名", ['其它模块名',...], function (参数,...){
+  //成员: 变量/方法
+  return {
+     要抛出的成员
+  }
+}); //其中，参数指代前面数组中引入的模块
+```
+
+第二步:在主js文件中引入子模块
+
+```javascript
+require(["子模块",...], function(参数, ...){
+  //参数指代子模块对象
+  //这里可以调用子模块中的成员了
+})
+```
+
+第三步:在HTML中,先引入require.js,并引入主js文件
+
+1.普通引入
+
+```html
+<script src="require.js" data-main="3_js/main"></script>
+```
+
+2.优化require.js本身的异步加载速度
+
+```html
+<script src="require.js" defer async="true" data-main="3_js/main"></script>
+```
+
+原理:define()和require()中写的依赖子模块js,也是使用<script>加载,只不过,不是所有script都在开始时创建好的,而是根据依赖关系,按需动态创建script
+
+### CMD(按需加载模块对象)
+
+1.定义子模块
+
+```javascript
+define(function(require, exports, module) {
+  require()//用法同CommenJS中的require()
+  exports别名//用法同CommenJS中的exports别名用法
+  module对象//用法同CommenJS中的module对象用法
+});
+```
+
+2.定义子模块,在主模块中,按需加载子模块使用
+
+```javascript
+//定义主模块
+define(function(require, exports, module){
+  if(Math.random()<0.5){
+    var {signin,signout,signup}=require("users");
+    ... ...
+  }else alert(“没用到users模块...”); 
+  … …
+});
+seajs.config({
+  base:"./4_js/modules"
+});
+seajs.use(["./4_js/main"],function(main){})
+```
+
+3.在自定义脚本中引入主模块
+
+```html
+<script src="sea.js"></script>
+<script src="4_js/main.js"></script>
+```
+
+4.require.async()
+
+require.async()代替require()实现按需加载
+
+```javascript
+require.async("子模块",function(模块对象){
+   ... 后续要执行的代码 ...
+})
+```
+
+require() vs require.async()
+
+-加载方式不同:
+
+require()提前加载完,但暂不执行,等待按需执行
+
+require.async()异步加载,后续代码放在回调函数中按需执行
+
+-加载阶段不同
+
+require()在代码分析阶段就加载多有模块js,没起到优化带宽的作用
+
+require.async()在执行阶段,真正按需加载,按需执行
+
+# 闭包
+
+闭包就是能够读取其他函数内部变量的函数。例如在javascript中，只有函数内部的子函数才能读取[局部变量](https://baike.baidu.com/item/局部变量/9844788)，所以闭包可以理解成“定义在一个[函数](https://baike.baidu.com/item/函数/301912)内部的函数“。在本质上，闭包是将函数内部和函数外部连接起来的桥梁。
+
+闭包内的变量内被闭包内的函数访问,通过返回闭包内的函数对象,实现对闭包内部的修改.
+
+## 概念
+
+闭包: 是一个函数

@@ -191,7 +191,7 @@ person2.sayHello();
 
 3）通过原型创建的新对象实例是相互独立的，为新对象实例添加的方法只有该实例拥有这个方法，其它实例是没有这个方法的
 
-```
+```javascript
 // 创建原型
  ``var` `Person = ``function``(name){
    ``this.name = name;
@@ -284,3 +284,123 @@ person2.getName();
 ![image-20220814130536240](assets/image-20220814130536240.png)
 
 [js的原型和原型链是什么-js教程-PHP中文网](https://m.php.cn/article/462738.html)
+
+##  javascript的方法可以分为三类
+
+a 类方法
+
+b 对象方法
+
+c 原型方法
+
+```javascript
+function People(name)
+{
+this.name=name;
+//对象方法
+this.Introduce=function(){
+alert("My name is "+this.name);
+}
+}
+//类方法
+People.Run=function(){
+alert("I can run");
+}
+//原型方法
+People.prototype.IntroduceChinese=function(){
+alert("我的名字是"+this.name);
+}
+ 
+ 
+//测试
+ 
+var p1=new People("Windking");
+ 
+p1.Introduce();
+ 
+People.Run();
+ 
+p1.IntroduceChinese();
+```
+
+##　prototype是什么含义？
+
+javascript中的每个对象都有prototype属性，Javascript中对象的prototype属性的解释是：返回对象类型原型的引用。
+
+A.prototype = new B();
+
+理解prototype不应把它和继承混淆。A的prototype为B的一个实例，可以理解A将B中的方法和属性全部克隆了一遍。A能使用B的方法和属性。这里强调的是克隆而不是继承。可以出现这种情况：A的prototype是B的实例，同时B的prototype也是A的实例。
+
+```javascript
+function baseClass()
+{
+ 
+this.showMsg = function()
+{
+     alert("baseClass::showMsg");   
+}
+ 
+}
+ 
+function extendClass()
+{
+ 
+}
+ 
+extendClass.prototype = new baseClass();
+ 
+var instance = new extendClass();
+ 
+instance.showMsg(); // 显示baseClass::showMsg
+```
+
+我们首先定义了baseClass类，然后我们要定义extentClass，但是我们打算以baseClass的一个实例为原型，来克隆的extendClass也同时包含showMsg这个对象方法。
+
+extendClass.prototype = new baseClass()就可以阅读为：extendClass是以baseClass的一个实例为原型克隆创建的。
+
+[(70条消息) JS中的prototype（非prototype框架）_小_林_子的博客-CSDN博客](https://blog.csdn.net/xiaolinye3319/article/details/19204447)
+
+## Object.assign(prototype, function)
+
+给原型添加方法。
+
+# Class类
+
+ES6新增了Class概念，能够像传统面向对象语言一样定义类。(没有重载概念)（只是让编程更清晰）
+
+传统JavaScript只有对象的概念，没有类的概念，基于原型编程。原型对象的属性和方法会共享给新对象。
+
+js创建对象的过程：
+
+```javascript
+function Person(name,age){
+    this.name = name
+    this.age = age
+  
+  return this; //被省略了
+}
+
+class Person{
+  constructor(name, age){
+    this.name = name;
+    this.age = age;
+  }
+  do(sth){  // 方法
+    
+  }
+}
+
+let zs = new Person("张三",19)
+zs.__proto__ === Person.prototype  // true
+```
+
+1. 创建一个新对象：zs
+2. 新对象会执行[[prototype]]连接：zs.proto = Person.prototype (这里prototype是对象的属性，默认指向自己;__proto__是实例的属性，指的是创建该实例的对象)
+3. 新对象和函数调用的this会绑定起来：Person.call(zs,‘Da’)
+4. 执行构造函数中的代码：zs.name
+5. 若函数没有返回值，那么就会自动返回这个新对象，如果返回的是对象，实例化的对象就是此对象
+
+
+
+
+
