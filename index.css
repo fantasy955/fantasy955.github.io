@@ -1,0 +1,15 @@
+.centerFlexParent {
+    display: flex;
+    justify-content: center
+}
+
+.nav-link {
+    cursor: pointer;
+}
+.main-content {
+    top: 100px;
+}
+
+.bg-white-50 {
+    background: rgba(255, 255, 255, 0.5);
+}

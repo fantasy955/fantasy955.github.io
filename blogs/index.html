@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
         integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link href="../assets/css/main.css" rel="stylesheet" />
+    <link href="../index.css" rel="stylesheet" />
 
     <style>
         .navbar>.container {
@@ -36,7 +37,7 @@
     <!--------------------------------------
 NAVBAR
 --------------------------------------->
-    <nav class="container topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <nav class="container topnav navbar navbar-expand-lg navbar-light bg-white-50 fixed-top">
         <div class="container" id="top">
             <div class="col-md-1 d-none d-md-block"><img id="img-profile-photo"
                     src="../custom/figures/progile_photo.png" class="img-fluid img-responsive" v-bind:alt="personName">
@@ -74,7 +75,9 @@ MAIN
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 border" role="main" id="article-body"></div>
+            <div class="col-md-8 border" role="main">
+                <div id="article-body"></div>
+            </div>
             <div class="col-md-3 pl-3">
                 <div class="sticky-top" style="top: 90px;" id="article-toc">
                 </div>
