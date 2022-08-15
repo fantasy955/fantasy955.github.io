@@ -187,3 +187,164 @@ watcher 实例用来监听某个 key ，如果该 key 产生变化，便会执�
 ![在这里插入图片描述](assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3d1eXhpbnU=,size_16,color_FFFFFF,t_70-166055339066613.png)
 
 [(70条消息) Vue响应式原理_wuyxinu的博客-CSDN博客_vue响应式原理](https://blog.csdn.net/wuyxinu/article/details/103565014/)
+
+# 事件
+
+## 事件修饰符
+
+`@****.prevent`;
+
+阻止a标签的跳转；
+
+```javascript
+<a href="www.baidu.com" @click.prevent="showInfo"></a>
+```
+
+![image-20220815165514056](assets/image-20220815165514056.png)
+
+- 冒泡
+
+div有点击事件，div内按钮有点击事件。
+
+对按钮添加stop，div不会触发点击事件。
+
+事件捕获：由外往内
+
+事件冒泡：由内往外
+
+# 计算属性与监视属性
+
+## 计算属性
+
+`computed`
+
+> **组件模板应该只包含简单的表达式，复杂的表达式则应该重构为计算属性或方法。**
+>
+> 复杂表达式会让你的模板变得不那么声明式。我们应该尽量描述应该出现的*是什么*，而非*如何*计算那个值。而且计算属性和方法使得代码可以重用。
+
+`ps`：但vue的数据发生变化，就会重新解析模板，比对区别，更新DOM树，因此就算某个地方使用方法返回进行插值， {{function()}}，如果修改的数据影响到了方法的返回值，页面也会更新。
+
+```javascript
+export default {
+  data() {
+    return { a: 1 }
+  },
+  computed: {
+    // 只读
+    aDouble() {
+      return this.a * 2
+    },
+    // 可写
+    aPlus: {
+      get() {
+        return this.a + 1
+      },
+      set(v) {
+        this.a = v - 1
+      }
+    }
+  },
+  created() {
+    console.log(this.aDouble) // => 2
+    console.log(this.aPlus) // => 2
+
+    this.aPlus = 3
+    console.log(this.a) // => 2
+    console.log(this.aDouble) // => 4
+  }
+}
+```
+
+计算属性相比方法，计算属性会缓存，重复调用只会执行一次。
+
+## 监视属性
+
+```javascript
+interface ComponentOptions {
+  watch?: {
+    [key: string]: WatchOptionItem | WatchOptionItem[]
+  }
+}
+
+type WatchOptionItem = string | WatchCallback | ObjectWatchOptionItem
+
+type WatchCallback<T> = (
+  value: T,
+  oldValue: T,
+  onCleanup: (cleanupFn: () => void) => void
+) => void
+
+type ObjectWatchOptionItem = {
+  handler: WatchCallback | string
+  immediate?: boolean // default: false
+  deep?: boolean // default: false
+  flush?: 'pre' | 'post' | 'sync' // default: 'pre'
+  onTrack?: (event: DebuggerEvent) => void
+  onTrigger?: (event: DebuggerEvent) => void
+}
+
+export default {
+  data() {
+    return {
+      a: 1,
+      b: 2,
+      c: {
+        d: 4
+      },
+      e: 5,
+      f: 6
+    }
+  },
+  watch: {
+    // 侦听根级属性
+    a(val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`)
+    },
+    // 字符串方法名称
+    b: 'someMethod',
+    // 该回调将会在被侦听的对象的属性改变时调动，无论其被嵌套多深
+    c: {
+      handler(val, oldVal) {
+        console.log('c changed')
+      },
+      deep: true
+    },
+    // 侦听单个嵌套属性：
+    'c.d': function (val, oldVal) {
+      // do something
+    },
+    // 该回调将会在侦听开始之后立即调用
+    e: {
+      handler(val, oldVal) {
+        console.log('e changed')
+      },
+      immediate: true
+    },
+    // 你可以传入回调数组，它们将会被逐一调用
+    f: [
+      'handle1',
+      function handle2(val, oldVal) {
+        console.log('handle2 triggered')
+      },
+      {
+        handler: function handle3(val, oldVal) {
+          console.log('handle3 triggered')
+        }
+        /* ... */
+      }
+    ]
+  },
+  methods: {
+    someMethod() {
+      console.log('b changed')
+    },
+    handle1() {
+      console.log('handle 1 triggered')
+    }
+  },
+  created() {
+    this.a = 3 // => new: 3, old: 1
+  }
+}
+```
+

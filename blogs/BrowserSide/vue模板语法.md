@@ -155,4 +155,3 @@ this.items = categorys;
 ```
 this.items[message].currentpage = 1;
 ```
-
