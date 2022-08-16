@@ -21,37 +21,38 @@
 		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<!-- Main CSS -->
 	<link href="./assets/css/main.css" rel="stylesheet" />
-	<link href="./index.css" rel="stylesheet"/>
+	<link href="./index.css" rel="stylesheet" />
 </head>
 
 <body>
 	<!--------------------------------------
 NAVBAR
 --------------------------------------->
-<div id="top">
-	<nav class="container topnav navbar navbar-expand-lg navbar-light fixed-top" :class="topBarExpand ? bgW:bgW50">
-		<div class="container">
-			<div class="col-md-1 d-none d-md-block"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
-					class="img-fluid img-responsive" v-bind:alt="personName"></div>
-			<a class="navbar-brand nav-link" style="margin-right: 0;"
-				onclick="toTop()"><strong>{{personName}}</strong></a>
-			<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
-				data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon" @click="topBarExpand = !topBarExpand"></span>
-			</button>
-			<div class="navbar-collapse collapse" id="navbarColor02">
-				<ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
-					<li class="nav-item" v-for="item in items">
-						<a class="nav-link" style="padding-right: 0rem;" v-on:click="scrollIntoView"
-							v-bind:name="item.sname">{{item.sname}}</a>
-					</li>
-				</ul>
+	<div id="top">
+		<nav class="container topnav navbar navbar-expand-lg navbar-light fixed-top" :class="topBarExpand ? bgW:bgW50">
+			<div class="container">
+				<div class="col-md-1 d-none d-md-block"><img id="img-profile-photo"
+						src="custom/figures/progile_photo.png" class="img-fluid img-responsive" v-bind:alt="personName">
+				</div>
+				<a class="navbar-brand nav-link" style="margin-right: 0;"
+					onclick="toTop()"><strong>{{personName}}</strong></a>
+				<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
+					data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
+					aria-label="Toggle navigation" @click="topBarExpand = !topBarExpand">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse" id="navbarColor02">
+					<ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
+						<li class="nav-item" v-for="item in items">
+							<a class="nav-link" style="padding-right: 0rem;" v-on:click="scrollIntoView"
+								v-bind:name="item.sname">{{item.sname}}</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
-	</nav>
-</div>
-	
+		</nav>
+	</div>
+
 	<!-- End Navbar -->
 
 
@@ -79,17 +80,17 @@ MAIN
 	<div class="container-xxl my-md-4 bd-layout main-content bg-white-50" id="main">
 		<div class="row justify-content-start">
 			<div class="col-md-1 pl-3 pr-3">
-                <div class="sticky-top text-center" title="Visit my github">
+				<div class="sticky-top text-center" title="Visit my github">
 					<a v-bind:href="github" title="visit my github">
-						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 496 512" height="4em"
-							width="4em" xmlns="http://www.w3.org/2000/svg">
+						<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 496 512"
+							height="4em" width="4em" xmlns="http://www.w3.org/2000/svg">
 							<path
 								d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
 							</path>
 						</svg>
 					</a>
-                </div>
-            </div>
+				</div>
+			</div>
 			<div class="col-md-10" role="main">
 				<div class="container jumbotron jumbotron-fluid mb-3 pt-0 pb-0 bg-gray position-relative"
 					style="margin-bottom: 5px;" v-for="item in items" v-bind:id="['div-'+item.sname]">
@@ -97,11 +98,10 @@ MAIN
 							style="padding-bottom: 5px">{{item.aname}}</span></h5>
 					<div class="mb-1 d-flex justify-content-center border-bottom"></div>
 					<ol class="list-featured" v-bind:id="['ol-files-'+item.sname]">
-						<li class="mb-md-2" v-for="file in item.currentpage.files">
+						<li class="mb-md-2" v-for="file in item.filteredPageFiles" :key="file.name">
 							<div class="pl-3 justify-content-center">
 								<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
-										v-bind:href="`${item.sname}/${file.name}`"
-										style="cursor: pointer;"
+										v-bind:href="`${item.sname}/${file.name}`" style="cursor: pointer;"
 										v-on:click.prevent="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a>
 								</h6>
 								<div class="card-text text-muted small">
@@ -198,7 +198,7 @@ JAVASCRIPTS
 					}
 				},
 				watch: {
-					topBarExpand(val, oldVal){
+					topBarExpand(val, oldVal) {
 						console.log(`new val is ${val}`);
 						console.log(`old val is ${oldVal}`);
 					}
@@ -239,6 +239,7 @@ JAVASCRIPTS
 							categories[t]['files'] = datas.files;
 							categories[t]['pages'] = pages;
 							categories[t]['totalPage'] = totalPage;
+							categories[t]['filteredPageFiles'] = JSON.parse(JSON.stringify(pages[0].files));
 							categories[t]['currentpage'] = JSON.parse(JSON.stringify(pages[0])); // 需要进行深拷贝，否则会与pages[0]绑定
 							resolve(categories[t]);
 						} else {
@@ -260,19 +261,23 @@ JAVASCRIPTS
 					data() {
 						return {
 							items: categories,
-							github: github,
+							github,
 						}
 					},
 					methods: {
 						nextPage(categorySName, event) {
-							this.items[categorySName].pageindex += 1; 
-							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(  
- 								this.items[categorySName].pages[this.items[categorySName].pageindex]));
+							this.items[categorySName].pageindex += 1;
+							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
+								this.items[categorySName].pages[this.items[categorySName].pageindex]));
+							this.items[categorySName].filteredPageFiles = JSON.parse(JSON.stringify(
+								this.items[categorySName].pages[this.items[categorySName].pageindex].files));
 						},
 						prePage(categorySName, event) {
 							this.items[categorySName].pageindex -= 1;
 							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
 								this.items[categorySName].pages[this.items[categorySName].pageindex]));
+							this.items[categorySName].filteredPageFiles = JSON.parse(JSON.stringify(
+								this.items[categorySName].pages[this.items[categorySName].pageindex].files));
 						},
 						toBlogDetailsPage(categorySName, fileName, realPath, event) {
 							let tmp = realPath.split('/');
@@ -287,6 +292,8 @@ JAVASCRIPTS
 								this.items[categorySName].currentpage));
 							this.items[categorySName].currentpage.files = JSON.parse(JSON.stringify(
 								this.items[categorySName].files));
+							this.items[categorySName].filteredPageFiles = JSON.parse(JSON.stringify(
+								this.items[categorySName].files));
 							this.items[categorySName].more = false;
 							this.items[categorySName].layaside = true;
 							console.log(this.items[categorySName]);
@@ -294,6 +301,8 @@ JAVASCRIPTS
 						layAside(categorySName, event) {
 							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
 								this.items[categorySName].prePage));
+							this.items[categorySName].filteredPageFiles = JSON.parse(JSON.stringify(
+								this.items[categorySName].prePage.files));
 							this.items[categorySName].more = true;
 							this.items[categorySName].layaside = false;
 							let el = document.getElementById(`div-${categorySName}`);
@@ -301,7 +310,7 @@ JAVASCRIPTS
 								el.scrollIntoView({ behavior: 'smooth' });
 							}
 						},
-						toMyGithub(){
+						toMyGithub() {
 							window.location.href = github;
 						}
 					}
