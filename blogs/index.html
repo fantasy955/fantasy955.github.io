@@ -82,12 +82,10 @@ MAIN
             <div class="col-md-8 border order-1" role="main">
                 <div id="article-body"></div>
             </div>
-            <!-- <div id="div-article-toc"> -->
             <div class="col-md-3 pl-3 order-2" id="div-article-toc">
                 <div class="sticky-top" style="top: 90px;" id="article-toc">
                 </div>
             </div>
-            <!-- </div> -->
         </div>
         <!-- End Main -->
 
@@ -191,89 +189,89 @@ FOOTER
                 }
             }
             const tocApp = Vue.createApp(ArticleTocComponent);
-                tocApp.mount('#article-toc');
+            tocApp.mount('#article-toc');
 
-                new Promise((resolve, reject) => {
-                    var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
-                    // console.log("我的地址" + loc);
-                    var n1 = loc.length;//地址的总长
-                    var n2 = loc.indexOf("?");//取得=号的位置
-                    var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
-                    var parameters = parameter.split("&");//从&处拆分，返回字符串数组
-                    // console.log("参数列表" + parameters);
-                    var paValue = new Array();//创建一个用于保存具体值得数组
-                    for (var i = 0; i < parameters.length; i++) {
-                        // console.log("参数键值对值" + i + ":" + parameters[i]);
-                        var m1 = parameters[i].length;//获得每个键值对的长度
-                        var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
-                        var value = parameters[i].substr(m2 + 1, m1 - m2);//获取每个键值对=号后面具体的值
-                        paValue[i] = value;
-                        // console.log("参数值" + i + ":" + value);
+            new Promise((resolve, reject) => {
+                var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
+                // console.log("我的地址" + loc);
+                var n1 = loc.length;//地址的总长
+                var n2 = loc.indexOf("?");//取得=号的位置
+                var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+                var parameters = parameter.split("&");//从&处拆分，返回字符串数组
+                // console.log("参数列表" + parameters);
+                var paValue = new Array();//创建一个用于保存具体值得数组
+                for (var i = 0; i < parameters.length; i++) {
+                    // console.log("参数键值对值" + i + ":" + parameters[i]);
+                    var m1 = parameters[i].length;//获得每个键值对的长度
+                    var m2 = parameters[i].indexOf("=");//获得每个键值对=号的位置
+                    var value = parameters[i].substr(m2 + 1, m1 - m2);//获取每个键值对=号后面具体的值
+                    paValue[i] = value;
+                    // console.log("参数值" + i + ":" + value);
+                }
+                console.log("具体参数数组：" + paValue);
+                category = paValue[0];
+                blogName = paValue[1];
+                realDir = paValue[2];
+                resolve();
+            }).then((res) => {
+                document.title = `Fantasy.${category}`;
+                const TopComponent = {
+                    data() {
+                        return {
+                            category: category,
+                            blogName: blogName.split('.md')[0],
+                            personName: user_name,
+                            topBarExpand: false,
+                            bgW: 'bg-white',
+                            bgW50: 'bg-white-50',
+                        }
+                    },
+                    methods: {
+
                     }
-                    console.log("具体参数数组：" + paValue);
-                    category = paValue[0];
-                    blogName = paValue[1];
-                    realDir = paValue[2];
-                    resolve();
-                }).then((res) => {
-                    document.title = `Fantasy.${category}`;
-                    const TopComponent = {
+                }
+                const topApp = Vue.createApp(TopComponent);
+                topApp.mount('#top');
+
+                // let getBlogDetail = axios.get(`https://fantasy995.github.io/blogs/${realDir}/${blogName.split('.md')[0]}.html`);
+                let getBlogDetail = axios.get(`${realDir}/${blogName}`);
+                getBlogDetail.then((res) => {
+                    let mdcontent = res.data;
+                    let el = document.getElementById('article-body');
+                    mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
+
+                    // 配合 MathJax 显示行内公式
+                    MathJax.Hub.Config({
+                        tex2jax: {
+                            inlineMath: [['$', '$'], ["\(", "\)"]],
+                            displayMath: [['$$', '$$'], ["\[", "\]"]]
+                        }
+                    });
+                    // 指定生效的element
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+
+                    let editor = editormd.markdownToHTML('article-body', {
+                        markdown: mdcontent,
+                        tocContainer: '#article-toc',
+                        tocDropown: false,
+                        // htmlDecode: "style,script,iframe", // 不解析这些内容，会导致浏览器加载js标签等
+                        // emoji: true,
+                        // taskList: true,
+                        tex: true,  // 默认不解析
+                    });
+
+                    const ArticleComponent = {
                         data() {
                             return {
-                                category: category,
-                                blogName: blogName.split('.md')[0],
-                                personName: user_name,
-                                topBarExpand: false,
-                                bgW: 'bg-white',
-                                bgW50: 'bg-white-50',
+                                // html: html,
                             }
-                        },
-                        methods: {
-
                         }
                     }
-                    const topApp = Vue.createApp(TopComponent);
-                    topApp.mount('#top');
-
-                    // let getBlogDetail = axios.get(`https://fantasy995.github.io/blogs/${realDir}/${blogName.split('.md')[0]}.html`);
-                    let getBlogDetail = axios.get(`${realDir}/${blogName}`);
-                    getBlogDetail.then((res) => {
-                        let mdcontent = res.data;
-                        let el = document.getElementById('article-body');
-                        mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
-
-                        // 配合 MathJax 显示行内公式
-                        MathJax.Hub.Config({
-                            tex2jax: {
-                                inlineMath: [['$', '$'], ["\(", "\)"]],
-                                displayMath: [['$$', '$$'], ["\[", "\]"]]
-                            }
-                        });
-                        // 指定生效的element
-                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-
-                        let editor = editormd.markdownToHTML('article-body', {
-                            markdown: mdcontent,
-                            tocContainer: '#article-toc',
-                            tocDropown: false,
-                            // htmlDecode: "style,script,iframe", // 不解析这些内容，会导致浏览器加载js标签等
-                            // emoji: true,
-                            // taskList: true,
-                            tex: true,  // 默认不解析
-                        });
-
-                        const ArticleComponent = {
-                            data() {
-                                return {
-                                    // html: html,
-                                }
-                            }
-                        }
-                        const articleApp = Vue.createApp(ArticleComponent);
-                        // articleApp.mount(el);
-                        // $('#article-toc')[0].innerHTML = $(document.querySelector('.markdown-toc-list'));
-                    });
+                    const articleApp = Vue.createApp(ArticleComponent);
+                    // articleApp.mount(el);
+                    // $('#article-toc')[0].innerHTML = $(document.querySelector('.markdown-toc-list'));
                 });
+            });
 
         </script>
 </body>

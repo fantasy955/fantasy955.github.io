@@ -100,8 +100,9 @@ MAIN
 						<li class="mb-md-2" v-for="file in item.currentpage.files">
 							<div class="pl-3 justify-content-center">
 								<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
+										v-bind:href="`${item.sname}/${file.name}`"
 										style="cursor: pointer;"
-										v-on:click="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a>
+										v-on:click.prevent="(event) => toBlogDetailsPage(item.sname, file.name, item.path, event)">{{file.name}}</a>
 								</h6>
 								<div class="card-text text-muted small">
 									Fantasy955
