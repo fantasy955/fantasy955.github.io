@@ -199,7 +199,7 @@ FOOTER
                 var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
                 var parameters = parameter.split("&");//从&处拆分，返回字符串数组
                 // console.log("参数列表" + parameters);
-                var paValue = new Array();//创建一个用于保存具体值得数组
+                var paValue = new Array(3);//创建一个用于保存具体值得数组
                 for (var i = 0; i < parameters.length; i++) {
                     // console.log("参数键值对值" + i + ":" + parameters[i]);
                     var m1 = parameters[i].length;//获得每个键值对的长度
@@ -212,6 +212,11 @@ FOOTER
                 category = paValue[0];
                 blogName = paValue[1];
                 realDir = paValue[2];
+                for(let i=0; i<paValue.length; i++){
+                    if (paValue[i] == null || paValue[i] == undefined || paValue[i] == ''){
+                        reject(i);
+                    }
+                }
                 resolve();
             }).then((res) => {
                 document.title = `Fantasy.${category}`;
@@ -270,9 +275,19 @@ FOOTER
                     const articleApp = Vue.createApp(ArticleComponent);
                     // articleApp.mount(el);
                     // $('#article-toc')[0].innerHTML = $(document.querySelector('.markdown-toc-list'));
+                }, (error) => {
+                    backToHome();
                 });
+            }, (error) => {
+                backToHome();
+            }).catch((error) => {
+                backToHome();
             });
 
+            function backToHome(){
+                alert('发生意料之外的错误，返回首页!');
+                window.location.href = '../';
+            }
         </script>
 </body>
 
