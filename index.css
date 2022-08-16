@@ -13,3 +13,8 @@
 .bg-white-50 {
     background: rgba(255, 255, 255, 0.5);
 }
+
+.nplr {
+   padding-left: 0;
+   padding-right: 0;
+}

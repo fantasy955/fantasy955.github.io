@@ -348,3 +348,18 @@ export default {
 }
 ```
 
+**计算属性内部不能开启异步计算**，依靠返回值。
+
+**箭头函数没有this，会往外找。**
+
+![image-20220815183238386](assets/image-20220815183238386.png)
+
+# 样式绑定
+
+![image-20220815202401614](assets/image-20220815202401614.png)
+
+# 技巧
+
+## 监听窗口变化
+
+[vue监听窗口大小发生变化，实现自适应_Abenazhan的博客-CSDN博客_vue监听窗口大小变化 自动缩放](https://blog.csdn.net/Abenazhan/article/details/121411973)

@@ -28,8 +28,9 @@
 	<!--------------------------------------
 NAVBAR
 --------------------------------------->
-	<nav class="container topnav navbar navbar-expand-lg navbar-light bg-white-50 fixed-top">
-		<div class="container" id="top">
+<div id="top">
+	<nav class="container topnav navbar navbar-expand-lg navbar-light fixed-top" :class="topBarExpand ? bgW:bgW50">
+		<div class="container">
 			<div class="col-md-1 d-none d-md-block"><img id="img-profile-photo" src="custom/figures/progile_photo.png"
 					class="img-fluid img-responsive" v-bind:alt="personName"></div>
 			<a class="navbar-brand nav-link" style="margin-right: 0;"
@@ -37,7 +38,7 @@ NAVBAR
 			<button class="navbar-toggler collapsed mb-3" type="button" data-toggle="collapse"
 				data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false"
 				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
+				<span class="navbar-toggler-icon" @click="topBarExpand = !topBarExpand"></span>
 			</button>
 			<div class="navbar-collapse collapse" id="navbarColor02">
 				<ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
@@ -49,6 +50,8 @@ NAVBAR
 			</div>
 		</div>
 	</nav>
+</div>
+	
 	<!-- End Navbar -->
 
 
@@ -188,6 +191,15 @@ JAVASCRIPTS
 					return {
 						personName: 'WeiJL',
 						items: categories,
+						topBarExpand: false,
+						bgW: 'bg-white',
+						bgW50: 'bg-white-50'
+					}
+				},
+				watch: {
+					topBarExpand(val, oldVal){
+						console.log(`new val is ${val}`);
+						console.log(`old val is ${oldVal}`);
 					}
 				},
 				methods: {
@@ -203,6 +215,7 @@ JAVASCRIPTS
 			};
 			const topApp = Vue.createApp(TopComponent);
 			topApp.mount('#top');
+			console.log(topApp);
 
 			let filesPromises = []
 			for (x in categories) {
@@ -251,9 +264,9 @@ JAVASCRIPTS
 					},
 					methods: {
 						nextPage(categorySName, event) {
-							this.items[categorySName].pageindex += 1;
-							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(
-								this.items[categorySName].pages[this.items[categorySName].pageindex]));
+							this.items[categorySName].pageindex += 1; 
+							this.items[categorySName].currentpage = JSON.parse(JSON.stringify(  
+ 								this.items[categorySName].pages[this.items[categorySName].pageindex]));
 						},
 						prePage(categorySName, event) {
 							this.items[categorySName].pageindex -= 1;

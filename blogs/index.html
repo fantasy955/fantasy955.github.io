@@ -37,20 +37,24 @@
     <!--------------------------------------
 NAVBAR
 --------------------------------------->
-    <nav class="container topnav navbar navbar-expand-lg navbar-light bg-white-50 fixed-top">
-        <div class="container" id="top">
-            <div class="col-md-1 d-none d-md-block"><img id="img-profile-photo"
-                    src="../custom/figures/progile_photo.png" class="img-fluid img-responsive" v-bind:alt="personName">
+    <div id="top">
+        <nav class="container topnav navbar navbar-expand-lg navbar-light fixed-top" :class="topBarExpand ? bgW:bgW50">
+            <div class="container">
+                <div class="col-md-1 d-none d-md-block"><img id="img-profile-photo"
+                        src="../custom/figures/progile_photo.png" class="img-fluid img-responsive"
+                        v-bind:alt="personName">
+                </div>
+                <nav class="pl-5" aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="margin-top: 1rem;">
+                        <li class="breadcrumb-item"><a href="../">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ category}}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ blogName}}</li>
+                    </ol>
+                </nav>
             </div>
-            <nav class="pl-5" aria-label="breadcrumb">
-                <ol class="breadcrumb" style="margin-top: 1rem;">
-                    <li class="breadcrumb-item"><a href="../">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ category}}</li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ blogName}}</li>
-                </ol>
-            </nav>
-        </div>
-    </nav>
+        </nav>
+    </div>
+
     <!-- End Navbar -->
 
     <!--------------------------------------
@@ -75,71 +79,120 @@ MAIN
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 border" role="main">
+            <div class="col-md-8 border order-1" role="main">
                 <div id="article-body"></div>
             </div>
-            <div class="col-md-3 pl-3">
+            <!-- <div id="div-article-toc"> -->
+            <div class="col-md-3 pl-3 order-2" id="div-article-toc">
                 <div class="sticky-top" style="top: 90px;" id="article-toc">
                 </div>
             </div>
-            <!-- End Main -->
+            <!-- </div> -->
+        </div>
+        <!-- End Main -->
 
-            <!--------------------------------------
+        <!--------------------------------------
 FOOTER
 --------------------------------------->
-            <div class="container mt-5">
-                <footer class="bg-white border-top p-3 text-muted small">
-                    <div class="row align-items-center justify-content-between">
-                        <div>
-                            <span class="navbar-brand mr-2"><strong>WeiJL</strong></span> Copyright &copy;
-                            <script>document.write(new Date().getFullYear())</script>
-                            . All rights reserved.
-                        </div>
-                        <div>
-                            Made with <a target="_blank" class="text-secondary font-weight-bold"
-                                href="https://www.wowthemes.net/mundana-free-html-bootstrap-template/">Mundana Theme</a>
-                            by
-                            WowThemes.net.
-                        </div>
+        <div class="container mt-5">
+            <footer class="bg-white border-top p-3 text-muted small">
+                <div class="row align-items-center justify-content-between">
+                    <div>
+                        <span class="navbar-brand mr-2"><strong>WeiJL</strong></span> Copyright &copy;
+                        <script>document.write(new Date().getFullYear())</script>
+                        . All rights reserved.
                     </div>
-                </footer>
-            </div>
-            <!-- End Footer -->
+                    <div>
+                        Made with <a target="_blank" class="text-secondary font-weight-bold"
+                            href="https://www.wowthemes.net/mundana-free-html-bootstrap-template/">Mundana Theme</a>
+                        by
+                        WowThemes.net.
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- End Footer -->
 
-            <script src="../assets/js/vendor/jquery.min.js" type="text/javascript"></script>
-            <script src="../assets/js/vendor/popper.min.js" type="text/javascript"></script>
-            <script src="../assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
-            <script src="../assets/js/functions.js" type="text/javascript"></script>
-            <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script> -->
-            <script src="../assets/vue/dist/vue.global.js"></script>
-            <script src="../assets/axios/dist/axios.js" type="text/javascript"></script>
-            <!-- <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js" type="text/javascript"></script> -->
-            <script src="../custom/config.js"></script>
-            
-            <!-- <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet"> -->
-            <link href="../assets/highlightjs/styles/monokai-sublime.css" rel="stylesheet">
-            <!-- <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script> -->
-            <script src="../assets/highlightjs/highlight.pack.js" type="text/javascript"></script>
-            <script>hljs.initHighlightingOnLoad();</script>
+        <script src="../assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+        <script src="../assets/js/vendor/popper.min.js" type="text/javascript"></script>
+        <script src="../assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/functions.js" type="text/javascript"></script>
+        <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.33/vue.global.js"></script> -->
+        <script src="../assets/vue/dist/vue.global.js"></script>
+        <script src="../assets/axios/dist/axios.js" type="text/javascript"></script>
+        <!-- <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js" type="text/javascript"></script> -->
+        <script src="../custom/config.js"></script>
 
-            <!-- math parser -->
-            <!-- <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
-            <script src="../assets/MathJax-2.6-latest/MathJax.js"></script>
+        <!-- <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet"> -->
+        <link href="../assets/highlightjs/styles/monokai-sublime.css" rel="stylesheet">
+        <!-- <script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script> -->
+        <script src="../assets/highlightjs/highlight.pack.js" type="text/javascript"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
 
-            <!-- 引入editor.md相关样式 -->
-            <link rel="stylesheet" href="../assets/editor.md/css/editormd.preview.css" />
+        <!-- math parser -->
+        <!-- <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        <script src="../assets/MathJax-2.6-latest/MathJax.js"></script>
 
-            <!-- 引入editor.md js文件 -->
-            <script src="../assets/editor.md/editormd.js"></script>
-            <script src="../assets/editor.md/lib/marked.min.js"></script>
-            <script src="../assets/editor.md/lib/prettify.min.js"></script>
+        <!-- 引入editor.md相关样式 -->
+        <link rel="stylesheet" href="../assets/editor.md/css/editormd.preview.css" />
 
-            <script type="text/javascript">
+        <!-- 引入editor.md js文件 -->
+        <script src="../assets/editor.md/editormd.js"></script>
+        <script src="../assets/editor.md/lib/marked.min.js"></script>
+        <script src="../assets/editor.md/lib/prettify.min.js"></script>
 
+        <script type="text/javascript">
+            var category;
+            var blogName;
+            var realDir;
 
-                var category;
-                var blogName;
-                var realDir;
+            const ArticleTocComponent = {
+                data() {
+                    return {
+                        first: 'order-0',
+                        second: 'order-2',
+                        screenWidth: document.body.clientWidth,
+                    }
+                },
+                mounted() {
+                    const that = this;
+                    // 设置回调函数
+                    window.onresize = () => (() => {
+                        window.screenWidth = document.body.clientWidth;
+                        that.screenWidth = window.screenWidth;
+                    })();
+                },
+                computed: {
+                    smallScreen: {
+                        get() {
+                            return this.screenWidth < 768;
+                        }
+                    }
+                },
+                watch: {
+                    smallScreen: {
+                        handler(val, oldVal) {
+                            if ($('#div-article-toc').hasClass(this.first)) {
+                                $('#div-article-toc').removeClass(this.first);
+                            }
+                            if ($('#div-article-toc').hasClass(this.second)) {
+                                $('#div-article-toc').removeClass(this.second);
+                            }
+                            if (val == true) {
+                                $('#div-article-toc').addClass(this.first);
+                                console.log('change to small screen');
+                            } else {
+                                $('#div-article-toc').addClass(this.second);
+                                console.log('change to large screen');
+                            }
+                        },
+                        immediate: true
+                    }
+                }
+            }
+            const tocApp = Vue.createApp(ArticleTocComponent);
+                tocApp.mount('#article-toc');
+
                 new Promise((resolve, reject) => {
                     var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
                     // console.log("我的地址" + loc);
@@ -170,8 +223,12 @@ FOOTER
                                 category: category,
                                 blogName: blogName.split('.md')[0],
                                 personName: user_name,
+                                topBarExpand: false,
+                                bgW: 'bg-white',
+                                bgW50: 'bg-white-50',
                             }
-                        }, methods: {
+                        },
+                        methods: {
 
                         }
                     }
@@ -218,7 +275,7 @@ FOOTER
                     });
                 });
 
-            </script>
+        </script>
 </body>
 
 </html>
