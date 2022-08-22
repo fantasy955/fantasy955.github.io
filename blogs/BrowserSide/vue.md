@@ -102,6 +102,12 @@ Object.defineProperty(o,'b',{
 
 ![img](assets/lifecycle.16e4c08e.png)
 
+**mounted**：完成模板解析，将真实DOM元素**放入页面后**（只调用一次，更新未**updated**）；
+
+![image-20220816205545698](assets/image-20220816205545698.png)
+
+
+
 # 响应式原理
 
 ![在这里插入图片描述](assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3d1eXhpbnU=,size_16,color_FFFFFF,t_70.png)
@@ -460,6 +466,8 @@ Vue只检测数组7个修改自身的方法，不能使用`arr[x] = new_val`。
 
 # 外置指令
 
+指定相关回调函数的this都指向window
+
 ## 对象式
 
 ```javascript
@@ -538,3 +546,6 @@ app.directive('color', (el, binding) => {
 
 ![image-20220816202739495](assets/image-20220816202739495.png)
 
+## Vue2中
+
+![image-20220816203929982](assets/image-20220816203929982.png)
