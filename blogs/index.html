@@ -27,8 +27,42 @@
             justify-content: start;
         }
 
-        .toc {
-            position: fixed;
+        .toc-scroll {
+            /*要设置滚动条的容器样式*/
+            overflow-y: scroll;
+            width: auto;
+            height: 500px;
+        }
+
+        .toc-scroll::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 2px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 1px;
+        }
+
+        .toc-scroll::-webkit-scrollbar-thumb {
+            /*滚动条里面小方块*/
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            background: #535353;
+        }
+
+        .toc-scroll::-webkit-scrollbar-track {
+            /*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            background: #EDEDED;
+        }
+
+        @media (max-width: 500px) {
+            .toc-scroll {
+                height: 300px;
+            }
+        }
+
+        [v-cloak] {
+            display: none;
         }
     </style>
 </head>
@@ -80,10 +114,12 @@ MAIN
                 </div>
             </div>
             <div class="col-md-8 border order-1" role="main">
-                <div id="article-body"></div>
+                <div id="article-body">
+                    加载中
+                </div>
             </div>
             <div class="col-md-3 pl-3 order-2" id="div-article-toc">
-                <div class="sticky-top mr-1" style="top: 90px; overflow: scroll;"  id="article-toc"></div>
+                <div class="sticky-top mr-1 toc-scroll" style="top: 90px;" id="article-toc"></div>
             </div>
         </div>
         <!-- End Main -->
@@ -188,7 +224,7 @@ FOOTER
                 }
             }
             const tocApp = Vue.createApp(ArticleTocComponent);
-            tocApp.mount('#article-toc');
+            tocApp.mount('#div-article-toc');
 
             new Promise((resolve, reject) => {
                 var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
@@ -246,7 +282,7 @@ FOOTER
                     // mdcontent = mdcontent.replaceAll('](assets', `](${realDir}/assets`);
 
                     // for older
-                    mdcontent = mdcontent.replace(/\]\(assets/g, "]("+realDir+"/assets");
+                    mdcontent = mdcontent.replace(/\]\(assets/g, "](" + realDir + "/assets");
 
                     // 配合 MathJax 显示行内公式
                     MathJax.Hub.Config({
@@ -258,6 +294,7 @@ FOOTER
                     // 指定生效的element
                     MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
 
+                    $('#article-body').html('');
                     let editor = editormd.markdownToHTML('article-body', {
                         markdown: mdcontent,
                         tocContainer: '#article-toc',
