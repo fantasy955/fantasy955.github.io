@@ -1,3 +1,5 @@
+快速访问 [Enjoy Today! QaQ (fantasy995.github.io)](https://fantasy995.github.io/)
+
 # 环境
 
 `Windows11`
