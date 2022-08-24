@@ -1,1 +1,1 @@
-skip_render: 'blogs/**'
+skip_render: blogs/**
