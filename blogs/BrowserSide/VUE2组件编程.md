@@ -43,6 +43,16 @@
               Vue的实例对象，以后简称vm
      -->
 
+## VueComponent与Vue的内置关系
+
+![image-20220824081342646](assets/image-20220824081342646.png)
+
+`VueComponent`是Vue2.extend生成的构造函数
+
+![image-20220824082243803](assets/image-20220824082243803.png)
+
+**保证Vue原型更新时，VueComponent也能更新。**
+
 
 
 # 单文件组件(.vue) -- 生产
@@ -50,6 +60,67 @@
 # 概念
 
 一个文件中只包含一个组件(a.vue)
+
+## 编写.Vue组件文件
+
+![image-20220824094606384](assets/image-20220824094606384.png)
+
+```vue
+<template>
+  <!-- 组件的结构 -->
+  <div>
+    <h2>学校名称:{{ name }}</h2>
+    <h2>学校地址:{{ address }}</h2>
+    <button $click="showName">点我提示名称</button>
+  </div>
+</template>
+
+<script>
+// es6默认暴露  常用(只需要暴露一个)
+// import *** from ***
+// 组件的交互
+export default {
+  name: "School",
+  data() {
+    return {
+      name: "hnu",
+      address: "css",
+    };
+  },
+  methods: {
+    showName() {
+      alert(this.name);
+    },
+  },
+};
+
+// 统一暴露
+// import {} from ***
+// const School = {
+//   data() {
+//     return {
+//       name: "hnu",
+//       address: "css",
+//     };
+//   },
+//   methods: {
+//     showName() {
+//       alert(this.name);
+//     },
+//   },
+// };
+// export { School };
+</script>
+
+<style>
+/* 组件的样式 */
+h2 {
+  background: rgb(189, 25, 210);
+  text-align: center;
+  border: 5px;
+}
+</style>
+```
 
 
 
