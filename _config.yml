@@ -1,2 +1,8 @@
 skip_render: blogs/**
 markdown_ext: ""
+exclude: 
+  - node_modules
+  - babel.config.js
+  - package-lock.json
+  - package.json
+  - vue.config.js

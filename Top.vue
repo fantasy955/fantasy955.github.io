@@ -1,0 +1,68 @@
+<template>
+  <div>
+    <nav
+      class="container topnav navbar navbar-expand-lg navbar-light fixed-top"
+      :class="topBarExpand ? bgW : bgW50"
+    >
+      <div class="container">
+        <div class="col-md-1 d-none d-md-block">
+          <img
+            id="img-profile-photo"
+            src="custom/figures/progile_photo.png"
+            class="img-fluid img-responsive"
+            v-bind:alt="personName"
+          />
+        </div>
+        <a
+          class="navbar-brand nav-link"
+          style="margin-right: 0"
+          onclick="toTop()"
+          ><strong>{{ personName }}</strong></a
+        >
+        <button
+          class="navbar-toggler collapsed mb-3"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarColor02"
+          aria-controls="navbarColor02"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          @click="topBarExpand = !topBarExpand"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarColor02">
+          <ul
+            id="categorylist"
+            class="navbar-nav mr-auto d-flex align-items-center"
+          >
+            <li class="nav-item" v-for="item in items" :key="item.sname">
+              <a
+                class="nav-link"
+                style="padding-right: 0rem"
+                v-on:click="scrollIntoView"
+                v-bind:name="item.sname"
+                >{{ item.sname }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+    data(): {
+
+    }
+};
+</script>
+
+<style>
+    @import "./assets/css/main.css";
+    @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700");
+    @import "./index.css"
+</style>
