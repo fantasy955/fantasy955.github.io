@@ -283,7 +283,12 @@ JAVASCRIPTS
 							let tmp = realPath.split('/');
 							window.localStorage.setItem('categoryPath', tmp[tmp.length - 1]);
 							let realDir = tmp[tmp.length - 1];
-							let target = `./blogs/?ca=${categorySName}&n=${fileName}&r=${realDir}`;
+							categorySName = categorySName.replace(/\#/g, '%23').replace(/\&/g, '%26').replace(/ /g, '%20').replace(/\//g, '%2F').replace(/\?/g, '%3F').replace(/\%/g, '%25').replace(/\+/g, '%2B');
+							fileName = fileName.replace(/\#/g, '%23').replace(/\&/g, '%26').replace(/ /g, '%20').replace(/\//g, '%2F').replace(/\?/g, '%3F').replace(/\%/g, '%25').replace(/\+/g, '%2B');
+							realDir = realDir.replace(/\#/g, '%23').replace(/\&/g, '%26').replace(/ /g, '%20').replace(/\//g, '%2F').replace(/\?/g, '%3F').replace(/\%/g, '%25').replace(/\+/g, '%2B');
+							let params = `ca=${categorySName}&n=${fileName}&r=${realDir}`;
+							// params = encodeURIComponent(params);
+							let target = `./blogs/?${params}`;
 							console.log(target);
 							window.location.href = target;
 						},

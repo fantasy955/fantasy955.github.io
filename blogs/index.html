@@ -228,10 +228,11 @@ FOOTER
 
             new Promise((resolve, reject) => {
                 var loc = location.href.split('#')[0]; //获取整个跳转地址内容，其实就是你传过来的整个地址字符串
-                // console.log("我的地址" + loc);
+                console.log("我的地址" + loc);
                 var n1 = loc.length;//地址的总长
                 var n2 = loc.indexOf("?");//取得=号的位置
-                var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+                // var parameter = decodeURI(loc.substr(n2 + 1, n1 - n2));//截取从?号后面的内容,也就是参数列表，因为传过来的路径是加了码的，所以要解码
+                var parameter = decodeURIComponent(loc.substr(n2 + 1, n1 - n2));
                 var parameters = parameter.split("&");//从&处拆分，返回字符串数组
                 // console.log("参数列表" + parameters);
                 var paValue = new Array(3);//创建一个用于保存具体值得数组
@@ -244,9 +245,9 @@ FOOTER
                     // console.log("参数值" + i + ":" + value);
                 }
                 console.log("具体参数数组：" + paValue);
-                category = paValue[0];
-                blogName = paValue[1];
-                realDir = paValue[2];
+                category = paValue[0].replace(/\%23/g, '#').replace(/\%26/g, '&').replace(/\%20/g, ' ').replace(/\%2F/g, '/').replace(/\%3F/g, '?').replace(/\%25/g, '%').replace(/%2B/g, '\+');
+                blogName = paValue[1].replace(/\%23/g, '#').replace(/\%26/g, '&').replace(/\%20/g, ' ').replace(/\%2F/g, '/').replace(/\%3F/g, '?').replace(/\%25/g, '%').replace(/%2B/g, '\+');
+                realDir = paValue[2].replace(/\%23/g, '#').replace(/\%26/g, '&').replace(/\%20/g, ' ').replace(/\%2F/g, '/').replace(/\%3F/g, '?').replace(/\%25/g, '%').replace(/%2B/g, '\+');
                 for (let i = 0; i < paValue.length; i++) {
                     if (paValue[i] == null || paValue[i] == undefined || paValue[i] == '') {
                         reject(i);
