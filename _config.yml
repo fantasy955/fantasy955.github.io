@@ -1,2 +1,1 @@
-skip_render:
-  - blogs/leetcode/C++vector操作.md
+skip_render: 'blogs/**'
