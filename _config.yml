@@ -1,2 +1,2 @@
 skip_render: blogs/**
-exclude: blogs
+keep_files: blogs
