@@ -1,2 +1,2 @@
 skip_render: blogs/**
-keep_files: blogs
+markdown_ext: ""
