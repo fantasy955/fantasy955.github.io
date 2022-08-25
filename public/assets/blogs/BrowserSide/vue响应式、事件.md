@@ -431,12 +431,21 @@ export default {
 
 加工data见[响应式原理](#响应式原理)；`Object.defineProperty()`;
 
-简单模拟数据检测：
+**简单模拟数据检测：**
 
 ![image-20220816163531647](assets/image-20220816163531647.png)
+
+
 
 ### Vue监听数组内对象改变
 
 Vue只检测数组7个修改自身的方法，不能使用`arr[x] = new_val`。
 `split`：修改；`unshift`：头部插入
 
+![image-20220825185922205](assets/image-20220825185922205.png)
+
+
+
+不能在根(data下一级)直接添加新属性。
+
+![image-20220825190030901](assets/image-20220825190030901.png)

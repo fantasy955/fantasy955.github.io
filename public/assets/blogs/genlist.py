@@ -1,11 +1,20 @@
+from ast import parse
 from genericpath import isdir
 import os
 import json
 from functools import cmp_to_key
 import time
 import math
+import argparse
 
-menu_config = './custom/menu.json'
+os.chdir(r"E:\Users\lenovo\fantasy995.github.io\public")
+parser = argparse.ArgumentParser(description='generate list.json for each category')
+parser.add_argument('--menu', default='./assets/custom/menu.json')
+
+args = parser.parse_args()
+
+menu_config = args.menu
+
 max_file_items = 5
 
 

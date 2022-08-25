@@ -53,8 +53,7 @@
 </template>
 
 <script>
-// import axios from "axios";
-import uConfig from "../../custom/config";
+import uConfig from "../config";
 export default {
   data() {
     return {
@@ -62,18 +61,14 @@ export default {
       topBarExpand: false,
       bgW: "bg-white",
       bgW50: "bg-white-50",
-      menu: []
+      // menu: []
     };
   },
-  beforeMount() {
-    const menuJson = require('../../public/assets/custom/menu.json');
-    console.log(menuJson);
-    for(let item of menuJson.categories){
-      this.menu.push(item);
+  props: {
+    menu: {
+      type: Array,
+      required: true
     }
-  },
-  mounted() {
-    console.log(this);
   }
 };
 </script>

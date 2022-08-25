@@ -5,7 +5,7 @@
 							style="padding-bottom: 5px">{{categoryInfo.aname}}</span></h5>
 					<div class="mb-1 d-flex justify-content-center border-bottom"></div>
 					<ol class="list-featured" v-bind:id="['ol-files-'+categoryInfo.sname]">
-						<li class="mb-md-2" v-for="file in categoryInfo.filteredPageFiles" :key="file.name">
+						<li class="mb-md-2" v-for="file in currentPageFiles" :key="file.name">
 							<div class="pl-3 justify-content-center">
 								<h6 class="font-weight-bold" style="margin-bottom: 0;"><a class="text-dark"
 										v-bind:href="`${categoryInfo.sname}/${file.name}`" style="cursor: pointer;"
@@ -20,33 +20,87 @@
 							</div>
 						</li>
 					</ol>
-					<div class="card-text mr-1" v-if="categoryInfo.more" v-on:click="(event) => showAll(categoryInfo.sname, event)">
+					<div class="card-text mr-1" v-if="readMore" v-on:click="(event) => showAll()">
 						<p class="pl-md-1 pr-md-1 c-pointer text-primary">View All</p>
 					</div>
-					<div class="card-text mr-1" v-if="categoryInfo.layaside"
-						v-on:click="(event) => layAside(categoryInfo.sname, event)">
+					<div class="card-text mr-1" v-if="layaside"
+						v-on:click="layaside = false">
 						<p class="pl-md-1 pr-md-1 c-pointer text-primary">收起</p>
 					</div>
 					<div class="row pl-3 justify-content-center">
 						<div class="card-text small" v-if="!categoryInfo.layaside">
-							<p class="text-muted">总共 {{categoryInfo.totalPage}} 页, 当前第 {{categoryInfo.pageindex+1}} 页</p>
+							<p class="text-muted">总共 {{totalPage}} 页, 当前第 {{pageIndex}} 页</p>
 						</div>
 						<div class="ml-1 card-text small" v-if="!categoryInfo.layaside">
-							<p class="c-pointer bg-white" v-if="categoryInfo.pageindex>0"
-								v-on:click="(event)=>prePage(categoryInfo.sname, event)">上一页</p>
+							<p class="c-pointer bg-white" v-if="pageIndex>1"
+								v-on:click="(event)=>pageIndex--">上一页</p>
 						</div>
 						<div class="ml-1 card-text small" v-if="!categoryInfo.layaside">
-							<p class="c-pointer badge-white" v-if="categoryInfo.pageindex+1<categoryInfo.totalPage"
-								v-on:click="(event)=>nextPage(categoryInfo.sname, event)">下一页</p>
+							<p class="c-pointer badge-white" v-if="pageIndex<totalPage"
+								v-on:click="(event)=>pageIndex++">下一页</p>
 						</div>
 					</div>
 				</div>
 </template>
 
-<script>
-export default {
+<script setup>
+import uConfig from "../config";
+import { defineProps, onMounted, computed, ref } from 'vue';
 
+const probs = defineProps({
+	categoryInfo: {
+		type: Object,
+		required: true
+	}
+});
+
+var pageIndex = 1;
+pageIndex = ref(pageIndex);
+
+var max_file_items = uConfig.max_file_items;
+max_file_items = ref(max_file_items);
+
+var layaside = false;
+layaside = ref(layaside);
+
+const filteredFiles = computed({
+  get(){
+    return probs.categoryInfo.files.filter((item) => {
+      return item.name.indexOf('') != -1;
+    })
+  }
+})
+
+const readMore = computed({
+  get(){
+    return filteredFiles.value.length > max_file_items.value;
+  },
+  set(newValue){
+    console.log('set');
+  }
+});
+
+const totalPage = computed(() => {
+	return Math.ceil(filteredFiles.value.length / max_file_items.value);
+});
+
+const currentPageFiles = computed(() => {
+	let start = (pageIndex.value - 1) * max_file_items.value;
+	return filteredFiles.value.filter((item, index) => {
+		return index >= start && index < start + max_file_items.value;
+	})
+});
+
+function showAll(){
+	console.log('展开全部');
+	layaside.value = !layaside.value;
 }
+
+onMounted(() => {
+	// console.log('mounted');
+})
+
+
 </script>
 
 <style>

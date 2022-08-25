@@ -14,8 +14,7 @@
 </template>
 
 <script>
-import uConfig from "../../custom/config";
-
+import uConfig from "../config";
 export default {
     data() {
         return {
