@@ -227,7 +227,17 @@ this.$refs.[ref_name]
 
 ![image-20220825112748297](assets/image-20220825112748297.png)
 
-​	
+## 限定样式的范围
+
+Vue会给每个template生成的DOM添加data-v-[随机数]，
+
+![image-20220825161220417](assets/image-20220825161220417.png)
+
+![image-20220825161125148](assets/image-20220825161125148.png)
+
+通过样式选择器限定生效范围。
+
+
 
 # probs属性的使用
 
@@ -264,3 +274,18 @@ this.$refs.[ref_name]
 **probs优先被接收。**
 
 ![image-20220825115157382](assets/image-20220825115157382.png)
+
+
+
+# mixin
+
+![image-20220825144121616](assets/image-20220825144121616.png)
+
+
+
+# plugin
+
+![image-20220825154251180](assets/image-20220825154251180.png)
+
+![image-20220825160228980](assets/image-20220825160228980.png)
+

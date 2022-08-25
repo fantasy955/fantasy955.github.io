@@ -549,3 +549,7 @@ app.directive('color', (el, binding) => {
 ## Vue2中
 
 ![image-20220816203929982](assets/image-20220816203929982.png)
+
+**获取焦点：**
+
+![image-20220825154421056](assets/image-20220825154421056.png)
