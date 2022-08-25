@@ -10,7 +10,8 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-axios": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -31,7 +32,6 @@
       "node": true,
       "jquery": true
     },
-  
     "extends": [
       "plugin:vue/vue3-essential",
       "eslint:recommended"

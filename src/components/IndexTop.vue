@@ -36,7 +36,7 @@
             id="categorylist"
             class="navbar-nav mr-auto d-flex align-items-center"
           >
-            <li class="nav-item" v-for="item in items" :key="item.sname">
+            <li class="nav-item" v-for="item in menu" :key="item.sname">
               <a
                 class="nav-link"
                 style="padding-right: 0rem"
@@ -59,16 +59,27 @@ export default {
   data() {
     return {
       personName: uConfig.real_name,
-      // items: categories,
-      items: [{sname: 'test'}],
       topBarExpand: false,
       bgW: "bg-white",
       bgW50: "bg-white-50",
+      menu: []
     };
   },
+  beforeMount() {
+    const menuJson = require('../../public/assets/custom/menu.json');
+    console.log(menuJson);
+    for(let item of menuJson.categories){
+      this.menu.push(item);
+    }
+  },
+  mounted() {
+    console.log(this);
+  }
 };
 </script>
 
+<!-- scoped -->
+<!-- lang='sass' less  -->
 <style >
 
 </style>

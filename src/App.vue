@@ -1,18 +1,41 @@
 <template>
   <div>
-    <Top></Top>
+    <IndexTop></IndexTop>
   </div>
 </template>
 
-<script>
-import Top from './components/Top.vue';
+<!-- 选项式 -->
+<!-- <script>
+import IndexTop from './components/IndexTop.vue';
 export default {
     name: 'App',
     components: {
-        Top
+        IndexTop
     }
 }
+</script> -->
+
+<!-- 最多包含一个script语句块和一个 script setup语句块-->
+<script> 
 </script>
+
+<!-- 组合式 -->
+<!-- 组件不需要使用模块化规范暴露 -->
+<script setup>
+// 在setup块中，导入的组件可以直接使用
+import IndexTop from './components/IndexTop.vue';
+import { ref, defineProps } from 'vue';
+
+// const probs =  defineProps(['menu', 'categoryInfoList']);
+// const probs =  defineProps({
+//   menu: Array,
+//   categoryInfoList: Array
+// });
+
+var count = ref(0);
+
+</script>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700');
