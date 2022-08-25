@@ -53,16 +53,26 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from "axios";
+import uConfig from "../../custom/config";
 export default {
-    data(): {
-
-    }
+  data() {
+    return {
+      personName: uConfig.real_name,
+      // items: categories,
+      items: [{sname: 'test'}],
+      topBarExpand: false,
+      bgW: "bg-white",
+      bgW50: "bg-white-50",
+    };
+  },
 };
 </script>
 
-<style>
-    @import "./assets/css/main.css";
-    @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700");
-    @import "./index.css"
+<style scoped lang="less">
+// @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700');
+// @import '../../assets/css/main.css';
+// @import url('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
+// @import '../../index.css';
+
 </style>
