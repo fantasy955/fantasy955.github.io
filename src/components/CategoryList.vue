@@ -1,6 +1,6 @@
 <template>
 <div v-for="categoryInfo in categoryInfoList" :key="categoryInfo.aname">
-  <CategoryFileList :categoryInfo="categoryInfo" @click="showInfo(categoryInfo)"></CategoryFileList>
+  <CategoryFileList :categoryInfo="categoryInfo"></CategoryFileList>
 </div>
   
 </template>

@@ -1,70 +1,33 @@
 <template>
-  <div>
-    <IndexTop :menu="menu"></IndexTop>
-    <WeatherHeader />
-    <CategoryList :categoryInfoList="categoryFileList" />
-  </div>
+  <router-view />
 </template>
 
-<!-- 选项式 -->
-<!-- <script>
-import IndexTop from './components/IndexTop.vue';
-export default {
-    name: 'App',
-    components: {
-        IndexTop
-    }
-}
-</script> -->
-
-<!-- 最多包含一个script语句块和一个 script setup语句块-->
-<script>
-</script>
-
-<!-- 组合式 -->
-<!-- 组件不需要使用模块化规范暴露 -->
 <script setup>
-// 在setup块中，导入的组件可以直接使用
-import axios from "axios";
-import IndexTop from "./components/IndexTop.vue";
-import WeatherHeader from "./components/WeatherHeader.vue";
-import CategoryList from "./components/CategoryList.vue";
-import uConfig from "./config";
+import { ref, computed, defineEmits } from 'vue'
+import HomePage from './components/HomePage.vue';
+import BlogPage from './components/BlogPage.vue';
+import NotFound from './components/NotFound.vue';
 
-import { ref, defineProps } from "vue";
+// const routes = {
+//   '/': HomePage,
+//   '/blog': BlogPage
+// }
+// const currentPath = ref(window.location.hash)
 
-let menu = [];
-let categoryFileList = [];
-menu = ref(menu);
-categoryFileList = ref(categoryFileList);
-const menuJson = require("../public/assets/custom/menu.json");
+// // window.location.hash这个属性可读可写。读取时，可以用来判断网页状态是否改变；写入时，则会在不重载网页的前提下，创造一条访问历史记录。
+// // 这是一个HTML 5新增的事件，当#值发生变化时，就会触发这个事件。IE8+、Firefox 3.6+、Chrome 5+、Safari 4.0+支持该事件。
+// window.addEventListener('hashchange', () => {
+//   currentPath.value = window.location.hash
+// })
 
-let filesPromises = [];
-for (const item of menuJson.categories) {
-  menu.value.push(item);
-  let filesPromise = axios.get(item.path + "/list.json").then((res) => {
-    let data = res.data;
-    for(let key in item){
-      data[key] = item[key];
-    }
-    data['more'] = false;
-    categoryFileList.value.push(data);
-  });
-  filesPromises.push(filesPromise);
-}
+// const currentView = computed(() => {
+//   let hashValue = currentPath.value.slice(1);
+//   if (hashValue.startsWith('/blog')){
+//     return BlogPage;
+//   }
+//   return routes[hashValue.slice(1) || '/'] || NotFound
+// })
 
-Promise.all(filesPromises).then(res => {
-  // console.log('categoryFileList ok');
-});
-
-
-// const probs =  defineProps(['menu', 'categoryInfoList']);
-// const probs =  defineProps({
-//   menu: Array,
-//   categoryInfoList: Array
-// });
-
-var count = ref(0);
 </script>
 
 

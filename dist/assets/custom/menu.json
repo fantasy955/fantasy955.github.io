@@ -3,19 +3,23 @@
         {
             "sname": "前端",
             "aname": "前端开发",
-            "path": "./blogs/BrowserSide"
+            "dirName": "BrowserSide",
+            "path": "./assets/blogs/BrowserSide"
         },{
             "sname": "leetcode", 
             "aname": "leetcode",
-            "path": "./blogs/leetcode"
+            "dirName": "leetcode",
+            "path": "./assets/blogs/leetcode"
         },{
             "sname": "python", 
             "aname": "python",
-            "path": "./blogs/python"
+            "dirName": "python",
+            "path": "./assets/blogs/python"
         },{
             "sname": "Git", 
             "aname": "Git协作",
-            "path": "./blogs/git"
+            "dirName": "git",
+            "path": "./assets/blogs/git"
         }
     ]
 }
