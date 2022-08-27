@@ -1,9 +1,34 @@
 <template>
   <div class="row">
+    <div class="col-md-1 pl-3 pr-3">
+      <div class="sticky-top text-center">
+        <div class="text-muted">Share this</div>
+        <div class="share d-inline-block">
+          <!-- AddToAny BEGIN -->
+          <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+            <a class="a2a_button_facebook"></a>
+            <a class="a2a_button_twitter"></a>
+          </div>
+          <component
+            src="https://static.addtoany.com/menu/page.js"
+            :is="'script'"
+            async
+          >
+          </component>
+          <!-- AddToAny END -->
+        </div>
+      </div>
+    </div>
+
     <div class="col-md-8 border order-1" role="main">
       <div id="article-body">加载中</div>
     </div>
-    <div class="col-md-3 pl-3 order-2" id="div-article-toc">
+    <div
+      class="col-md-3 pl-3"
+      :class="screenWidth <= smallSceenSize ? first : second"
+      id="div-article-toc"
+    >
       <div
         class="sticky-top mr-1 toc-scroll"
         style="top: 90px"
@@ -16,7 +41,8 @@
 <script setup>
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
-import { defineProps, onMounted, inject } from "vue";
+import uConfig from "../config";
+import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
 
 const editor = editormd();
 
@@ -27,7 +53,16 @@ const probs = defineProps({
   },
 });
 
+const smallSceenSize = uConfig.smallScreenSize;
+const first = ref("order-0");
+const second = ref("order-2");
+
 var getBlogContent = axios.get(probs.blogPath);
+
+var screenWidth = document.body.clientWidth;
+screenWidth = ref(screenWidth);
+
+
 
 onMounted(() => {
   getBlogContent.then((res) => {
@@ -53,21 +88,37 @@ onMounted(() => {
         resolve();
       });
       md2html.then(() => {
-        console.log('md ok');
-        let titleElments = document.querySelectorAll(".reference-link");
+        const titleElments = document.querySelectorAll(".reference-link");
+        // https://www.qy.cn/jszx/detail/6411.html
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting){
+              console.log(entry.target);
+            }
+          });
+        });
         let tocContainer = document.querySelector(".markdown-toc-list");
         let liElements = tocContainer.getElementsByTagName("li");
-        for (let i=0; i < liElements.length; i++) {
+        for (let i = 0; i < liElements.length; i++) {
           let el = liElements[i].firstChild;
           el.addEventListener("click", function (event) {
             event.preventDefault();
-            titleElments[i].scrollIntoView();
+            titleElments[i].scrollIntoView({
+              behavior: "smooth",
+            });
           });
+          observer.observe(titleElments[i]);
         }
       });
-
     }
   });
+});
+
+onMounted(() => {
+  window.onresize = () =>
+    (() => {
+      screenWidth.value = document.body.clientWidth;
+    })();
 });
 </script>
 

@@ -3,6 +3,7 @@
     <IndexTop :menu="menu"></IndexTop>
     <WeatherHeader />
     <CategoryList :categoryInfoList="categoryFileList" />
+    <PageFooter></PageFooter>
   </div>
 </template>
 
@@ -32,6 +33,7 @@ import CategoryList from "./CategoryList.vue";
 import uConfig from "../config";
 
 import { ref, defineProps } from "vue";
+import PageFooter from "./PageFooter.vue";
 
 let menu = [];
 let categoryFileList = [];

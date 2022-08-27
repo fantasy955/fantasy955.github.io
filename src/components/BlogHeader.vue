@@ -20,7 +20,7 @@
             {{ category }}
           </li>
           <li class="breadcrumb-item active" aria-current="page">
-            {{ blogName }}
+            {{ showName }}
           </li>
         </ol>
       </nav>
@@ -29,8 +29,26 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import uConfig from "../config";
+import { computed, defineProps, ref } from "vue";
+const probs = defineProps(["category", "blogName"]);
+
+var personName = uConfig.user_name;
+var topBarExpand = false;
+topBarExpand = ref(topBarExpand);
+
+const bgW = ref("bgW");
+const bgW50 = ref("bgW50");
+
+const showName = computed(() => {
+  let res = probs.blogName.split('.');
+  return res[res.length-2];
+})
+
 </script>
 
-<style>
+<style scoped>
+.navbar > .container {
+  justify-content: start;
+}
 </style>

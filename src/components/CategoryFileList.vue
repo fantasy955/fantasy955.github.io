@@ -44,7 +44,7 @@
     >
       <p class="pl-md-1 pr-md-1 c-pointer text-primary">View All</p>
     </div>
-    <div class="card-text mr-1" v-if="layaside" v-on:click="layaside = false">
+    <div class="card-text mr-1" v-if="layaside" v-on:click="(event) => layAside(event)">
       <p class="pl-md-1 pr-md-1 c-pointer text-primary">收起</p>
     </div>
     <div class="row pl-3 justify-content-center">
@@ -117,19 +117,31 @@ const readMore = computed({
 });
 
 const totalPage = computed(() => {
-  return Math.ceil(filteredFiles.value.length / max_file_items.value);
+  return Math.max(1, Math.ceil(filteredFiles.value.length / max_file_items.value));
 });
 
 const currentPageFiles = computed(() => {
-  let start = (pageIndex.value - 1) * max_file_items.value;
-  return filteredFiles.value.filter((item, index) => {
-    return index >= start && index < start + max_file_items.value;
-  });
+  if (max_file_items.value != Infinity) {
+    let start = (pageIndex.value - 1) * max_file_items.value;
+    return filteredFiles.value.filter((item, index) => {
+      return index >= start && index < start + max_file_items.value;
+    });
+  }else{
+    return filteredFiles.value;
+  }
 });
 
 function showAll() {
-  console.log("展开全部");
-  layaside.value = !layaside.value;
+  max_file_items.value = Infinity;
+  layaside.value = true;
+  pageIndex.value = 1;
+}
+
+function layAside(event){
+  max_file_items.value = uConfig.max_file_items;
+  layaside.value = false;
+  let div = document.getElementById(`div-${probs.categoryInfo.sname}`);
+  div.scrollIntoView({behavior: 'smooth'});
 }
 
 function viewBlog(file) {

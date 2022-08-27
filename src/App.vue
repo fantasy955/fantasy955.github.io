@@ -3,10 +3,10 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
-import HomePage from './components/HomePage.vue';
-import BlogPage from './components/BlogPage.vue';
-import NotFound from './components/NotFound.vue';
+import { ref, computed, defineEmits } from "vue";
+import HomePage from "./components/HomePage.vue";
+import BlogPage from "./components/BlogPage.vue";
+import NotFound from "./components/NotFound.vue";
 
 // const routes = {
 //   '/': HomePage,
@@ -27,7 +27,6 @@ import NotFound from './components/NotFound.vue';
 //   }
 //   return routes[hashValue.slice(1) || '/'] || NotFound
 // })
-
 </script>
 
 
@@ -36,4 +35,16 @@ import NotFound from './components/NotFound.vue';
 @import "../assets/css/main.css";
 @import url("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
 @import "../index.css";
+
+.bgW {
+  background: #fff;
+}
+
+.bgW50 {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.nav-link {
+    cursor: pointer;
+}
 </style>

@@ -67,14 +67,23 @@ export default {
   props: {
     menu: {
       type: Array,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
+  methods: {
+    scrollIntoView(event) {
+      if (event) {
+        let el = document.getElementById("div-" + event.target.name);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    },
+  },
 };
 </script>
 
 <!-- scoped -->
 <!-- lang='sass' less  -->
 <style >
-
 </style>
