@@ -7,7 +7,6 @@ import HomePage from './components/HomePage.vue';
 import BlogPage from './components/BlogPage.vue';
 import NotFound from './components/NotFound.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
-// import MathJax from './js/MathJax';
 
 const routes = [
     {path: '/', component: HomePage},

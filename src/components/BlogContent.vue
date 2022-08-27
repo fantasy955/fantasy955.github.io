@@ -15,9 +15,10 @@
 
 <script setup>
 import axios from "axios";
-import MathJax from "../js/MathJax";
 import editormd from "editor.md/src/editormd";
 import { defineProps, onMounted, inject } from "vue";
+
+const editor = editormd();
 
 const probs = defineProps({
   blogPath: {
@@ -42,12 +43,29 @@ onMounted(() => {
       );
 
       el.innerHTML = "";
-      let editor = editormd().markdownToHTML("article-body", {
-        markdown: mdcontent,
-        tocContainer: "#article-toc",
-        tocDropown: false,
-        tex: true, // 默认不解析
+      let md2html = new Promise(function (resolve, reject) {
+        editor.markdownToHTML("article-body", {
+          markdown: mdcontent,
+          tocContainer: "#article-toc",
+          tocDropown: true,
+          tex: true, // 默认不解析
+        });
+        resolve();
       });
+      md2html.then(() => {
+        console.log('md ok');
+        let titleElments = document.querySelectorAll(".reference-link");
+        let tocContainer = document.querySelector(".markdown-toc-list");
+        let liElements = tocContainer.getElementsByTagName("li");
+        for (let i=0; i < liElements.length; i++) {
+          let el = liElements[i].firstChild;
+          el.addEventListener("click", function (event) {
+            event.preventDefault();
+            titleElments[i].scrollIntoView();
+          });
+        }
+      });
+
     }
   });
 });
@@ -56,7 +74,7 @@ onMounted(() => {
 <style>
 .toc-scroll {
   /*要设置滚动条的容器样式*/
-  overflow-y: scroll;
+  overflow-y: auto;
   width: auto;
   max-height: 500px;
 }

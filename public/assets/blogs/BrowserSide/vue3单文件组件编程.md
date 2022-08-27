@@ -1,3 +1,5 @@
+test $a=n$
+
 # 传值
 
 [Props | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/components/props.html#one-way-data-flow)

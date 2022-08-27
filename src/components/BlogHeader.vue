@@ -15,7 +15,7 @@
       </div>
       <nav class="pl-5" aria-label="breadcrumb">
         <ol class="breadcrumb" style="margin-top: 1rem">
-          <li class="breadcrumb-item"><a href="../">Home</a></li>
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item active" aria-current="page">
             {{ category }}
           </li>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import {defineProbs} from 'vue';
+import { defineProps } from "vue";
 </script>
 
 <style>
