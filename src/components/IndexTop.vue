@@ -8,7 +8,7 @@
         <div class="col-md-1 d-none d-md-block">
           <img
             id="img-profile-photo"
-            src="../../custom/figures/progile_photo.png"
+            src="../assets/figures/progile_photo.png"
             class="img-fluid img-responsive"
             v-bind:alt="personName"
           />

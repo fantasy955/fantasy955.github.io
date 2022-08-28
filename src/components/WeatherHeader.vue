@@ -7,7 +7,7 @@
 				</h5>
 			</div>
 			<div class="col-2 mb-0">
-				<img src="../../custom/qweather-icons/icons/100.svg" fill="#1C242C" alt="QWeather" width="32" height="32">
+				<img src="../assets/qweather-icons/icons/100.svg" fill="#1C242C" alt="QWeather" width="32" height="32">
 			</div>
 		</div>
 	</div>

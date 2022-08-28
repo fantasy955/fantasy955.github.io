@@ -35,6 +35,8 @@
         id="article-toc"
       ></div>
     </div>
+    <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
+
   </div>
 </template>
 

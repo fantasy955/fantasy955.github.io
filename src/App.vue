@@ -32,9 +32,9 @@ import NotFound from "./components/NotFound.vue";
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700");
-@import "../assets/css/main.css";
+@import "./assets/css/main.css";
 @import url("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
-@import "../index.css";
+@import "./assets/index.css";
 
 .bgW {
   background: #fff;
