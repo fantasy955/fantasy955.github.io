@@ -10,11 +10,14 @@
       position-relative
     "
     style="margin-bottom: 5px"
-    v-bind:id="['div-' + categoryInfo.sname]"
+    v-bind:id="`div-${categoryInfo.sname}`"
   >
-    <h5 class="mt-1 btn btn-dark font-weight-bold">
-      <span style="padding-bottom: 5px">{{ categoryInfo.aname }}</span>
-    </h5>
+    <div class="category-header">
+      <h5 class="mt-1 btn btn-dark font-weight-bold">
+        <span style="padding-bottom: 5px">{{ categoryInfo.aname }}</span>
+      </h5>
+        <input class="keyword-input" type="text" placeholder="标题关键字" v-model="keyword"/>
+    </div>
     <div class="mb-1 d-flex justify-content-center border-bottom"></div>
     <ol class="list-featured" v-bind:id="['ol-files-' + categoryInfo.sname]">
       <li class="mb-md-2" v-for="file in currentPageFiles" :key="file.name">
@@ -44,7 +47,11 @@
     >
       <p class="pl-md-1 pr-md-1 c-pointer text-primary">View All</p>
     </div>
-    <div class="card-text mr-1" v-if="layaside" v-on:click="(event) => layAside(event)">
+    <div
+      class="card-text mr-1"
+      v-if="layaside"
+      v-on:click="(event) => layAside(event)"
+    >
       <p class="pl-md-1 pr-md-1 c-pointer text-primary">收起</p>
     </div>
     <div class="row pl-3 justify-content-center">
@@ -77,7 +84,7 @@
 
 <script setup>
 import uConfig from "../config";
-import { defineProps, onMounted, computed, ref } from "vue";
+import { defineProps, onMounted, computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -89,6 +96,8 @@ const probs = defineProps({
     required: true,
   },
 });
+
+const keyword = ref('');
 
 var pageIndex = 1;
 pageIndex = ref(pageIndex);
@@ -102,7 +111,7 @@ layaside = ref(layaside);
 const filteredFiles = computed({
   get() {
     return probs.categoryInfo.files.filter((item) => {
-      return item.name.indexOf("") != -1;
+      return item.name.indexOf(keyword) != -1;
     });
   },
 });
@@ -117,7 +126,10 @@ const readMore = computed({
 });
 
 const totalPage = computed(() => {
-  return Math.max(1, Math.ceil(filteredFiles.value.length / max_file_items.value));
+  return Math.max(
+    1,
+    Math.ceil(filteredFiles.value.length / max_file_items.value)
+  );
 });
 
 const currentPageFiles = computed(() => {
@@ -126,7 +138,7 @@ const currentPageFiles = computed(() => {
     return filteredFiles.value.filter((item, index) => {
       return index >= start && index < start + max_file_items.value;
     });
-  }else{
+  } else {
     return filteredFiles.value;
   }
 });
@@ -137,11 +149,11 @@ function showAll() {
   pageIndex.value = 1;
 }
 
-function layAside(event){
+function layAside(event) {
   max_file_items.value = uConfig.max_file_items;
   layaside.value = false;
   let div = document.getElementById(`div-${probs.categoryInfo.sname}`);
-  div.scrollIntoView({behavior: 'smooth'});
+  div.scrollIntoView({ behavior: "smooth" });
 }
 
 function viewBlog(file) {
@@ -161,4 +173,14 @@ onMounted(() => {
 </script>
 
 <style>
+.category-header {
+  
+}
+
+.keyword-input {
+  border-top-left-radius: 1;
+  border-bottom-left-radius: 1;
+  margin-left: 2rem;
+}
+
 </style>
