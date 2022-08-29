@@ -8726,7 +8726,9 @@ html {
 /* Base Styles -------------------- */
 body {
   overflow-x: hidden;
-  padding-top: 69.75px; }
+  padding-top: 69.75px;
+  /* padding-top: 0; */
+ }
 
 .sticky-top {
   top: 69.75px; }

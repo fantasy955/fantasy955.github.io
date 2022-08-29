@@ -16,11 +16,21 @@
       <h5 class="mt-1 btn btn-dark font-weight-bold">
         <span style="padding-bottom: 5px">{{ categoryInfo.aname }}</span>
       </h5>
-        <input class="keyword-input" type="text" placeholder="标题关键字" v-model="keyword"/>
+      <input
+        class="keyword-input"
+        type="text"
+        placeholder="标题关键字"
+        v-model="keyword"
+      />
     </div>
     <div class="mb-1 d-flex justify-content-center border-bottom"></div>
     <ol class="list-featured" v-bind:id="['ol-files-' + categoryInfo.sname]">
-      <li class="mb-md-2" v-for="file in currentPageFiles" :key="file.name">
+      <li
+        class="mb-md-2"
+        v-for="(file, index) in currentPageFiles"
+        :key="file.name"
+      >
+        <span class="li-file-number">{{ baseIndex + index + 1 }}</span>
         <div class="pl-3 justify-content-center">
           <h6 class="font-weight-bold" style="margin-bottom: 0">
             <a
@@ -40,43 +50,60 @@
         </div>
       </li>
     </ol>
-    <div
-      class="card-text mr-1"
-      v-if="readMore"
-      v-on:click="(event) => showAll()"
-    >
-      <p class="pl-md-1 pr-md-1 c-pointer text-primary">View All</p>
+    <div class="card-text mr-1" v-if="readMore">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary"
+        v-on:click="(event) => showAll()"
+      >
+        View ALL
+      </button>
+    </div>
+    <div class="card-text mr-1 pb-2" v-if="layaside">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary"
+        v-on:click="(event) => layAside(event)"
+      >
+        收起
+      </button>
     </div>
     <div
-      class="card-text mr-1"
-      v-if="layaside"
-      v-on:click="(event) => layAside(event)"
+      class="row pl-3 justify-content-center pb-2"
+      style="gap: 20px; align-items: center"
+      v-if="!layaside"
     >
-      <p class="pl-md-1 pr-md-1 c-pointer text-primary">收起</p>
-    </div>
-    <div class="row pl-3 justify-content-center">
-      <div class="card-text small" v-if="!categoryInfo.layaside">
-        <p class="text-muted">
-          总共 {{ totalPage }} 页, 当前第 {{ pageIndex }} 页
-        </p>
-      </div>
-      <div class="ml-1 card-text small" v-if="!categoryInfo.layaside">
-        <p
-          class="c-pointer bg-white"
-          v-if="pageIndex > 1"
-          v-on:click="(event) => pageIndex--"
+      <p class="text-muted card-text small" style="padding: 0; margin: 0">
+        总共 {{ totalPage }} 页, 当前第 {{ pageIndex }} 页
+      </p>
+      <div>
+        <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
+        <button
+          type="button"
+          v-on:click="
+            (event) => {
+              pageIndex--;
+              baseIndex = (pageIndex - 1) * max_file_items;
+            }
+          "
+          class="btn btn-sm btn-outline-primary mr-1"
+          :class="{ 'button-disabled': pageIndex <= 1 }"
         >
           上一页
-        </p>
-      </div>
-      <div class="ml-1 card-text small" v-if="!categoryInfo.layaside">
-        <p
-          class="c-pointer badge-white"
-          v-if="pageIndex < totalPage"
-          v-on:click="(event) => pageIndex++"
+        </button>
+        <button
+          type="button"
+          v-on:click="
+            (event) => {
+              pageIndex++;
+              baseIndex = (pageIndex - 1) * max_file_items;
+            }
+          "
+          class="btn btn-sm btn-outline-primary"
+          :class="{ 'button-disabled': pageIndex >= totalPage }"
         >
           下一页
-        </p>
+        </button>
       </div>
     </div>
   </div>
@@ -97,7 +124,7 @@ const probs = defineProps({
   },
 });
 
-const keyword = ref('');
+const keyword = ref("");
 
 var pageIndex = 1;
 pageIndex = ref(pageIndex);
@@ -108,10 +135,12 @@ max_file_items = ref(max_file_items);
 var layaside = false;
 layaside = ref(layaside);
 
+const baseIndex = ref(0);
+
 const filteredFiles = computed({
   get() {
     return probs.categoryInfo.files.filter((item) => {
-      return item.name.indexOf(keyword) != -1;
+      return item.name.toLowerCase().indexOf(keyword.value.toLowerCase()) != -1;
     });
   },
 });
@@ -144,12 +173,14 @@ const currentPageFiles = computed(() => {
 });
 
 function showAll() {
+  baseIndex.value = 0;
   max_file_items.value = Infinity;
   layaside.value = true;
   pageIndex.value = 1;
 }
 
 function layAside(event) {
+  baseIndex.value = 0;
   max_file_items.value = uConfig.max_file_items;
   layaside.value = false;
   let div = document.getElementById(`div-${probs.categoryInfo.sname}`);
@@ -172,15 +203,54 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .category-header {
-  
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.page-control {
+  width: auto;
 }
 
 .keyword-input {
   border-top-left-radius: 1;
   border-bottom-left-radius: 1;
-  margin-left: 2rem;
+  /* margin-left: 2rem; */
+  padding: 0.4375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.4285714;
+  color: #232e3c;
+  background-color: hsla(0, 0%, 100%, 0.651);
+  background-clip: padding-box;
+  border: 1px solid #44494e;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.li-file-number {
+  font-weight: bold;
+  font-size: 3rem;
+  margin-right: 0.5rem;
+  font-family: "Abril Fatface", serif;
+  line-height: 1;
+}
+
+.button-disabled {
+  pointer-events: none;
+}
+
+button.button-disabled {
+  cursor: not-allowed;
+}
+
+ol.list-featured li:before {
+  display: none;
+}
 </style>
