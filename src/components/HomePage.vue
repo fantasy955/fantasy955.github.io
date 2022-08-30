@@ -35,14 +35,16 @@ import uConfig from "../config";
 import { ref, defineProps } from "vue";
 import PageFooter from "./PageFooter.vue";
 
-let menu = [];
-let categoryFileList = [];
-menu = ref(menu);
-categoryFileList = ref(categoryFileList);
 const menuJson = require("../../public/assets/custom/menu.json");
+let categoryFileList = [];
+categoryFileList = ref(categoryFileList);
+let menu = [];
+menu = ref(menu);
 
-let filesPromises = [];
-for (const item of menuJson.categories) {
+let filesPromises = Array(menuJson.categories.length);
+for (const i in menuJson.categories) {
+  const item = menuJson.categories[i];
+  item['order'] = i;
   menu.value.push(item);
   let filesPromise = axios.get(item.path + "/list.json").then((res) => {
     let data = res.data;
@@ -50,13 +52,19 @@ for (const item of menuJson.categories) {
       data[key] = item[key];
     }
     data['more'] = false;
+    data['order'] = i;
     categoryFileList.value.push(data);
   });
   filesPromises.push(filesPromise);
 }
 
 Promise.all(filesPromises).then(res => {
-  // console.log('categoryFileList ok');
+  menu.value.sort((a, b) => {
+    return a.order < b.order;
+  });
+  categoryFileList.value.sort((a, b) => {
+    return a.order < b.order;
+  })
 });
 
 

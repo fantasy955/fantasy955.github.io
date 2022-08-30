@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-1 pl-3 pr-3">
+    <div class="col-xl-2 pl-3 pr-3">
       <div class="sticky-top text-center">
         <div class="text-muted">Share this</div>
         <div class="share d-inline-block">
@@ -21,11 +21,11 @@
       </div>
     </div>
 
-    <div class="col-md-8 border order-1" role="main">
+    <div class="col-xl-8 border order-1" role="main">
       <div id="article-body">加载中</div>
     </div>
     <div
-      class="col-md-3 pl-3"
+      class="col-md-2 pl-3"
       :class="screenWidth <= smallSceenSize ? first : second"
       id="div-article-toc"
     >

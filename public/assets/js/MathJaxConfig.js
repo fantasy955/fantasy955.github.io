@@ -1,9 +1,11 @@
-(function(res){
+(function (res) {
     console.log('config mathjax');
-    console.log(res);
+
+    // console.log(res);
     // ƒ (){
     //     return 1;
     // }
+
     let el = document.getElementById('article-body');
     MathJax.Hub.Config({
         tex2jax: {
@@ -12,7 +14,9 @@
         }
     });
     // 指定生效的element
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
-})(function(){
+    setTimeout(() => {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, el]);
+    }, 1000);
+})(function () {
     return 1;
 });

@@ -6,11 +6,8 @@
     >
       <div>
         <img src="../assets/figures/progile_photo.png" class="avatar" />
-        <a
-          class="navbar-brand nav-link"
-          style="margin-right: 0"
-          onclick="toTop()"
-          ><strong>{{ personName }}</strong></a
+        <a class="navbar-brand nav-link" style="margin-right: 0" @click="toTop"
+          ><strong>{{ $globalParams.real_name }}</strong></a
         >
       </div>
 
@@ -47,15 +44,12 @@
 </template>
 
 <script>
-import uConfig from "../config";
 export default {
   data() {
     return {
-      personName: uConfig.real_name,
       topBarExpand: false,
       bgW: "bg-white",
       bgW50: "bg-white-50",
-      // menu: []
     };
   },
   props: {
@@ -73,11 +67,15 @@ export default {
         }
       }
     },
-    toTop() {
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
-    }
   },
 };
+</script>
+
+<script setup>
+function toTop() {
+  console.log("?");
+  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+}
 </script>
 
 <!-- scoped -->

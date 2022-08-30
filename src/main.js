@@ -1,4 +1,4 @@
-import { createApp, createSSRApp, h } from 'vue';
+import { createApp, createSSRApp, defineComponent, h } from 'vue';
 import App from "./App.vue";
 import axios from 'axios';
 // Vue 的服务端渲染 API 位于 `vue/server-renderer` 路径下
@@ -7,6 +7,7 @@ import HomePage from './components/HomePage.vue';
 import BlogPage from './components/BlogPage.vue';
 import NotFound from './components/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import uConifg from './config';
 
 const routes = [
     {path: '/', component: HomePage},
@@ -19,8 +20,12 @@ const router = createRouter({
   routes, 
 })
 
+const avc = defineComponent({});
+console.log(avc);
+console.log(typeof(avc));
 
 const app = createApp(App);
 app.use(router);
+app.use(uConifg);
 // app.use(MathJax);
 app.mount('#app');
