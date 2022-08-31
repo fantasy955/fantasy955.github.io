@@ -4,9 +4,9 @@
 
 <script setup>
 import { ref, computed, defineEmits } from "vue";
-import HomePage from "./components/HomePage.vue";
-import BlogPage from "./components/BlogPage.vue";
-import NotFound from "./components/NotFound.vue";
+import HomePage from "./components/home/HomePage.vue";
+import BlogPage from "./components/blog/BlogPage.vue";
+import NotFound from "./components/common/NotFound.vue";
 
 // const routes = {
 //   '/': HomePage,
@@ -32,7 +32,7 @@ import NotFound from "./components/NotFound.vue";
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,600,700");
-@import "./assets/bootstrap/css/main.css";
+@import "./assets/bootstrap/css/bootstrap.css";
 @import url("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
 @import "./assets/index.css";
 

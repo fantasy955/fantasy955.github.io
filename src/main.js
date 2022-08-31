@@ -3,9 +3,9 @@ import App from "./App.vue";
 import axios from 'axios';
 // Vue 的服务端渲染 API 位于 `vue/server-renderer` 路径下
 import { renderToString } from 'vue/server-renderer';
-import HomePage from './components/HomePage.vue';
-import BlogPage from './components/BlogPage.vue';
-import NotFound from './components/NotFound.vue';
+import HomePage from './components/home/HomePage.vue';
+import BlogPage from './components/blog/BlogPage.vue';
+import NotFound from './components/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 import uConifg from './config';
 
