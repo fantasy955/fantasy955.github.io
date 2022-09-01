@@ -7,7 +7,7 @@
       >
         <div>
           <img src="../../assets/figures/progile_photo.png" class="avatar" />
-          <a class="navbar-brand nav-link" @click="toTop"
+          <a class="navbar-brand nav-link"
             ><strong>{{ $globalParams.real_name }}</strong></a
           >
         </div>
@@ -30,10 +30,6 @@ export default {
 </script>
 
 <script setup>
-function toTop() {
-  console.log("?");
-  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
-}
 </script>
 
 <!-- scoped -->

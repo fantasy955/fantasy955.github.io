@@ -22,5 +22,7 @@ export default {
     cityName,
     install: (app, options) => {
         app.config.globalProperties.$globalParams = globalParams;
+
+        app.provide('globalParams', globalParams);
     }
 }

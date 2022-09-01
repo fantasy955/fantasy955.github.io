@@ -16,9 +16,8 @@
 </template>
   
   <script setup>
-import uConfig from "../../config";
 import HomeBlogCategory from "./HomeBlogCategory.vue";
-import { computed, defineProps } from "vue";
+import { computed, defineProps, inject } from "vue";
 
 const probs = defineProps({
   categoryInfoList: {
@@ -26,6 +25,7 @@ const probs = defineProps({
     required: true,
   },
 });
+
 </script>
   
   

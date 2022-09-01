@@ -5,6 +5,7 @@
     class="navbar navbar-blog sticky-top"
     :class="topBarExpand ? bgW : bgW50"
   >
+    <a class="nav-link" @click="toTop">Top</a>
     <button
       class="navbar-toggler collapsed"
       type="button"
@@ -60,6 +61,10 @@ function scrollIntoView(event) {
     }
   }
 }
+
+function toTop() {
+  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+}
 </script>
 
 <style scoped>
@@ -69,7 +74,7 @@ function scrollIntoView(event) {
 
 .navbar-blog {
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
   background: rgba(255, 255, 255, 0.95);
 }
 

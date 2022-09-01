@@ -11,6 +11,7 @@
     "
     style="margin-bottom: 5px"
     v-bind:id="`div-${categoryInfo.sname}`"
+    ref="main"
   >
     <div class="category-header">
       <h5 class="mt-1 btn btn-dark font-weight-bold">
@@ -76,11 +77,7 @@
       <button
         type="button"
         v-on:click="
-          (event) => {
-            pageIndex--;
-            baseIndex = (pageIndex - 1) * max_file_items;
-          }
-        "
+          (event) => prePage(event)  "
         class="btn btn-sm mr-1"
         :class="[pageIndex <= 1 ? 'button-disabled btn-outline-danger' : 'btn-outline-secondary']"
       >
@@ -89,13 +86,9 @@
       <button
         type="button"
         v-on:click="
-          (event) => {
-            pageIndex++;
-            baseIndex = (pageIndex - 1) * max_file_items;
-          }
-        "
-        class="btn btn-sm btn-outline-secondary"
-        :class="{ 'button-disabled': pageIndex >= totalPage }"
+          (event) => nextPage(event)"
+        class="btn btn-sm"
+        :class="[pageIndex >= totalPage ? 'button-disabled btn-outline-danger' : 'btn-outline-secondary']"
       >
         下一页
       </button>
@@ -104,10 +97,10 @@
 </template>
 
 <script setup>
-import uConfig from "../../config";
-import { defineProps, onMounted, computed, ref, watch } from "vue";
+import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+const globalParams = inject('globalParams');
 const route = useRoute();
 const router = useRouter();
 
@@ -118,12 +111,13 @@ const probs = defineProps({
   },
 });
 
+const main = ref(null);
 const keyword = ref("");
 
 var pageIndex = 1;
 pageIndex = ref(pageIndex);
 
-var max_file_items = uConfig.max_file_items;
+var max_file_items = globalParams.max_file_items;
 max_file_items = ref(max_file_items);
 
 var layaside = false;
@@ -175,7 +169,7 @@ function showAll() {
 
 function layAside(event) {
   baseIndex.value = 0;
-  max_file_items.value = uConfig.max_file_items;
+  max_file_items.value = globalParams.max_file_items;
   layaside.value = false;
   let div = document.getElementById(`div-${probs.categoryInfo.sname}`);
   div.scrollIntoView({ behavior: "smooth" });
@@ -190,6 +184,19 @@ function viewBlog(file) {
       blogName: file.name,
     },
   });
+}
+
+function prePage(event){
+  pageIndex.value--
+  baseIndex.value = (pageIndex.value - 1) * max_file_items.value;
+}
+
+function nextPage(event){
+  pageIndex.value++;
+  baseIndex.value = (pageIndex.value - 1) * max_file_items.value;
+  if (pageIndex.value == totalPage.value){
+    document.getElementById(main.value.id).scrollIntoView({behavior: 'smooth'});
+  }
 }
 
 onMounted(() => {

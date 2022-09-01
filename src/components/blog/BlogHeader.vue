@@ -1,7 +1,7 @@
 <template>
   <nav
     :x="1"
-    class="container topnav navbar navbar-expand-lg navbar-light fixed-top"
+    class="container topnav navbar navbar-expand-lg navbar-light sticky-top"
     :class="topBarExpand ? bgW : bgW50"
   >
     <div class="container">
@@ -10,7 +10,7 @@
           id="img-profile-photo"
           src="../../assets/figures/progile_photo.png"
           class="img-fluid img-responsive"
-          v-bind:alt="personName"
+          v-bind:alt="$globalParams.user_name"
         />
       </div>
       <nav class="pl-5" aria-label="breadcrumb">
@@ -29,11 +29,9 @@
 </template>
 
 <script setup>
-import uConfig from "../../config";
-import { computed, defineProps, ref } from "vue";
+import { computed, defineProps, ref, inject } from "vue";
 const probs = defineProps(["category", "blogName"]);
 
-var personName = uConfig.user_name;
 var topBarExpand = false;
 topBarExpand = ref(topBarExpand);
 
