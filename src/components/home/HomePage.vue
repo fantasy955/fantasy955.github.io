@@ -1,10 +1,13 @@
 <template>
   <div>
-    <HomeTop></HomeTop>
-    <WeatherHeader />
-    <HomeBlog :categoryInfoList="categoryFileList" >
+    <HomeTop>
+      <template #weather>
+        <WeatherHeader />
+      </template>
+    </HomeTop>
+    <HomeBlog :categoryInfoList="categoryFileList">
       <template #leftside>
-        <HomeLeftSide></HomeLeftSide>
+        <HomeBlogLeftSide></HomeBlogLeftSide>
       </template>
       <template #nav>
         <HomeBlogNav :menu="menu"></HomeBlogNav>
@@ -36,15 +39,14 @@ export default {
 import axios from "axios";
 import HomeTop from "./HomeTop.vue";
 import WeatherHeader from "../common/WeatherHeader.vue";
-import uConfig from "../../config";
 
 import { ref, defineProps } from "vue";
 import PageFooter from "../common/PageFooter.vue";
-import HomeBlog from "./HomeBlog.vue";
-import HomeLeftSide from "./HomeLeftSide.vue";
-import HomeBlogNav from "./HomeBlogNav.vue";
+import HomeBlog from "../blog/HomeBlog.vue";
+import HomeBlogLeftSide from "../blog/HomeBlogLeftSide.vue";
+import HomeBlogNav from "../blog/HomeBlogNav.vue";
 
-const menuJson = require("./menu.json");
+const menuJson = require("../blog/menu.json");
 let categoryFileList = [];
 categoryFileList = ref(categoryFileList);
 let menu = [];
@@ -53,35 +55,28 @@ menu = ref(menu);
 let filesPromises = Array(menuJson.categories.length);
 for (const i in menuJson.categories) {
   const item = menuJson.categories[i];
-  item['order'] = i;
+  item["order"] = i;
   menu.value.push(item);
   let filesPromise = axios.get(item.path + "/list.json").then((res) => {
     let data = res.data;
-    for(let key in item){
+    for (let key in item) {
       data[key] = item[key];
     }
-    data['more'] = false;
-    data['order'] = i;
+    data["more"] = false;
+    data["order"] = i;
     categoryFileList.value.push(data);
   });
   filesPromises.push(filesPromise);
 }
 
-Promise.all(filesPromises).then(res => {
+Promise.all(filesPromises).then((res) => {
   menu.value.sort((a, b) => {
     return a.order - b.order;
   });
   categoryFileList.value.sort((a, b) => {
     return a.order - b.order;
-  })
+  });
 });
-
-
-// const probs =  defineProps(['menu', 'categoryInfoList']);
-// const probs =  defineProps({
-//   menu: Array,
-//   categoryInfoList: Array
-// });
 
 var count = ref(0);
 </script>

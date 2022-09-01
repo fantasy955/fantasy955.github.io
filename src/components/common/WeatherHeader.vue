@@ -1,29 +1,24 @@
 <template>
-  <div class="container mt-1" id="header">
-		<div class="row justify-content-center">
-			<div class="col-2" id="cityINFO">
-				<h5 style="height: auto;">
-					<p class="text-center">{{cityName}}<br>Weather</p>
-				</h5>
-			</div>
-			<div class="col-2 mb-0">
-				<img src="../../assets/qweather-icons/icons/100.svg" fill="#1C242C" alt="QWeather" width="32" height="32">
-			</div>
-		</div>
-	</div>
+  <div
+    class="container mt-1 navbar-collapse collapse justify-content-center gap-sm-1"
+    id="header"
+  >
+    <div class="d-flex flex-sm-column align-items-center">
+      <h5 class="m-0">{{ $globalParams.cityName }}</h5>
+      <h5 class="m-0">Weather</h5>
+    </div>
+    <img
+      src="../../assets/qweather-icons/icons/100.svg"
+      fill="#1C242C"
+      alt="QWeather"
+      width="32"
+      height="32"
+    />
+  </div>
 </template>
 
-<script>
-import uConfig from "../../config";
-export default {
-    data() {
-        return {
-            cityName: uConfig.cityName
-        }
-    },
-}
+<script setup>
 </script>
 
 <style>
-
 </style>

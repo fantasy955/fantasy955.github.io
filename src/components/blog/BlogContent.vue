@@ -43,9 +43,9 @@
 <script setup>
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
-import uConfig from "../../config";
 import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
 
+const globalParams = inject('globalParams');
 const editor = editormd();
 
 const probs = defineProps({
@@ -55,7 +55,7 @@ const probs = defineProps({
   },
 });
 
-const smallSceenSize = uConfig.smallScreenSize;
+const smallSceenSize = globalParams.smallScreenSize;
 const first = ref("order-0");
 const second = ref("order-2");
 
@@ -63,8 +63,6 @@ var getBlogContent = axios.get(probs.blogPath);
 
 var screenWidth = document.body.clientWidth;
 screenWidth = ref(screenWidth);
-
-
 
 onMounted(() => {
   getBlogContent.then((res) => {
@@ -80,6 +78,7 @@ onMounted(() => {
       );
 
       el.innerHTML = "";
+      mdcontent = mdcontent.trim().length > 0 ? mdcontent : '**等待填坑**';
       let md2html = new Promise(function (resolve, reject) {
         editor.markdownToHTML("article-body", {
           markdown: mdcontent,

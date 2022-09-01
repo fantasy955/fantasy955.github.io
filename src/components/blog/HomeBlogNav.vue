@@ -73,8 +73,8 @@ function toTop() {
 }
 
 .navbar-blog {
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
   background: rgba(255, 255, 255, 0.95);
 }
 

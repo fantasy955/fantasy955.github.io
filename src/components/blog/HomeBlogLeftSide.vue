@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-1 pl-3 pr-3">
-    <div class="sticky-top text-center" title="Visit my github">
-      <a v-bind:href="github" title="visit my github">
+    <div class="text-center github" title="Visit my github">
+      <a v-bind:href="$globalParams.github" title="visit my github">
         <svg
           stroke="currentColor"
           fill="currentColor"
@@ -21,15 +21,24 @@
 </template>
 
 <script>
-import uConfig from '../../config';
-export default {
-    data() {
-        return {
-            github: uConfig.github
-            }
-    }
-};
 </script>
 
-<style>
+<style scoped>
+a {
+  color: rgb(61, 58, 58);
+}
+
+.github {
+    position: sticky;
+    top: 0;
+    left: 10px;
+  }
+
+@media (min-width: 768px) {
+  .github {
+    position: fixed;
+    top: 100px;
+    left: 10px;
+  }
+}
 </style>
