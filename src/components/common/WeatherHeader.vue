@@ -18,6 +18,16 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from 'vue';
+
+onMounted(() => {
+  console.log('天气挂载了');
+});
+
+onUnmounted(() => {
+  console.log('天气销毁了');
+});
+
 </script>
 
 <style>

@@ -37,13 +37,9 @@ const router = createRouter({
   routes,
 })
 
-const avc = defineComponent({});
-console.log(avc);
-console.log(typeof (avc));
 
 const app = createApp(App);
 app.use(router);
 app.use(uConifg);
-console.log(app);
 // app.use(MathJax);
 app.mount('#app');

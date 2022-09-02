@@ -119,6 +119,7 @@ onMounted(() => {
   window.onresize = () =>
     (() => {
       screenWidth.value = document.body.clientWidth;
+      console.log(screenWidth.value);
     })();
 });
 </script>

@@ -3,7 +3,7 @@ const user_name = 'Fantasy955';
 const real_name = 'WeiJL';
 const github = 'https://github.com/fantasy995';
 const cityName = "长沙";
-const smallScreenSize = 785;
+const smallScreenSize = 1200;
 const globalParams = {
     max_file_items,
     user_name,
