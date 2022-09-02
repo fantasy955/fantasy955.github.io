@@ -9,6 +9,7 @@
           <a
             v-for="category in categories"
             :key="category"
+            @click="toCategoryHome(category)"
             class="m-1 pointer fw-bold"
             role="button"
             >{{ category }}</a
@@ -33,10 +34,11 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="nav-category collapse" id="homecategory">
+        <div class="nav-category collapse" id="homecategory" style="flex-basis: 100%;">
           <a
             v-for="category in categories"
             :key="category"
+            @click="toCategoryHome(category)"
             class="m-1 pointer fw-bold"
             role="button"
             >{{ category }}</a
@@ -62,7 +64,18 @@ export default {
 
 <script setup>
 import menu from "./menu";
+import { useRoute, useRouter } from "vue-router";
+
+const rounte = useRoute();
+const rounter = useRouter();
 const categories = menu.categories;
+
+function toCategoryHome(category){
+  category = category.toLowerCase();
+  console.log(`/${category}`);
+  rounter.push(`/${category.toLowerCase()}`);
+}
+
 </script>
 
 <style scoped>

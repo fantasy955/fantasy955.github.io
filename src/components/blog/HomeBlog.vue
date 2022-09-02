@@ -1,9 +1,9 @@
 <template>
   <div class="row justify-content-start">
     <!-- <HomeLeftSide></HomeLeftSide> -->
-    <slot name="leftside"></slot>
+    <HomeBlogLeftSide></HomeBlogLeftSide>
     <div class="col-md-10" role="main">
-      <slot name="nav"></slot>  
+      <HomeBlogNav :menu="menu"></HomeBlogNav>
       <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->
       <HomeBlogCategory
         v-for="categoryInfo in categoryInfoList"
@@ -16,19 +16,46 @@
 </template>
   
   <script setup>
+import axios from "axios";
 import HomeBlogCategory from "./HomeBlogCategory.vue";
-import { computed, defineProps, inject } from "vue";
+import HomeBlogLeftSide from "./HomeBlogLeftSide.vue";
+import HomeBlogNav from "./HomeBlogNav.vue";
+import { computed, defineProps, inject, ref } from "vue";
+import { useRouter } from "vue-router";
 
-const probs = defineProps({
-  categoryInfoList: {
-    type: Array,
-    required: true,
-  },
+const menuJson = require("../blog/menu.json");
+const categoryInfoList = ref([]);
+const menu = ref([]);
+
+const router = useRouter();
+
+let filesPromises = Array(menuJson.categories.length);
+for (const i in menuJson.categories) {
+  const item = menuJson.categories[i];
+  item["order"] = i;
+  menu.value.push(item);
+  let filesPromise = axios.get(item.path + "/list.json").then((res) => {
+    let data = res.data;
+    for (let key in item) {
+      data[key] = item[key];
+    }
+    data["more"] = false;
+    data["order"] = i;
+    categoryInfoList.value.push(data);
+  });
+  filesPromises.push(filesPromise);
+}
+
+Promise.all(filesPromises).then((res) => {
+  menu.value.sort((a, b) => {
+    return a.order - b.order;
+  });
+  categoryInfoList.value.sort((a, b) => {
+    return a.order - b.order;
+  });
 });
-
 </script>
   
   
 <style>
-
 </style>
