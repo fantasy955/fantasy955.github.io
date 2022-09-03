@@ -27,7 +27,7 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { computed, defineProps, onMounted, onUnmounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import BlogContentVue from "./BlogContent.vue";
 import PageFooter from "../common/PageFooter.vue";
 import PageHeader from "../common/PageHeader.vue";
@@ -44,6 +44,12 @@ const showName = computed(() => {
 
 onUnmounted(() => {
   console.log('博客页面卸载了');
+});
+
+onBeforeRouteUpdate ((to, from, next) => {
+  document.title = to.params.blogName.split('.md')[0];
+  console.log(to, from)
+  next();
 })
 </script>
 

@@ -75,7 +75,7 @@ export default {
 import WeatherHeader from "../common/WeatherHeader.vue";
 import { useRoute, useRouter } from "vue-router";
 import menu from "./menu";
-import { ref, defineProps, onUnmounted } from "vue";
+import { ref, defineProps, onUnmounted, onActivated, onDeactivated } from "vue";
 import PageFooter from "../common/PageFooter.vue";
 import PageHeader from "../common/PageHeader.vue";
 
@@ -91,6 +91,14 @@ function toCategoryHome(category) {
 
 onUnmounted(() => {
   console.log('首页卸载了');
+})
+ 
+onActivated(() => {
+  console.log('首页激活了');
+})
+
+onDeactivated(() => {
+  console.log('首页失活了');
 })
 </script>
 

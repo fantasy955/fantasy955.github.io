@@ -144,3 +144,40 @@ function viewBlog(file) {
 ![image-20220903154348770](assets/image-20220903154348770.png)
 
 **要用对应的方法获取参数。**
+
+
+
+# keep-alive用到的声明周期钩子
+
+- **onActivated**,
+- **onDeactivated**
+
+
+
+# 路由守卫
+
+保卫路由的安全（权限控制）
+
+满足某种条件才能触发路由。
+
+## 全局前置守卫
+
+```
+const router = createRouter({ ... })
+
+router.beforeEach((to, from) => {
+  // ...
+  // 返回 false 以取消导航
+  return false
+})
+```
+
+当一个导航触发时，全局前置守卫按照创建顺序调用。守卫是异步解析执行，此时导航在**所有守卫** resolve 完之前一直处于**等待中**。
+
+## 控制是否进行守卫
+
+```
+// 在meta中添加自定义数据
+meta: { requiresAuth: true }
+```
+
