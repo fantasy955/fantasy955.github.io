@@ -124,18 +124,16 @@ onMounted(() => {
               let targetBlogName = href.split('./')[1];
               let targetPath = route.params.path;
               targetPath = targetPath.substring(0, targetPath.lastIndexOf('/')+1) + targetBlogName;
-              console.log(targetBlogName, targetPath);
               let targetParams = route.params;
               targetParams.path = targetPath;
               targetParams.blogName = targetBlogName;
-              console.log(targetParams);
-              router.push({
+              let targetRouter =  router.resolve({
                 query: {
                   blogName: targetBlogName,
                   path: targetPath,
                 },
               });
-              router.go();
+              window.open(targetRouter.href);
             })
           }
         }

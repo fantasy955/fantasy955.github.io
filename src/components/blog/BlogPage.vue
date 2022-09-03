@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref } from "@vue/reactivity";
-import { computed } from "vue";
+import { computed, defineProps, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import BlogContentVue from "./BlogContent.vue";
 import PageFooter from "../common/PageFooter.vue";
@@ -35,15 +35,16 @@ import PageHeader from "../common/PageHeader.vue";
 var route = useRoute();
 var router = useRouter();
 
-const params = route.params;
-var categorySname = params.categorySname;
-var blogName = params.blogName;
-var path = params.path;
+const probs = defineProps(['categorySname', 'blogName', 'path']);
 
 const showName = computed(() => {
-  let res = blogName.split(".");
+  let res = probs.blogName.split(".");
   return res[res.length - 2];
 });
+
+onUnmounted(() => {
+  console.log('博客页面卸载了');
+})
 </script>
 
 <style scoped>

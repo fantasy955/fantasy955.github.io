@@ -21,13 +21,13 @@
 <script setup>
 import {onMounted, onUnmounted} from 'vue';
 
-onMounted(() =>{
-  console.log('PageHeader 挂载了');
-});
+// onMounted(() =>{
+//   console.log('PageHeader 挂载了');
+// });
 
-onUnmounted(()=>{
-  console.log('PageHeader 卸载了');
-});
+// onUnmounted(()=>{
+//   console.log('PageHeader 卸载了');
+// });
 </script>
   
   

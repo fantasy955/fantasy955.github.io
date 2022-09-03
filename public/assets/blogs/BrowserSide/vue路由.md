@@ -30,11 +30,45 @@ const routes = [
 
 ## 接收声明
 
+- 使用布尔类型probs
+
 ```
 {
     path: '/blog/:categorySname/:blogName/:path',
     name: 'blog', component: BlogPage, props: true
   }
+```
+
+```
+//1 
+const params = route.params;
+//2
+const probs = defineProps(['categorySname', 'blogName', 'path']);
+```
+
+- 使用字典probs，不会出现在路径中
+
+```
+{
+    path: '/blog/:categorySname/:blogName/:path',
+    name: 'blog', component: BlogPage, props: {a: '123', b: '456'}
+  }
+```
+
+route.params只能得到probs字典内的参数。
+
+![image-20220903151549315](assets/image-20220903151549315.png)
+
+- 函数
+
+```
+const routes = [
+  {
+    path: '/search',
+    component: SearchUser,
+    props: route => ({ query: route.query.q })
+  }
+]
 ```
 
 ## 跳转
@@ -90,4 +124,23 @@ url由路由实现（不需要自己写路径）
 router.push({ path: '/register', query: { plan: 'private' } })
 ```
 
-需要自己写路径
+需要自己写路径。
+
+![image-20220903154308878](assets/image-20220903154308878.png)
+
+```javascript
+function viewBlog(file) {
+  router.push({
+    name: "blog",
+    params: {
+      path: file.relapath,
+      categorySname: probs.categoryInfo.sname,
+      blogName: file.name,
+    },
+  });
+}
+```
+
+![image-20220903154348770](assets/image-20220903154348770.png)
+
+**要用对应的方法获取参数。**

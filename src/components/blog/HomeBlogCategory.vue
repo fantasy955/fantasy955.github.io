@@ -14,7 +14,7 @@
     ref="main"
   >
     <div class="category-header">
-      <h5 class="mt-1 btn btn-dark font-weight-bold">
+      <h5 class="m-1 btn btn-dark font-weight-bold">
         <span style="padding-bottom: 5px">{{ categoryInfo.aname }}</span>
       </h5>
       <input
