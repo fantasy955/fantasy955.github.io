@@ -56,3 +56,12 @@ md2html.then(() => {
 
 `.reference-link`和`.markdown-toc-list`分别是`editormd.js`生成的内容元素和标题元素的类，获取到这两个容器，然后进行事件绑定。
 
+
+
+# 后端解决跳转问题
+
+自己分辨是后端路由还是前端路由。
+
+`nginx`
+
+`connect-history-api-fallback`
