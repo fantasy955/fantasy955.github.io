@@ -44,7 +44,10 @@
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
 import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
+const route = useRoute();
+const router = useRouter();
 const globalParams = inject('globalParams');
 const editor = editormd();
 
@@ -91,6 +94,7 @@ onMounted(() => {
       md2html.then(() => {
         const titleElments = document.querySelectorAll(".reference-link");
         // https://www.qy.cn/jszx/detail/6411.html
+        // 监听元素是否可见
         const observer = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting){
@@ -109,6 +113,31 @@ onMounted(() => {
             });
           });
           observer.observe(titleElments[i]);
+        }
+        let aElements = el.querySelectorAll('a');
+        for(let aEl of aElements){
+          let href = aEl.getAttribute('href');
+          // href.length-1 对应最后一个
+          if (href !== null && href.search(/.md/) == href.length-3){
+            aEl.addEventListener('click', (event) => {
+              event.preventDefault();
+              let targetBlogName = href.split('./')[1];
+              let targetPath = route.params.path;
+              targetPath = targetPath.substring(0, targetPath.lastIndexOf('/')+1) + targetBlogName;
+              console.log(targetBlogName, targetPath);
+              let targetParams = route.params;
+              targetParams.path = targetPath;
+              targetParams.blogName = targetBlogName;
+              console.log(targetParams);
+              router.push({
+                query: {
+                  blogName: targetBlogName,
+                  path: targetPath,
+                },
+              });
+              router.go();
+            })
+          }
         }
       });
     }

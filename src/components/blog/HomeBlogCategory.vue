@@ -69,26 +69,32 @@
         收起
       </button>
     </div>
-    <div class="category-footer pl-3 pb-2" v-if="!layaside && totalPage>1">
+    <div class="category-footer pl-3 pb-2" v-if="!layaside && totalPage > 1">
       <p class="text-muted card-text small" style="padding: 0; margin: 0">
         总共 {{ totalPage }} 页, 当前第 {{ pageIndex }} 页
       </p>
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
       <button
         type="button"
-        v-on:click="
-          (event) => prePage(event)  "
+        v-on:click="(event) => prePage(event)"
         class="btn btn-sm mr-1"
-        :class="[pageIndex <= 1 ? 'button-disabled btn-outline-danger' : 'btn-outline-secondary']"
+        :class="[
+          pageIndex <= 1
+            ? 'button-disabled btn-outline-danger'
+            : 'btn-outline-secondary',
+        ]"
       >
         上一页
       </button>
       <button
         type="button"
-        v-on:click="
-          (event) => nextPage(event)"
+        v-on:click="(event) => nextPage(event)"
         class="btn btn-sm"
-        :class="[pageIndex >= totalPage ? 'button-disabled btn-outline-danger' : 'btn-outline-secondary']"
+        :class="[
+          pageIndex >= totalPage
+            ? 'button-disabled btn-outline-danger'
+            : 'btn-outline-secondary',
+        ]"
       >
         下一页
       </button>
@@ -100,7 +106,7 @@
 import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const globalParams = inject('globalParams');
+const globalParams = inject("globalParams");
 const route = useRoute();
 const router = useRouter();
 
@@ -186,16 +192,23 @@ function viewBlog(file) {
   });
 }
 
-function prePage(event){
-  pageIndex.value--
+function prePage(event) {
+  pageIndex.value--;
   baseIndex.value = (pageIndex.value - 1) * max_file_items.value;
+  // if (pageIndex.value == 1) {
+  //   document
+  //     .getElementById(main.value.id)
+  //     .scrollIntoView({ behavior: "smooth" });
+  // }
 }
 
-function nextPage(event){
+function nextPage(event) {
   pageIndex.value++;
   baseIndex.value = (pageIndex.value - 1) * max_file_items.value;
-  if (pageIndex.value == totalPage.value){
-    document.getElementById(main.value.id).scrollIntoView({behavior: 'smooth'});
+  if (pageIndex.value == totalPage.value) {
+    document
+      .getElementById(main.value.id)
+      .scrollIntoView({ behavior: "smooth" });
   }
 }
 
@@ -289,5 +302,4 @@ a.text-dark:focus {
   margin-bottom: 4px;
   border: 1px #263330;
 }
-
 </style>

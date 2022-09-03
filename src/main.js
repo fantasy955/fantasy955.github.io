@@ -17,6 +17,7 @@ const routes = [
     component: HomePage,
     children: [{
       path: '',
+      redirect: '/blog',
       component: HomeBlog,
     }, {
       path: 'demo',

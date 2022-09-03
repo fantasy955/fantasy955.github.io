@@ -5,11 +5,11 @@
         <div class="nav-category navbar-collapse collapse mr-auto">
           <a
             v-for="category in categories"
-            :key="category"
-            @click="toCategoryHome(category)"
+            :key="category.path"
+            @click="toCategoryHome(category.path)"
             class="m-1 pointer fw-bold"
             role="button"
-            >{{ category }}</a
+            >{{ category.name }}</a
           >
         </div>
         <WeatherHeader />
@@ -34,11 +34,11 @@
         >
           <a
             v-for="category in categories"
-            :key="category"
-            @click="toCategoryHome(category)"
+            :key="category.path"
+            @click="toCategoryHome(category.path)"
             class="m-1 pointer fw-bold"
             role="button"
-            >{{ category }}</a
+            >{{ category.name }}</a
           >
         </div>
       </template>
@@ -102,5 +102,6 @@ function toCategoryHome(category) {
   color: aliceblue;
   padding-left: 12px;
   padding-right: 12px;
+  width: max-content;
 }
 </style>
