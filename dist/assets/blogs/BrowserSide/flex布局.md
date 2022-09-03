@@ -4,18 +4,34 @@
 
 ## justify-content
 
+**横向中**，cell在父组件中如何布局。
+
 - space-between, space-around
 
 ![image-20220829103521600](assets/image-20220829103521600.png)
 
+## align-content
+
+**纵向中**，cell在父组件中如何布局。
+
+
+
+## justify-items
+
+横向中，cell中的内容与cell总空间的关系。
+
 ## align-items
+
+纵向中，cell中的内容与cell总空间的关系。
 
 - center
 - strech 会把div高度拉伸
 
+## 总结
 
+`justify`横向，`align`纵向；`content`控制cell，`item`控制item在cell中的排列方式。
 
-
+对子元素使用`justifySelf`和`alignSelf`相当于只对该子元素生效的`justify-item`和`align-item`。
 
 
 
