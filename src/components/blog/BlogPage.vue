@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref } from "@vue/reactivity";
-import { computed, defineProps, onMounted, onUnmounted } from "vue";
+import { computed, defineProps, onDeactivated, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import BlogContentVue from "./BlogContent.vue";
 import PageFooter from "../common/PageFooter.vue";

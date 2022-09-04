@@ -11,3 +11,9 @@ app.use(router);
 app.use(uConifg);
 // app.use(MathJax);
 app.mount('#app');
+
+// vue 2
+// const vm = new Vue({
+//     render: h => h(App)
+// });
+// vm.mount('#app');

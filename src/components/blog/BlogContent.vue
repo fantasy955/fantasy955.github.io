@@ -36,19 +36,27 @@
       ></div>
     </div>
     <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
-
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
-import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
+import {
+  defineProps,
+  onMounted,
+  inject,
+  computed,
+  ref,
+  watch,
+  onDeactivated,
+  nextTick,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const globalParams = inject('globalParams');
+const globalParams = inject("globalParams");
 const editor = editormd();
 
 const probs = defineProps({
@@ -81,7 +89,8 @@ onMounted(() => {
       );
 
       el.innerHTML = "";
-      mdcontent = mdcontent.trim().length > 0 ? mdcontent : '**等待填坑**';
+      mdcontent = mdcontent.trim().length > 0 ? mdcontent : "**等待填坑**";
+
       let md2html = new Promise(function (resolve, reject) {
         editor.markdownToHTML("article-body", {
           markdown: mdcontent,
@@ -97,7 +106,7 @@ onMounted(() => {
         // 监听元素是否可见
         const observer = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting){
+            if (entry.isIntersecting) {
               console.log(entry.target);
             }
           });
@@ -114,27 +123,29 @@ onMounted(() => {
           });
           observer.observe(titleElments[i]);
         }
-        let aElements = el.querySelectorAll('a');
-        for(let aEl of aElements){
-          let href = aEl.getAttribute('href');
+        let aElements = el.querySelectorAll("a");
+        for (let aEl of aElements) {
+          let href = aEl.getAttribute("href");
           // href.length-1 对应最后一个
-          if (href !== null && href.search(/.md/) == href.length-3){
-            aEl.addEventListener('click', (event) => {
+          if (href !== null && href.search(/.md/) == href.length - 3) {
+            aEl.addEventListener("click", (event) => {
               event.preventDefault();
-              let targetBlogName = href.split('./')[1];
+              let targetBlogName = href.split("./")[1];
               let targetPath = route.params.path;
-              targetPath = targetPath.substring(0, targetPath.lastIndexOf('/')+1) + targetBlogName;
+              targetPath =
+                targetPath.substring(0, targetPath.lastIndexOf("/") + 1) +
+                targetBlogName;
               let targetParams = route.params;
               targetParams.path = targetPath;
               targetParams.blogName = targetBlogName;
-              let targetRouter =  router.resolve({
+              let targetRouter = router.resolve({
                 query: {
                   blogName: targetBlogName,
                   path: targetPath,
                 },
               });
               window.open(targetRouter.href);
-            })
+            });
           }
         }
       });
@@ -148,6 +159,10 @@ onMounted(() => {
       screenWidth.value = document.body.clientWidth;
       console.log(screenWidth.value);
     })();
+});
+
+onDeactivated(() => {
+  document.querySelector('#article-body').innerHTML = "加载中";
 });
 </script>
 

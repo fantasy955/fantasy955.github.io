@@ -18,8 +18,8 @@
         <button
           class="navbar-toggler collapsed"
           type="button"
-          data-toggle="collapse"
-          data-target="#homecategory"
+          data-bs-toggle="collapse"
+          data-bs-target="#homecategory"
           aria-controls="homecategory"
           aria-expanded="false"
           aria-label="Toggle navigation"

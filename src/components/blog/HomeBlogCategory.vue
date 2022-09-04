@@ -166,11 +166,11 @@ const currentPageFiles = computed(() => {
   }
 });
 
+
 function showAll() {
   baseIndex.value = 0;
   max_file_items.value = Infinity;
   layaside.value = true;
-  pageIndex.value = 1;
 }
 
 function layAside(event) {
@@ -195,11 +195,6 @@ function viewBlog(file) {
 function prePage(event) {
   pageIndex.value--;
   baseIndex.value = (pageIndex.value - 1) * max_file_items.value;
-  // if (pageIndex.value == 1) {
-  //   document
-  //     .getElementById(main.value.id)
-  //     .scrollIntoView({ behavior: "smooth" });
-  // }
 }
 
 function nextPage(event) {

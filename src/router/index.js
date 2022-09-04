@@ -3,7 +3,7 @@ import BlogPage from '../components/blog/BlogPage.vue';
 import HomeBlog from '../components/blog/HomeBlog';
 import NotFound from '../components/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
-import DemoContent from '../components/demo/DemoContent.vue';
+import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
 
 const routes = [
     {
@@ -15,7 +15,7 @@ const routes = [
             component: HomeBlog,
         }, {
             path: 'demo',
-            component: DemoContent
+            component: HomeDemoPage
         }, {
             path: 'blog',
             component: HomeBlog
@@ -25,6 +25,9 @@ const routes = [
         // meta: {title: '博客', withTitle: true},
         // 只有独享前置路由守卫
         name: 'blog', component: BlogPage, props: true
+    }, {
+        path: '/demo', 
+        component: HomeDemoPage,
     }
 ]
 

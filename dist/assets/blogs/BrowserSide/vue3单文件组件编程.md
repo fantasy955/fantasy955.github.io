@@ -1,5 +1,3 @@
-测试行内公式$a==3$
-
 # 传值
 
 [Props | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/components/props.html#one-way-data-flow)
@@ -73,3 +71,8 @@ const props = defineProps(['size'])
 const normalizedSize = computed(() => props.size.trim().toLowerCase())
 ```
 
+
+
+# RefImpl引用对象
+
+基于Object.defineProperty();
