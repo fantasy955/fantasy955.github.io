@@ -28,6 +28,9 @@ const routes = [
     }, {
         path: '/demo', 
         component: HomeDemoPage,
+        children: [{
+            path: 'css',
+        }]
     }
 ]
 

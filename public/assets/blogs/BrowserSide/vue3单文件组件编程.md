@@ -73,6 +73,17 @@ const normalizedSize = computed(() => props.size.trim().toLowerCase())
 
 
 
-# RefImpl引用对象
+# 响应式
+
+## ref函数
 
 基于Object.defineProperty();
+
+![image-20220904195019703](assets/image-20220904195019703.png)
+
+基本数据类型 -> RefImpl **(ref，defineProperty)**
+
+**对象类型 -> Proxy (reacive，Proxy)**
+
+
+## reactive函数
