@@ -50,6 +50,8 @@ import {
   ref,
   watch,
   onDeactivated,
+  onUnmounted,
+  onBeforeUnmount,
   nextTick,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -161,8 +163,9 @@ onMounted(() => {
     })();
 });
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   document.querySelector('#article-body').innerHTML = "加载中";
+  console.log("博客详细页面将要卸载");
 });
 </script>
 

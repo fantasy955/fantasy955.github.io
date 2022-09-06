@@ -42,10 +42,6 @@ const showName = computed(() => {
   return res[res.length - 2];
 });
 
-onUnmounted(() => {
-  console.log('博客页面卸载了');
-});
-
 onBeforeRouteUpdate ((to, from, next) => {
   document.title = to.params.blogName.split('.md')[0];
   console.log(to, from)

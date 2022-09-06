@@ -180,3 +180,91 @@ router.beforeEach((to, from) => {
 // 在meta中添加自定义数据
 meta: { requiresAuth: true }
 ```
+
+# 使用router-link的坑
+
+**声明一个三层路由**
+
+```javascript
+const routes = [
+    {
+        path: '/',
+        component: HomePage,
+        children: [{
+            path: '',
+            redirect: '/blog',
+            component: HomeBlog,
+        }, {
+            path: 'demo',
+            component: HomeDemoPage,
+            children: [{
+                name: 'demodetail',
+                path: 'details/:category/:name',
+                component: DemoContent,
+                props: true
+            }]
+        }]
+    }
+]
+```
+
+这种方式匹配的地址是#/demo/demodetail/{category}/{name}
+
+**目标路由地址：**/demo/demodetail
+
+**声明跳转：**
+
+- name+params
+
+```
+:to="{name: 'demodetail', params: {category: category.path, name: item.path}}"
+
+```
+
+生成地址：http://localhost:8080/#/demo/details/cssanimation/test1
+
+参数通过params获取
+
+- path+query
+
+```
+:to="{path: '/demo/demodetail', query: {category: category.path, name: item.path}}"
+```
+
+生成地址：http://localhost:8080/#/demodetail?category=cssanimation&name=test1
+
+**name+params**生成了不符合经典带参数跳转的链接（但符合vue的params标准）；**path+query**生成了经典的跳转链接，但不符合定义路由参数生成的匹配路由格式。
+
+**path+query**响应的声明是：
+
+```
+const routes = [
+    {
+        path: '/',
+        component: HomePage,
+        children: [{
+            path: '',
+            redirect: '/blog',
+            component: HomeBlog,
+        }, {
+            path: 'demo',
+            component: HomeDemoPage,
+            children: [{
+                name: 'demodetail',
+                path: 'details',
+                component: DemoContent,
+                props: true，
+                query: route => route.query
+            }]
+        }]
+    }
+]
+```
+
+接收到了
+
+```
+console.log(route.query);
+```
+
+![image-20220906105620118](assets/image-20220906105620118.png)

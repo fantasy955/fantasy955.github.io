@@ -12,21 +12,21 @@
             <button
               class="btn d-inline-flex align-items-center rounded collapsed"
               data-bs-toggle="collapse"
-              data-bs-target="#getting-started-collapse"
+              :data-bs-target="`#${category.name}-collapse`"
               aria-expanded="false"
               aria-current="true"
             >
               {{ category.name }}
             </button>
 
-            <div class="collapse" id="getting-started-collapse" style="">
+            <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
                 <li v-for="item in category.children" :key="item.name">
-                  <a
-                    :href="item.path"
+                  <router-link
+                    :to="{path: '/demo/details', query: {category: category.path, name: item.path}}"
                     class="d-inline-flex align-items-center rounded"
                     aria-current="page"
-                    >{{ item.name }}</a
+                    >{{ item.name }}</router-link
                   >
                 </li>
               </ul>
@@ -36,7 +36,7 @@
       </nav>
     </aside>
     <main class="bd-main order-1">
-      <span>Hello world</span>
+      <router-view></router-view>
     </main>
   </div>
 </template>

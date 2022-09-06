@@ -1,13 +1,18 @@
 export default {
     categories: [
         {
-            name: "CSS",
+            name: "CSS动画",
+            path: 'cssanimation',
             children: [{
-                name: 'CSS动画',
-                path: 'cssanimation'
-            }, {
-                name: 'CSS布局',
-                path: 'csslayout'
+                name: 'test1',
+                path: 'test1'
+            }]
+        },{
+            name: "CSS布局",
+            path: 'csslayout',
+            children: [{
+                name: 'test2',
+                path: 'test2'
             }]
         }
     ]
