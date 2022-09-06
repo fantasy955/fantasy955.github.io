@@ -58,7 +58,9 @@ const categories = ref(menu.categories);
 categories.value.forEach((category) => {
   const childrenJson = require(`./${category.path}/list.json`);
   childrenJson.demos.map((demo) => {
-    demo.name = demo.path.split(".")[0];
+    if (demo.name.trim() == ""){
+      demo.name = demo.path.split(".")[0];
+    }
   });
   category.children = childrenJson.demos;
 });
