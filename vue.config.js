@@ -1,3 +1,4 @@
+// 供node.js读取，使用CommonJS规范
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -10,6 +11,6 @@ module.exports = defineConfig({
         pathRewrite: { '^/github': '' }
       }
     }
-  }
+  },
 })
 

@@ -21,12 +21,15 @@
 
             <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
-                <li v-for="item in category.children" :key="item.name">
-                  <router-link
-                    :to="{path: '/demo/details', query: {category: category.path, name: item.path}}"
+                <li v-for="item in category.children" :key="item.path">
+                  <a
+                    :href="`/demo/details/${category.path}/${category.path}`"
+                    @click="
+                      (event) => viewDemoDetail(event, category.path, item.path)
+                    "
                     class="d-inline-flex align-items-center rounded"
                     aria-current="page"
-                    >{{ item.name }}</router-link
+                    >{{ item.name }}</a
                   >
                 </li>
               </ul>
@@ -36,14 +39,42 @@
       </nav>
     </aside>
     <main class="bd-main order-1">
-      <router-view></router-view>
+      <component :is="demoContent" />
     </main>
   </div>
 </template>
 
 <script setup>
 import menu from "./menu";
-const categories = menu.categories;
+import { onMounted, ref, shallowRef, defineAsyncComponent } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import DefaultDemoContent from './DefaultDemoContent.vue';
+// fs是服务端模块，无法使用
+// import { readFile } from 'fs';
+
+const route = useRoute();
+const categories = ref(menu.categories);
+categories.value.forEach((category) => {
+  axios.get(`./assets/components/${category.path}/list.json`).then((res) => {
+    const childrenJson = res.data;
+    childrenJson.demos.map((demo) => {
+      demo.name = demo.path.split(".")[0];
+    });
+    category.children = childrenJson.demos;
+  });
+});
+
+const demoContent = shallowRef(DefaultDemoContent); 
+function viewDemoDetail(event, category, name) {
+  event.preventDefault();
+  demoContent.value = defineAsyncComponent(() =>
+    import(`../${category}/${name}`)
+  );
+  // axios.get(`./assets/components/${category}/${name}`).then((res) => {
+  //   console.log(res.data);
+  // });
+}
 </script>
 
 <style scoped>

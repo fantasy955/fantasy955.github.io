@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunkcli_test"]=self["webpackChunkcli_test"]||[]).push([[372],{372:function(e){e.exports=JSON.parse('{"demos":[{"path":"TestDemo1.vue"},{"path":"TestDemo2.vue"}]}')}}]);

@@ -4,7 +4,7 @@ import HomeBlog from '../components/blog/HomeBlog';
 import NotFound from '../components/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
 import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
-import DemoContent from '../components/demo/DemoContent.vue';
+import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
 
 const routes = [
     {
@@ -17,12 +17,12 @@ const routes = [
         }, {
             path: 'demo',
             component: HomeDemoPage,
-            children: [{
-                name: 'demodetail',
-                path: 'details',
-                component: DemoContent,
-                props: true
-            }]
+            // children: [{
+            //     name: 'demodetail',
+            //     path: 'details',
+            //     component: DemoContent,
+            //     props: true
+            // }]
         }, {
             path: 'blog',
             component: HomeBlog
