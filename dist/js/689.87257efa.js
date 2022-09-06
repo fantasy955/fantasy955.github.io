@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkcli_test"]=self["webpackChunkcli_test"]||[]).push([[689],{5689:function(t,e,n){n.r(e),n.d(e,{default:function(){return f}});var r=n(3396);function s(t,e){return(0,r.wg)(),(0,r.iD)("span",null,"test demo2")}var u=n(89);const a={},c=(0,u.Z)(a,[["render",s],["__scopeId","data-v-5af789b5"]]);var f=c}}]);
+//# sourceMappingURL=689.87257efa.js.map

@@ -10,14 +10,6 @@ import axios from "axios";
 const probs = defineProps(["category", "name"]);
 console.log(probs);
 
-const AsyncComp = defineAsyncComponent(() => {
-  return new Promise((resolve, reject) => {
-    axios.get(`./assets/components/${probs.category}/${probs.name}`).then(res => {
-      console.log(res.data);
-    });
-    resolve(/* 获取到的组件 */);
-  });
-});
 </script>
 
 <style scoped>

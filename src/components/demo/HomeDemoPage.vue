@@ -49,31 +49,27 @@ import menu from "./menu";
 import { onMounted, ref, shallowRef, defineAsyncComponent } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
-import DefaultDemoContent from './DefaultDemoContent.vue';
+import DefaultDemoContent from "./DefaultDemoContent.vue";
 // fs是服务端模块，无法使用
 // import { readFile } from 'fs';
 
 const route = useRoute();
 const categories = ref(menu.categories);
 categories.value.forEach((category) => {
-  axios.get(`./assets/components/${category.path}/list.json`).then((res) => {
-    const childrenJson = res.data;
-    childrenJson.demos.map((demo) => {
-      demo.name = demo.path.split(".")[0];
-    });
-    category.children = childrenJson.demos;
+  const childrenJson = require(`./${category.path}/list.json`);
+  childrenJson.demos.map((demo) => {
+    demo.name = demo.path.split(".")[0];
   });
+  category.children = childrenJson.demos;
 });
 
-const demoContent = shallowRef(DefaultDemoContent); 
+const demoContent = shallowRef(DefaultDemoContent);
 function viewDemoDetail(event, category, name) {
   event.preventDefault();
   demoContent.value = defineAsyncComponent(() =>
-    import(`../${category}/${name}`)
+    // 这是如何实现的
+    import(`./${category}/${name}`)
   );
-  // axios.get(`./assets/components/${category}/${name}`).then((res) => {
-  //   console.log(res.data);
-  // });
 }
 </script>
 
@@ -156,11 +152,11 @@ li::marker {
 }
 
 aside {
-  background-color: brown;
+  /* background-color: brown; */
 }
 
 main {
-  background-color: blanchedalmond;
+  /* background-color: blanchedalmond; */
   height: 3000px;
 }
 </style>
