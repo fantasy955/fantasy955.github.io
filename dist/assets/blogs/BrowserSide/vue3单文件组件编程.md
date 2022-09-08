@@ -207,3 +207,16 @@ const demoContent = shallowRef(DefaultDemoContent);
          ......
      }
      ```
+
+# teleport组件
+
+![image-20220908161305817](assets/image-20220908161305817.png)
+
+不好控制弹出位置，难以让弹出在窗口中间。
+
+![image-20220908161503423](assets/image-20220908161503423.png)
+
+![image-20220908161537372](assets/image-20220908161537372.png)
+
+**参考body写定位，支持querySelectorAPI。**
+
