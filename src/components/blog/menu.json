@@ -20,6 +20,11 @@
             "aname": "Git协作",
             "dirName": "git",
             "path": "./assets/blogs/git"
+        }, {
+            "sname": "数据库",
+            "aname": "数据库",
+            "dirName": "database",
+            "path": "./assets/blogs/database"
         }
     ]
 }

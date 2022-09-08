@@ -26,7 +26,7 @@
   left: 50%;
   right: 50%;
   top: 30px;
-  animation: drop 0.7s infinite ease;
+  animation: ball-drop 0.7s infinite ease;
 }
 #shadow {
   position: absolute;
@@ -37,8 +37,9 @@
   right: 50%;
   top: 75px;
   background-color: #3d4949;
+  animation: shadow-drop 0.7s infinite ease;
 }
-@keyframes drop {
+@keyframes ball-drop {
   from {
     top: 30px;
     scale: 1 1;
@@ -62,6 +63,28 @@
   to {
     top: 44px;
     scale: 0.82 1.18;
+  }
+}
+
+@keyframes shadow-drop {
+  from {
+    /* height: 2px; */
+    scale: 1 1;
+  }
+  20% {
+    scale: 1.1 0.9;
+  }
+  40% {
+    scale: 1.12 0.88;
+  }
+  60% {
+    scale: 1.14 0.86;
+  }
+  80% {
+    scale: 1.16 0.84;
+  }
+  to {
+    scale: 1.18 0.82;
   }
 }
 </style>

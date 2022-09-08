@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xxl my-md-4 bd-layout">
+  <div class="container-xxl main">
     <aside class="bd-sidebar">
       <nav
         class="bd-links collapse"
@@ -38,7 +38,7 @@
         </ul>
       </nav>
     </aside>
-    <main class="bd-main order-1">
+    <main class="demo-content order-1">
       <component :is="demoContent" />
     </main>
   </div>
@@ -76,6 +76,18 @@ function viewDemoDetail(event, category, name) {
 </script>
 
 <style scoped>
+.main{
+  display: flex;
+  column-gap: 12px;
+}
+
+.demo-content {
+  display: flex;
+  width: 100%;
+  justify-items: center;
+  align-items: center;
+}
+
 @media (min-width: 768px) {
   .bd-links {
     position: -webkit-sticky;
@@ -155,10 +167,12 @@ li::marker {
 
 aside {
   /* background-color: brown; */
+  min-width: max-content;
 }
 
 main {
   /* background-color: blanchedalmond; */
-  height: 3000px;
+  border: 1px;
+  border-color: antiquewhite;
 }
 </style>
