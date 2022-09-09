@@ -24,3 +24,11 @@ sort(myVec.begin(), myVec.end(), [](const auto& a, const auto& b){
 {% endraw %}
 ```
 
+# 批量赋值
+
+**fill**函数
+
+```
+fill(visited.begin(), visited.end(), false);
+```
+
