@@ -49,3 +49,15 @@ for(const x of emitter){
 }
 ```
 
+
+
+# 循环
+
+## for-in 和 for-of
+
+`for-in`遍历对象所有**属性**，`for-of`遍历对象所有**可迭代元素**；
+
+因此，对于一个Array对象，`for-in`会输出下标，因为会将Array进行转换：
+
+![image-20220912225616461](assets/image-20220912225616461.png)
+
