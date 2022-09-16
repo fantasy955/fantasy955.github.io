@@ -85,6 +85,7 @@ function viewDemoDetail(event, category, name) {
   display: flex;
   width: 100%;
   justify-items: center;
+  justify-content: center;
   align-items: center;
 }
 

@@ -15,3 +15,11 @@ int indexRight = str.rfind('e'); // 4
 int indexLeft = str.find('b') // 1
 ```
 
+
+
+# 字符串转数字
+
+```
+int i = atoi(s.c_str());
+```
+

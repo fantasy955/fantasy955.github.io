@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkcli_test"]=self["webpackChunkcli_test"]||[]).push([[77],{1077:function(t,s,e){e.r(s),e.d(s,{default:function(){return o}});var n=e(3396);const i={name:"child"};var c=Object.assign(i,{emits:["showMsg"],setup(t,{emit:s}){return(t,s)=>((0,n.wg)(),(0,n.iD)(n.HY,null,[(0,n._)("button",{onClick:s[0]||(s[0]=s=>t.$emit("showMsg","hello world"))},"点我给父组件传值"),(0,n._)("button",{onClick:s[1]||(s[1]=s=>t.$emit("showMsg",""))},"清空消息")],64))}});const l=c;var o=l}}]);
+//# sourceMappingURL=77.99dd6c03.js.map

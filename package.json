@@ -50,7 +50,9 @@
         "error",
         {
           "ignores": [
-            "Top"
+            "Top",
+            "father",
+            "child"
           ]
         }
       ]

@@ -27,6 +27,8 @@ if __name__ == '__main__':
             components = os.listdir(os.path.join(os.getcwd(), category))
             
             for component in components:
+                if component.startswith('_'):
+                    continue
                 if component in existFiles:
                     existFileCount[component][0] = 1
                     continue

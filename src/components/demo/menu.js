@@ -6,6 +6,9 @@ export default {
         }, {
             name: "CSS布局",
             path: 'csslayout',
+        }, {
+            name: "Vue",
+            path: 'vue',
         }
     ]
 }
