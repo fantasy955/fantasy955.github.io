@@ -129,3 +129,17 @@ for(auto iter = mp.begin(); iter != mp.end(); iter++){
 
 map<int, int, less<int>> key_map;
 
+
+
+# pair
+
+库`utility`
+
+遍历`vector<pair<int, int>> vec`
+
+```c++
+
+```
+
+
+
