@@ -59,3 +59,10 @@ p.then(function (data) {//状态为fulfilled时执行
 ```
 
 `reject`回调作为then的第二个函数参数。
+
+## 问题
+
+resolve和reject都是链式执行的，容易不受控制。
+
+因此尽量使用`async`和`await`结合`promise`(尽可能规避promise)。
+
