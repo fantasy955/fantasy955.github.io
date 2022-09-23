@@ -1,9 +1,45 @@
 <template>
   <div class="container-xxl main">
+    <RightAsideNavBar v-if="showRightNavBar" :mask="true">
+      <template #header>
+        <h3>效果演示</h3>
+      </template>
+      <template #main>
+        <ul class="list-unstyled mb-0 py-3 pt-md-1">
+          <li class="mb-1" v-for="category in categories" :key="category.name">
+            <button
+              class="btn d-inline-flex align-items-center rounded collapsed"
+              data-bs-toggle="collapse"
+              :data-bs-target="`#${category.name}-collapse`"
+              aria-expanded="false"
+              aria-current="true"
+            >
+              {{ category.name }}
+            </button>
+
+            <div class="collapse" :id="`${category.name}-collapse`" style="">
+              <ul class="list-unstyled fw-normal pb-1 small">
+                <li v-for="item in category.children" :key="item.path">
+                  <a
+                    :href="`/demo/details/${category.path}/${category.path}`"
+                    @click="
+                      (event) => viewDemoDetail(event, category.path, item.path)
+                    "
+                    class="d-inline-flex align-items-center rounded"
+                    aria-current="page"
+                    >{{ item.name }}</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </template>
+    </RightAsideNavBar>
     <aside class="bd-sidebar">
       <nav
         class="bd-links collapse"
-        id="bd-docs-nav"
+        id="bd-demo-nav"
         aria-label="Docs navigation"
         style=""
       >
@@ -46,19 +82,30 @@
 
 <script setup>
 import menu from "./menu";
-import { onMounted, ref, shallowRef, defineAsyncComponent } from "vue";
+import {
+  onMounted,
+  ref,
+  shallowRef,
+  defineAsyncComponent,
+  watch,
+  inject,
+} from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import DefaultDemoContent from "./DefaultDemoContent.vue";
+import RightAsideNavBar from "../nav/RightAsideNavBar.vue";
+// import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
 // fs是服务端模块，无法使用
 // import { readFile } from 'fs';
 
 const route = useRoute();
 const categories = ref(menu.categories);
+const showRightNavBar = ref(false);
+
 categories.value.forEach((category) => {
   const childrenJson = require(`./${category.path}/list.json`);
   childrenJson.demos.map((demo) => {
-    if (demo.name.trim() == ""){
+    if (demo.name.trim() == "") {
       demo.name = demo.path.split(".")[0];
     }
   });
@@ -73,10 +120,25 @@ function viewDemoDetail(event, category, name) {
     import(`./${category}/${name}`)
   );
 }
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.target === document.querySelector("#bd-demo-nav")) {
+        if (entry.isIntersecting) {
+          showRightNavBar.value = false;
+        } else {
+          showRightNavBar.value = true;
+        }
+      }
+    });
+  });
+  observer.observe(document.querySelector("#bd-demo-nav"));
+});
 </script>
 
 <style scoped>
-.main{
+.main {
   display: flex;
   column-gap: 12px;
 }

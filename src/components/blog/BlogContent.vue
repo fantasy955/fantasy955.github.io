@@ -26,7 +26,7 @@
     </div>
     <div
       class="col-md-2 pl-3"
-      :class="screenWidth <= smallSceenSize ? first : second"
+      :class="screenWidth <= 1200 ? first : second"
       id="div-article-toc"
     >
       <div
@@ -40,6 +40,7 @@
 </template>
 
 <script setup>
+import { useScreenWidth, useScreenWidthStore } from "@/stores/screenWidth";
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
 import {
@@ -55,6 +56,7 @@ import {
   nextTick,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from 'pinia'
 
 const route = useRoute();
 const router = useRouter();
@@ -74,8 +76,7 @@ const second = ref("order-2");
 
 var getBlogContent = axios.get(probs.blogPath);
 
-var screenWidth = document.body.clientWidth;
-screenWidth = ref(screenWidth);
+const screenWidth = useScreenWidth();
 
 onMounted(() => {
   getBlogContent.then((res) => {
@@ -156,11 +157,7 @@ onMounted(() => {
 });
 
 onMounted(() => {
-  window.onresize = () =>
-    (() => {
-      screenWidth.value = document.body.clientWidth;
-      console.log(screenWidth.value);
-    })();
+
 });
 
 onBeforeUnmount(() => {

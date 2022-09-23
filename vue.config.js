@@ -12,5 +12,11 @@ module.exports = defineConfig({
       }
     }
   },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'sass',
+      patterns: []
+    }
+  }
 })
 

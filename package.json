@@ -12,6 +12,10 @@
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "marked": "^4.0.19",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.0.2",
+    "style-loader": "^3.3.1",
+    "style-resources-loader": "^1.5.0",
     "vue": "^3.2.13",
     "vue-axios": "^3.4.1"
   },
