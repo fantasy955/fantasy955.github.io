@@ -1,6 +1,10 @@
 <template>
   <div class="container-xxl main">
-    <RightAsideNavBar v-if="showRightNavBar" :mask="true">
+    <RightAsideNavBar
+      v-if="showRightNavBar"
+      :mask="true"
+      @closeNav="handleCloseNav"
+    >
       <template #header>
         <h3>效果演示</h3>
       </template>
@@ -119,6 +123,41 @@ function viewDemoDetail(event, category, name) {
     // 这是如何实现的
     import(`./${category}/${name}`)
   );
+  showRightNavBar.value = false;
+}
+
+const touchState = {
+  x: -1,
+  y: -1,
+};
+
+function handleTouchstart(event) {
+  touchState.x = event.touches[0].clientX;
+  touchState.y = event.touches[0].clientY;
+}
+
+let moveTime = null;
+function handleTouchmove(event) {
+  // 100ms内之后执行最后一次触发
+  // 之前的被clear
+  if (moveTime !== null) {
+    clearTimeout(moveTime);
+  }
+  moveTime = setTimeout(() => {
+    let x = event.touches[0].clientX;
+    let y = event.touches[0].clientY;
+    let { x_, y_ } = touchState;
+    if (x_ - x >= 100) {
+      showRightNavBar.value = true;
+    }
+  }, 100);
+}
+
+// touchend 没有touch对象
+function handleTouchend(event) {}
+
+function handleCloseNav() {
+  showRightNavBar.value = false;
 }
 
 onMounted(() => {
@@ -127,8 +166,14 @@ onMounted(() => {
       if (entry.target === document.querySelector("#bd-demo-nav")) {
         if (entry.isIntersecting) {
           showRightNavBar.value = false;
+          window.removeEventListener("touchstart", handleTouchstart, true);
+          window.removeEventListener("touchmove", handleTouchmove, true);
+          window.removeEventListener("touchend", handleTouchend, true);
         } else {
           showRightNavBar.value = true;
+          window.addEventListener("touchstart", handleTouchstart, true);
+          window.addEventListener("touchmove", handleTouchmove, true);
+          window.addEventListener("touchend", handleTouchend, true);
         }
       }
     });

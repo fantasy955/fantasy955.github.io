@@ -15,7 +15,7 @@
         type="button"
         class="btn-close btn-close-white"
         aria-label="Close"
-        @click="closeNav"
+        @click="$emit('closeNav')"
       ></button>
     </header>
     <hr class="text-white-50" />
@@ -44,15 +44,14 @@
     v-if="mask"
     class="offcanvas-backdrop"
     :class="show ? 'show' : 'fade'"
-    @click="closeNav"
+    @click="$emit('closeNav')"
   ></div>
 </template>
 
 <script setup>
-import { defineProps, onBeforeUnmount, onMounted, ref } from "vue";
+import { defineProps, onBeforeUnmount, onMounted, ref, defineEmits } from "vue";
 
 const show = ref(true);
-const nav = ref();
 const probs = defineProps({
   mask: {
     default: false,
@@ -60,41 +59,8 @@ const probs = defineProps({
   },
 });
 
-function closeNav(event) {
-  show.value = !show.value;
-}
+const emit = defineEmits(['closeNav'])
 
-const touchState = {
-    x: -1,
-    y: -1
-}
-
-function handleTouchstart(event) {
-  touchState.x = event.touches[0].clientX;
-  touchState.y = event.touches[0].clientY;
-  console.log(event);
-}
-function handleTouchend(event) {
-console.log(event)
-  let x = event.touches[0].clientX;
-  let y = event.touches[0].clientY;
-  let {x_, y_} = touchState;
-  if (Math.abs(y_-x_) >= 50){
-    show.value = true;
-  }
-  touchState.x = x;
-  touchState.y = y;
-}
-
-onMounted(() => {
-  window.addEventListener("touchstart", handleTouchstart, true);
-  window.addEventListener("touchend", handleTouchend, true);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("touchstart", handleTouchstart, true);
-  window.removeEventListener("touchend", handleTouchend, true);
-});
 </script>
 
 <style scoped lang="scss">
