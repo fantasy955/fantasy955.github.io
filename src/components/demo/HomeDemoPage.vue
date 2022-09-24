@@ -1,4 +1,5 @@
 <template>
+  <div></div>
   <div class="container-xxl main">
     <RightAsideNavBar
       v-if="showRightNavBar"
@@ -146,11 +147,12 @@ function handleTouchmove(event) {
   moveTime = setTimeout(() => {
     let x = event.touches[0].clientX;
     let y = event.touches[0].clientY;
-    let { x_, y_ } = touchState;
+    let x_ = touchState.x;
     if (x_ - x >= 100) {
       showRightNavBar.value = true;
     }
-  }, 100);
+    console.log(x_ - x);
+  }, 200);
 }
 
 // touchend 没有touch对象
