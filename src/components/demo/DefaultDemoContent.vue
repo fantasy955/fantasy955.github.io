@@ -1,10 +1,13 @@
 <template>
-  <span>Hello world</span>
+  <span v-if="screenType === smallScreen">左滑显示导航栏</span>
+  <span v-if="screenType !== smallScreen">Hello Wolrd</span>
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
 import { defineProps, defineAsyncComponent } from "vue";
+import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
+const screenType = useScreenType();
 </script>
 
 <style scoped>
