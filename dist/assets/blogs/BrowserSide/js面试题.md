@@ -91,11 +91,16 @@ function student(name, age){
 }
 
 // 代替new
+// fn 构造函数
+// args 构造函数参数
 function create(fn, ...args){
     let obj = {} // 创建一个空对象
     // let = Object.create({})  另一种创建空对象的方式
     // Object.setPrototypeOf(obj, fn.prototype)
+    
+    // 将fn构造函数内的this改为obj
     var result = fn.apply(obj, args)  // 接收构造函数返回值
+ 		
     return result instanceof Object ? result : obj 
 }
 
