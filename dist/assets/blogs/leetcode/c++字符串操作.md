@@ -19,7 +19,17 @@ int indexLeft = str.find('b') // 1
 
 # 字符串转数字
 
+`stdlib.h`
+
 ```
 int i = atoi(s.c_str());
+```
+
+# 数字转字符串
+
+`string`
+
+```
+string s = to_string(123);
 ```
 

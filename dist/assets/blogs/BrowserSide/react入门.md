@@ -171,6 +171,8 @@ export class Welcome extends React.Component {  // ES6
 
 state是在构造函数内，主动添加的状态，可以将probs的值作为state的初始值。
 
+## state
+
 ```javascript
 export class Weather extends React.Component {
     constructor(probs){
@@ -183,6 +185,7 @@ export class Weather extends React.Component {
         return <h3 onClick={this.doChangeWeather}>今天天气热吗？{this.state.hot ? '热':'不热'}</h3>
     }
 
+    // doChangeWeather 在构造函数的原型上，不在实例上
     // doChangeWeather是通过onClick回调调用，不是通过实例调用，是直接调用
     // 类中方法默认开启局部严格模式，this是undefined（不允许函数操作this）
     doChangeWeather() {
@@ -203,4 +206,54 @@ this.doChangeWeather = this.doChangeWeather.bind(this)
 - 能直接更改state吗？
 
 不能，React不会捕获这次更改。
+
+- 简写
+
+  - 类中直接写赋值语句（往实例上添加属性）
+
+  ```
+  class Person{
+  	walk = () => {  //没有this, 往外找，即组件实例对象
+  		console.log(this)
+  		console.log('走路')
+  	}
+  	run = function(){  // 函数this
+  		console.log(this)
+  		console.log('跑步')
+  	}
+  }
+  ```
+
+## probs
+
+```
+import React, { useState } from "react";
+
+export class Person extends React.Component {
+    constructor(probs) {
+        super(probs)
+    }
+    render() {
+        return (  // 这里有换行，所有需要括号
+            <ul>
+                <li>姓名: {this.props.name}</li>
+                <li>性别: {this.props.sex}</li>
+                <li>年龄: {this.props.age}</li>
+            </ul>
+        )
+    }
+}
+```
+
+
+
+- 默认值、类型限定、必要性限定
+
+在类定义后，添加
+
+```
+Person.propTypes = {
+    name: PropTypes.string.isRequired,  // 15 React.PropTypes 16+ PropTypes.
+}
+```
 
