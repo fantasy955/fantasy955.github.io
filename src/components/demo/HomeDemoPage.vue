@@ -69,6 +69,9 @@
                       (event) => viewDemoDetail(event, category.path, item.path)
                     "
                     class="d-inline-flex align-items-center rounded"
+                    :class="{
+                      active: activeDemoPath === `./${category.path}/${item.path}`,
+                    }"
                     aria-current="page"
                     >{{ item.name }}</a
                   >
@@ -107,6 +110,8 @@ const route = useRoute();
 const categories = ref(menu.categories);
 const showRightNavBar = ref(false);
 
+const tmpFlag = ref(true);
+
 categories.value.forEach((category) => {
   const childrenJson = require(`./${category.path}/list.json`);
   childrenJson.demos.map((demo) => {
@@ -117,13 +122,33 @@ categories.value.forEach((category) => {
   category.children = childrenJson.demos;
 });
 
+const activeDemoPath = ref("");
 const demoContent = shallowRef(DefaultDemoContent);
+
+const componentsList = [];
+
 function viewDemoDetail(event, category, name) {
   event.preventDefault();
-  demoContent.value = defineAsyncComponent(() =>
-    // 这是如何实现的
-    import(`./${category}/${name}`)
-  );
+  let path = `./${category}/${name}`;
+  if (activeDemoPath.value === path) {
+    return;
+  }
+  activeDemoPath.value = path;
+  let component = componentsList.find((item) => {
+    item.path === path;
+  });
+  if (component === undefined) {
+    component = defineAsyncComponent(() =>
+      // 这是如何实现的
+      // import(path) // 这样写不行
+      import(`./${category}/${name}`)
+    );
+    componentsList.push({
+      path,
+      component,
+    });
+  }
+  demoContent.value = component;
   showRightNavBar.value = false;
 }
 
@@ -191,7 +216,8 @@ onMounted(() => {
 }
 
 .demo-content {
-  display: flex;
+  /* display: flex; */
+  text-align: center;
   width: 100%;
   justify-items: center;
   justify-content: center;
@@ -211,7 +237,7 @@ onMounted(() => {
   }
 }
 
-.bd-links .btn::before {
+.btn::before {
   width: 1.25em;
   line-height: 0;
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
@@ -219,7 +245,7 @@ onMounted(() => {
   transform-origin: 0.5em 50%;
 }
 
-.bd-links a {
+a {
   padding: 0.1875rem 0.5rem;
   margin-top: 0.125rem;
   margin-left: 1.25rem;
@@ -280,9 +306,21 @@ aside {
   min-width: max-content;
 }
 
+a.active {
+  background-color: aquamarine;
+}
+
 main {
   /* background-color: blanchedalmond; */
   border: 1px;
   border-color: antiquewhite;
+}
+
+.right-aside-nav .btn {
+  color: white;
+}
+
+.right-aside-nav a {
+  color: white;
 }
 </style>

@@ -34,6 +34,8 @@ if __name__ == '__main__':
                     continue
                 if component == "list.json":
                     continue
+                if os.path.isdir(os.path.join(os.getcwd, component)):
+                    continue
                 json_dict['demos'].append({
                     "name": "",
                     "description": "",
