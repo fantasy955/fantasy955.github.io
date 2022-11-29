@@ -1443,3 +1443,562 @@ console.log(g.next()); // { done: false, value: 3}
 迭代器必须通过连续调用 next()方法才能连续取得值，这个方法返回一个 **IteratorObject**。这 个对象包含一个 done 属性和一个 value 属性。前者是一个布尔值，表示是否还有更多值可以访问；后者包含迭代器返回的当前值。这个接口可以通过手动反复调用 next()方法来消费，也可以通过原生消 费者，比如 for-of 循环来自动消费	
 
 **生成器是一种特殊的函数**，调用之后会返回一个生成器对象。生成器对象实现了 Iterable 接口， 因此可用在任何消费可迭代对象的地方。生成器的独特之处在于支持 yield 关键字，这个关键字能够 暂停执行生成器函数。使用 yield 关键字还可以通过 next()方法接收输入和产生输出。在加上星号之 后，yield 关键字可以将跟在它后面的可迭代对象序列化为一连串值。
+
+# Cap.8 对象、类与面向对象编程
+
+## 8.1 理解对象
+
+### 8.1.1 属性的类型
+
+**数据属性**
+
+ECMA-262 使用一些内部特性来描述属性的特征。这些特性是由为 JavaScript 实现**引擎的规范**定义 的。因此，开发者**不能在 JavaScript 中直接访问这些特性**。为了将某个特性标识为内部特性，规范会用 两个中括号把特性的名称括起来，比如[[Enumerable]]。
+
+- [[Configurable]]：表示属性**是否可以通过 delete 删除并重新定义**，是否可以修改它的特 性，以及是否可以把它改为访问器属性。默认情况下，所有直接定义在对象上的属性的这个特 性都是 true，如前面的例子所示。
+- [[Enumerable]]：表示属性是否可以通过 for-in 循环返回。默认情况下，所有**直接定义在对 象**上的属性的这个特性都是 true，如前面的例子所示。
+- [[Writable]]：表示属性的值是否可以被修改。默认情况下，所有直接定义在对象上的属性的 这个特性都是 true，如前面的例子所示。
+- [[Value]]：包含属性实际的值。这就是前面提到的那个读取和写入属性值的位置。这个特性 的默认值为 undefined。
+
+**要修改属性的默认特性，就必须使用 Object.defineProperty()方法**。这个方法接收 3 个参数： 要给其添加属性的**对象**、属性的名称和一个**描述符对象**。最后一个参数，即描述符对象上的属性可以包 含：configurable、enumerable、writable 和 value，跟相关特性的名称一一对应。根据要修改 的特性，可以设置其中一个或多个值。比如：
+
+```
+let person = {}; 
+Object.defineProperty(person, "name", { 
+ writable: false, 
+ value: "Nicholas" 
+}); 
+console.log(person.name); // "Nicholas" 
+person.name = "Greg"; 
+console.log(person.name); // "Nicholas"
+```
+
+一个属性被定义为不可配置之后，就不能再变回可配置的了。再次调用 Object.defineProperty()并修改任何非 writable 属性会导致 错误。
+
+**访问器属性**
+
+访问器属性不包含数据值。相反，它们包含一个获取（getter）函数和一个设置（setter）函数，不 过这两个函数不是必需的。在读取访问器属性时，会调用获取函数，这个函数的责任就是返回一个有效 的值。在写入访问器属性时，会调用设置函数并传入新值，这个函数必须决定对数据做出什么修改。访 问器属性有 4 个特性描述它们的行为。
+
+- [[Configurable]]：表示属性是否可以通过 delete 删除并重新定义，是否可以修改它的特 性，以及是否可以把它改为数据属性。默认情况下，所有直接定义在对象上的属性的这个特性 都是 true。
+- [[Enumerable]]：表示属性是否可以通过 for-in 循环返回。默认情况下，所有直接定义在对 象上的属性的这个特性都是 true。
+- [[Get]]：获取函数，在读取属性时调用。默认值为 undefined。
+- [[Set]]：设置函数，在写入属性时调用。默认值为 undefined。
+
+访问器属性是不能直接定义的，必须使用 Object.defineProperty()。下面是一个例子：
+
+```
+// 定义一个对象，包含伪私有成员 year_和公共成员 edition 
+let book = { 
+ year_: 2017, 
+ edition: 1 
+}; 
+Object.defineProperty(book, "year", { 
+ get() { 
+ 	return this.year_; 
+ }, 
+ set(newValue) { 
+   if (newValue > 2017) { 
+     this.year_ = newValue; 
+     this.edition += newValue - 2017; 
+   } 
+ } 
+}); 
+book.year = 2018; 
+console.log(book.edition); // 2
+```
+
+**只定义获取函数意味着属性是只读的**，尝试修改属性会被忽 略。在严格模式下，尝试写入只定义了获取函数的属性会抛出错误。类似地，**只有一个设置函数的属性 是不能读取的**，非严格模式下读取会返回 undefined，严格模式下会抛出错误。
+
+### 8.1.2 定义多个属性
+
+Object.defineProperties()方法。这个方法可以通过多个描述符一次性定义多个属性。它接收两个参数：要为之添 加或修改属性的对象和另一个描述符对象，其属性与要添加或修改的属性一一对应：
+
+```
+let book = {}; 
+Object.defineProperties(book, { 
+ year_: { 
+ 	value: 2017 
+ }, 
+ edition: { 
+ 	value: 1 
+ }, 
+ year: { 
+   get() { 
+   	return this.year_; 
+ 	 }, 
+  set(newValue) { 
+   if (newValue > 2017) { 
+   	this.year_ = newValue; 
+   	this.edition += newValue - 2017; 
+   } 
+  } 
+ } 
+}); 
+```
+
+这段代码在 book 对象上定义了**两个数据属性 year_和 edition**，还有一个**访问器属性 year**。 最终的对象跟上一节示例中的一样。唯一的区别是所有属性都是同时定义的，并且数据属性的 configurable、enumerable 和 writable 特性值都是 false。
+
+### 8.1.3 读取属性的特性
+
+使用 Object.getOwnPropertyDescriptor()方法可以取得指定属性的**属性描述符**。
+
+```
+let book = {}; 
+Object.defineProperties(book, { 
+ year_: { 
+ value: 2017 
+ }, 
+ edition: { 
+ value: 1 
+ }, 
+ year: { 
+ get: function() { 
+ return this.year_; 
+ }, 
+ set: function(newValue){ 
+ if (newValue > 2017) { 
+ this.year_ = newValue; 
+ this.edition += newValue - 2017; 
+ } 
+ } 
+ } 
+}); 
+let descriptor = Object.getOwnPropertyDescriptor(book, "year_"); 
+console.log(descriptor.value); // 2017 
+console.log(descriptor.configurable); // false 
+console.log(typeof descriptor.get); // "undefined" 
+
+let descriptor = Object.getOwnPropertyDescriptor(book, "year"); 
+console.log(descriptor.value); // undefined 
+console.log(descriptor.enumerable); // false 
+console.log(typeof descriptor.get); // "function" 
+```
+
+ECMAScript 2017 新增了 Object.getOwnPropertyDescriptors()静态方法。这个方法实际上 会在每个自有属性上调用 Object.getOwnPropertyDescriptor()并在一个新对象中返回它们。
+
+### 8.1.4 合并对象
+
+JavaScript 开发者经常觉得“合并”（merge）两个对象很有用。更具体地说，就是把源对象所有的 本地属性一起复制到目标对象上。有时候这种操作也被称为“混入”（mixin），因为目标对象通过混入 源对象的属性得到了增强。
+
+ECMAScript 6 专门为合并对象提供了 Object.assign()方法。这个方法接收一个**目标对象**和**一个 或多个**源对象作为参数，然后将每个源对象中可枚举（Object.propertyIsEnumerable()返回 true） 和自有（Object.hasOwnProperty()返回 true）属性复制到目标对象。以字符串和符号为键的属性 会被复制。对每个符合条件的属性，这个方法会使用源对象上的[[Get]]取得属性的值，然后使用目标 对象上的[[Set]]设置属性的值。
+
+Object.assign()实际上对每个源对象执行的是浅复制。如果多个源对象都有相同的属性，则使 用最后一个复制的值。此外，从源对象访问器属性取得的值，比如获取函数，会作为一个静态值赋给目 标对象。换句话说，不能在两个对象间转移获取函数和设置函数。
+
+通过`Object.defineProperties`定义的属性也不能被复制。
+
+```
+
+```
+
+### 8.1.5 对象标识及相等判定、
+
+ECMAScript 6 规范新增了 Object.is()，这个方法与===很像，但考虑 到了边界情形。这个方法必须接收两个参数：
+
+```
+// 正确的 0、-0、+0 相等/不等判定
+console.log(Object.is(+0, -0)); // false 
+console.log(Object.is(+0, 0)); // true 
+console.log(Object.is(-0, 0)); // false 
+```
+
+### 8.1.6 增强的对象语法
+
+ECMAScript 6 为定义和操作对象新增了很多极其有用的**语法糖特性**。这些特性都没有改变现有引擎 的行为，但极大地提升了处理对象的方便程度。
+
+1. 属性值简写
+
+   ```
+   let person = { 
+    name 
+   }; 
+   ```
+
+2. 可计算属性
+
+   使用变量的值作为属性。
+
+   在引入可计算属性前，不能在对象字面量中直接**动态命名属性**：
+
+   ```
+   const nameKey = 'name'; 
+   const ageKey = 'age'; 
+   const jobKey = 'job'; 
+   let person = {}; 
+   person[nameKey] = 'Matt'; 
+   person[ageKey] = 27; 
+   person[jobKey] = 'Software engineer'; 
+   ```
+
+   引入可计算属性后：
+
+   ```
+   const nameKey = 'name'; 
+   const ageKey = 'age'; 
+   const jobKey = 'job'; 
+   let person = { 
+    [nameKey]: 'Matt', 
+    [ageKey]: 27, 
+    [jobKey]: 'Software engineer' 
+   }; 
+   ```
+
+   因为被当作 JavaScript 表达式求值，所以可计算属性本身可以是复杂的表达式，在实例化时再求值：
+
+   ```
+   const nameKey = 'name'; 
+   const ageKey = 'age'; 
+   const jobKey = 'job'; 
+   let uniqueToken = 0; 
+   function getUniqueKey(key) { 
+    return `${key}_${uniqueToken++}`; 
+   } 
+   let person = { 
+    [getUniqueKey(nameKey)]: 'Matt', 
+    [getUniqueKey(ageKey)]: 27, 
+    [getUniqueKey(jobKey)]: 'Software engineer' 
+   }; 
+   console.log(person); // { name_0: 'Matt', age_1: 27, job_2: 'Software engineer' }
+   ```
+
+   **注意** 可计算属性表达式中抛出任何错误都会中断对象创建。如果计算属性的表达式有副 作用，那就要小心了，因为如果表达式抛出错误，那么之前完成的计算是不能回滚的。
+
+3. 简写方法名
+
+   在给对象定义方法时，通常都要写一个方法名、冒号，然后再引用一个匿名函数表达式，如下所示：
+
+   ```
+   let person = { 
+    sayName: function(name) { 
+    console.log(`My name is ${name}`); 
+    } 
+   }; 
+   ```
+
+   ```
+   let person = { 
+    sayName(name) { 
+    console.log(`My name is ${name}`); 
+    } 
+   }; 
+   ```
+
+   简写方法名对**获取函数**和**设置函数**也是适用的：
+
+   ```
+   let person = { 
+    name_: '', 
+    get name() { 
+    return this.name_; 
+    }, 
+    set name(name) { 
+    this.name_ = name; 
+    }, 
+    sayName() { 
+    console.log(`My name is ${this.name_}`); 
+    } 
+   }; 
+   person.name = 'Matt'; 
+   person.sayName(); // My name is Matt
+   ```
+
+   简写方法名与可计算属性键相互兼容：
+
+   ```
+   const methodKey = 'sayName'; 
+   let person = { 
+    [methodKey](name) { 
+    console.log(`My name is ${name}`); 
+    } 
+   } 
+   person.sayName('Matt'); // My name is Matt 
+   ```
+
+### 8.1.7 对象解构
+
+ECMAScript 6 新增了对象解构语法，可以在一条语句中使用嵌套数据实现一个或多个赋值操作。
+
+```
+// 不使用对象解构
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+let personName = person.name, 
+ personAge = person.age; 
+```
+
+- 然后，是使用对象解构的：
+
+```
+let { name: personName, age: personAge } = person;
+```
+
+`name: personName`是指定`personName`所对应的键，因为名称不相同。
+
+- 解构赋值不一定与对象的属性匹配。赋值的时候可以忽略某些属性，而如果引用的属性不存在，则 该变量的值就是 undefined：
+
+```
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+let { name, job } = person; 
+console.log(name); // Matt 
+console.log(job); // undefined 
+```
+
+- 也可以在解构赋值的同时定义默认值：
+
+```
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+let { name, job='Software engineer' } = person; 
+console.log(name); // Matt 
+console.log(job); // Software engineer 
+```
+
+解构在内部使用函数 ToObject()（**不能在运行时环境中直接访问**）把源数据结构转换为对象。这意味着在对象解构的上下文中（即`with`语句的上下文），原始值会被当成对象。这也意味着（根据 ToObject()的定义），null 和 undefined 不能被解构，否则会抛出错误
+
+- 解构**并不要求变量必须在解构表达式中声明**。不过，如果是**给事先声明**的变量赋值，则赋值表达式必须包含在一对括号中：
+
+```
+let personName, personAge; 
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+({name: personName, age: personAge} = person); 
+```
+
+- 嵌套解构
+
+```
+let person = { 
+ name: 'Matt', 
+ age: 27, 
+ job: { 
+ title: 'Software engineer' 
+ } 
+}; 
+// 声明 title 变量并将 person.job.title 的值赋给它
+let { job: { title } } = person; 
+console.log(title); // Software engineer
+```
+
+- 部分解构
+
+涉及多个属性的解构赋值是一个输出无关的顺序化操作。如果一个解构表达式涉及 多个赋值，开始的赋值成功而后面的赋值出错，则整个解构赋值只会完成一部分：
+
+```
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+let personName, personBar, personAge; 
+try { 
+ // person.foo 是 undefined，因此会抛出错误
+ ({name: personName, foo: { bar: personBar }, age: personAge} = person); 
+} catch(e) {} 
+console.log(personName, personBar, personAge); 
+// Matt, undefined, undefined 
+```
+
+- 参数上下文匹配
+
+在函数参数列表中也可以进行解构赋值。对参数的解构赋值**不会影响 arguments 对象**，但可以在函数签名中声明在函数体内使用局部变量：
+
+```
+let person = { 
+ name: 'Matt', 
+ age: 27 
+}; 
+function printPerson(foo, {name, age}, bar) { 
+ console.log(arguments); 
+ console.log(name, age); 
+} 
+function printPerson2(foo, {name: personName, age: personAge}, bar) { 
+ console.log(arguments); 
+ console.log(personName, personAge); 
+} 
+printPerson('1st', person, '2nd'); 
+// ['1st', { name: 'Matt', age: 27 }, '2nd'] 
+// 'Matt', 27 
+printPerson2('1st', person, '2nd'); 
+// ['1st', { name: 'Matt', age: 27 }, '2nd'] 
+// 'Matt', 27 
+```
+
+printPerson2是给name取了别名。
+
+## 8.2 创建对象
+
+虽然使用 Object **构造函数**或**对象字面量**可以方便地创建对象，但这些方式也有明显不足：创建具 有同样接口的多个对象需要重复编写很多代码。
+
+### 8.2.1 概述
+
+ECMAScript 5.1：原型继承
+
+ECMAScript 6：开始正式支持类和继承
+
+ES6 的类旨在完全涵盖之前规范设计的基于原型的继承模式。不过，无论从哪方面看，**ES6 的类都仅仅是封装了 ES5.1 构造函数加原型继承的语法糖而已**。
+
+### 8.2.2 工厂模式
+
+抽象创建特定对象的过程。
+
+```
+function createPerson(name, age, job) { 
+ let o = new Object(); 
+ o.name = name; 
+ o.age = age; 
+ o.job = job; 
+ o.sayName = function() { 
+   console.log(this.name); 
+ }; 
+ return o; 
+} 
+let person1 = createPerson("Nicholas", 29, "Software Engineer"); 
+let person2 = createPerson("Greg", 27, "Doctor");
+```
+
+这种工厂模式虽然可以解决创建多个类似对象的问题，但没有解决对象标识问题（即新创建的对象是什么类型。
+
+对象没有类型名称（无法使用instanceof判断类型）。
+
+### 8.2.3 构造函数模式
+
+```
+function Person(name, age, job){ 
+ this.name = name; 
+ this.age = age; 
+ this.job = job; 
+ this.sayName = function() { 
+ console.log(this.name); 
+ }; 
+} 
+let person1 = new Person("Nicholas", 29, "Software Engineer"); 
+let person2 = new Person("Greg", 27, "Doctor"); 
+person1.sayName(); // Nicholas 
+person2.sayName(); // Greg 
+```
+
+在这个例子中，Person()构造函数代替了 createPerson()工厂函数。实际上，Person()内部 的代码跟 createPerson()基本是一样的，只是有如下区别。
+
+- 没有显式地创建对象。
+- 属性和方法直接赋值给了 this
+- 没有 return
+
+要创建 Person 的实例，应使用 new 操作符。以这种方式调用构造函数会执行如下操作：
+
+(1) 在内存中创建一个新对象。
+
+```
+const obj = {}
+```
+
+(2) 这个新对象内部的[[Prototype]]特性被赋值为构造函数的 prototype 属性。
+
+```
+obj.__proto__ = Person.prototype
+```
+
+(3) 构造函数内部的 this 被赋值为这个新对象（即 this 指向新对象）;
+
+(4)执行构造函数内部的代码（给新对象添加属性）:
+
+```
+Person.apply(obj, args)
+```
+
+(5)如果构造函数返回非空对象，则返回该对象；否则，返回刚创建的新对象。
+
+```js
+var res = Person.apply(obj, args)
+return res instanceof Object ? res : obj 
+```
+
+在实例化时，如果不想传参数，那么构造函数后面的括号可加可不加。只要有 new 操作符，就可以 调用相应的构造函数：
+
+```
+function Person() { 
+ this.name = "Jake"; 
+ this.sayName = function() { 
+ console.log(this.name); 
+ }; 
+} 
+let person1 = new Person(); 
+let person2 = new Person; 
+```
+
+1. 构造函数也是函数
+
+   构造函数与普通函数唯一的区别就是调用方式不同。除此之外，构造函数也是函数。并没有把某个函数定义为构造函数的特殊语法。**任何函数只要使用 new 操作符调用就是构造函数**，而不使用 new 操 作符调用的函数就是普通函数。比如，前面的例子中定义的 Person()可以像下面这样调用：
+
+   ```
+   // 作为构造函数 
+   let person = new Person("Nicholas", 29, "Software Engineer"); 
+   person.sayName(); // "Nicholas" 
+   // 作为函数调用
+   Person("Greg", 27, "Doctor"); // 添加到 window 对象
+   window.sayName(); // "Greg" 
+   // 在另一个对象的作用域中调用
+   let o = new Object(); 
+   Person.call(o, "Kristen", 25, "Nurse"); 
+   o.sayName(); // "Kristen" 
+   ```
+
+   作为普通函数，函数内的`this`指针指向是`window`，因此是给`window`加属性。
+
+   this 始终指向 Global 对象（在浏览器中就是 window 对象）
+
+2. 构造函数的问题
+
+   构造函数虽然有用，但也不是没有问题。构造函数的主要问题在于，**其定义的方法会在每个实例上都创建一遍**。因此对前面的例子而言，person1 和 person2 都有名为 sayName()的方法，但这两个方法不是同一个 Function 实例。我们知道，ECMAScript 中的**函数是对象**，因此**每次定义函数时，都会初始化一个对象**。逻辑上讲，这个构造函数实际上是这样的：
+
+   ```
+   function Person(name, age, job){ 
+    this.name = name; 
+    this.age = age; 
+    this.job = job; 
+    this.sayName = new Function("console.log(this.name)"); // 逻辑等价
+   } 
+   ```
+
+   要解决这个问题，可以把函数定义转移到构造函数外部：
+   
+   ```
+   function Person(name, age, job){ 
+    this.name = name; 
+    this.age = age; 
+    this.job = job; 
+    this.sayName = sayName; 
+   } 
+   function sayName() { 
+    console.log(this.name); 
+   } 
+   let person1 = new Person("Nicholas", 29, "Software Engineer"); 
+   let person2 = new Person("Greg", 27, "Doctor"); 
+   person1.sayName(); // Nicholas 
+   person2.sayName(); // Greg 
+   person1.sayName === person2.person2 // true
+   ```
+   
+   相当于在外部执行了`sayName = new Function("console.log(this.name)");`
+   
+   在构造函数内将sayName 属性指向了该函数对象，sayName 对象只被创建了一次。
+   
+   关于this指向问题：
+   
+   [详解Javascript 中的this指针-阿里云开发者社区 (aliyun.com)](https://developer.aliyun.com/article/791255#:~:text=Javascript可以通过一定的设计模式来实现面向对象的编程，其中this,“指针”就是实现面向对象的一个很重要的特性。)
+   
+   在Javascript里面，this指针代表的是执行当前代码的对象的所有者。
+   
+   ```
+   
+   ```
+   
+   
+
+
+
