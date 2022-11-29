@@ -687,5 +687,759 @@ console.log(ints); // [0, -1]
 
 `ints[1] = 128;`将内存中的二进制位设置为`0x80 `，因为是有符号数，这个二进制数对应的值是-128.
 
-## Map
+## 6.4 Map
 
+ECMAScript 6 以前，在 JavaScript 中实现“键/值”式存储可以使用 Object 来方便高效地完成，也 就是使用对象属性作为键，再使用属性来引用值。但这种实现**并非没有问题**（有问题），为此 TC39 委员会专门为 “键/值”存储定义了一个规范。
+
+作为 ECMAScript 6 的新增特性，Map 是一种新的集合类型，为这门语言带来了真正的键/值存储机 制。Map 的大多数特性都可以通过 Object 类型实现，但二者之间还是存在一些细微的差异。具体实践 中使用哪一个，还是值得细细甄别。
+
+### 6.4.1 基本API
+
+Nan作为键会导致意料之外的错误，因为Nan和任何值比较，结果都是false。
+
+- set
+- has
+- keys
+- values
+- get
+- clear
+- delete(key)
+
+**与严格相等一样，在映射中用作键和值的对象及其他“集合”类型，在自己的内容或属性被修改时 仍然保持不变.**
+
+```
+const m = new Map(); 
+const objKey = {}, objVal = {};
+const arrKey = [], arrVal = [];
+m.set(objKey, objVal); 
+m.set(arrKey, arrVal); 
+objKey.foo = "foo"; 
+objVal.bar = "bar"; 
+arrKey.push("foo"); 
+arrVal.push("bar"); 
+console.log(m.get(objKey)); // {bar: "bar"} 
+console.log(m.get(arrKey)); // ["bar"] 
+```
+
+对象作为键，对象更新后，map中的键同步更新（引用同一个对象）
+
+### 6.4.2 顺序与迭代
+
+与 Object 类型的一个主要差异是，Map 实例会维护键值对的插入顺序，因此可以根据插入顺序执 行迭代操作。
+
+Map可迭代，对象不可迭代。
+
+```
+for (let pair of m.entries()) { 
+ alert(pair); 
+} 
+// [key1,val1] 
+// [key2,val2] 
+// [key3,val3] 
+for (let pair of m[Symbol.iterator]()) { 
+ alert(pair); 
+} 
+// [key1,val1] 
+// [key2,val2] 
+// [key3,val3] 
+
+map.forEach((key, value)=>{}， opt_thisArg)
+```
+
+如果不使用迭代器，而是使用回调方式，则可以调用映射的 forEach(callback, opt_thisArg) 方法并传入回调，依次迭代每个键/值对。传入的回调接收可选的第二个参数，这个参数用于**重写回调 内部 this 的值**。
+
+### 6.4.3 选择Object还是Map
+
+1.内存占用
+
+Object 和 Map 的工程级实现在不同浏览器间存在明显差异，但存储单个键/值对所占用的**内存数量都会随键的数量线性增加**。批量添加或删除键/值对则取决于各浏览器对该类型内存分配的工程实现。 不同浏览器的情况不同，但给定固定大小的内存，**Map 大约可以比 Object 多存储 50%的键/值对**。
+
+2.插入性能
+
+向 Object 和 Map 中插入新键/值对的消耗大致相当，不过**插入 Map 在所有浏览器中一般会稍微快 一点儿**。对这两个类型来说，**插入速度**并不会随着键/值对数量而线性增加。如果代码涉及大量插入操 作，那么显然 Map 的性能更佳。
+
+3.查找速度
+
+与插入不同，从大型 Object 和 Map 中查找键/值对的性能差异极小，但如果只包含少量键/值对， 则 Object 有时候速度更快。在把 Object 当成数组使用的情况下（比如使用连续整数作为属性），浏览器引擎可以进行优化，在内存中使用更高效的布局。这对 Map 来说是不可能的。对这两个类型而言， **查找速度不会随着键/值对数量增加而线性增加**。如果代码涉及大量查找操作，那么某些情况下可能选 择 Object 更好一些
+
+4.删除性能
+
+使用 delete 删除 Object 属性的性能一直以来饱受诟病，目前在很多浏览器中仍然如此。为此， 出现了一些伪删除对象属性的操作，包括把属性值设置为 undefined 或 null。但很多时候，这都是一 种讨厌的或不适宜的折中。而对大多数浏览器引擎来说，Map 的 delete()操作都比插入和查找更快。 如果代码涉及大量删除操作，那么毫无疑问应该选择 Map。
+
+## 6.5 WeakMap
+
+ECMAScript 6 新增的“弱映射”（WeakMap）是一种新的集合类型，为这门语言带来了**增强的键/ 值对存储机制**。WeakMap 是 Map 的“兄弟”类型，其 API 也是 Map 的子集。WeakMap 中的“weak”（弱）， **描述的是 JavaScript 垃圾回收程序对待“弱映射”中键的方式**。
+
+### 6.5.1 基本API
+
+弱映射中的键只能是 Object 或者继承自 Object 的类型，尝试使用非对象设置键会抛出 TypeError。值的类型没有限制。
+
+### 6.5.2 弱键
+
+WeakMap 中“weak”表示弱映射的键是“弱弱地拿着”的。意思就是，**这些键不属于正式的引用**， 不会阻止垃圾回收。
+
+只要键存在，键/值 对就会存在于映射中，并被当作对值的引用，因此就不会被当作垃圾回收。
+
+```
+const wm = new WeakMap(); 
+wm.set({}, "val");
+```
+
+set()方法初始化了一个新对象并将它用作一个字符串的键。因为没有指向这个对象的其他引用， **所以当这行代码执行完成后，这个对象键就会被当作垃圾回收**。然后，这个键/值对就从弱映射中消失 了，使其成为一个空映射。在这个例子中，**因为值也没有被引用，所以这对键/值被破坏以后，值本身 也会成为垃圾回收的目标**。
+
+```
+const wm = new WeakMap(); 
+const container = { 
+ key: {} 
+}; 
+wm.set(container.key, "val"); 
+function removeReference() { 
+ container.key = null; 
+} 
+```
+
+这一次，**container 对象维护着一个对弱映射键的引用**，因此这个对象键不会成为垃圾回收的目 标。不过，如果调用了 removeReference()，就会摧毁键对象的最后一个引用，垃圾回收程序就可以 把这个键/值对清理掉。
+
+### 6.5.3 不可迭代键
+
+因为 WeakMap 中的键/值对任何时候都可能被销毁，所以没必要提供迭代其键/值对的能力。当然， 也用不着像 clear()这样一次性销毁所有键/值的方法。WeakMap 确实没有这个方法。**因为不可能迭代， 所以也不可能在不知道对象引用的情况下从弱映射中取得值。**
+
+WeakMap 实例之所以限制只能用对象作为键，是为了**保证只有通过键对象的引用才能取得值**。如果 允许原始值，那就没办法区分初始化时使用的字符串字面量和初始化之后使用的一个相等的字符串了。
+
+### 6.5.4 使用弱映射
+
+WeakMap 实例与现有 JavaScript 对象有着很大不同，可能一时不容易说清楚应该怎么使用它。这个 问题没有唯一的答案，但已经出现了很多相关策略。
+
+**1.私有变量**
+
+弱映射造就了在 JavaScript 中实现真正私有变量的一种新方式。前提很明确：私有变量会存储在弱映射中，以对象实例为键，以私有成员的字典为值：
+
+```
+const wm = new WeakMap(); 
+class User { 
+ constructor(id) { 
+   this.idProperty = Symbol('id'); 
+   this.setId(id); 
+ } 
+ setPrivate(property, value) { 
+   const privateMembers = wm.get(this) || {}; 
+   privateMembers[property] = value; 
+   wm.set(this, privateMembers); 
+ } 
+ getPrivate(property) { 
+ 	return wm.get(this)[property]; 
+ } 
+ setId(id) { 
+ 	this.setPrivate(this.idProperty, id); 
+ } 
+ getId() { 
+ 	return this.getPrivate(this.idProperty); 
+ } 
+} 
+const user = new User(123); 
+alert(user.getId()); // 123 
+user.setId(456); 
+alert(user.getId()); // 456 
+```
+
+对于上面的实现，外部代码只需要拿到对象实例的引用和弱映射，就可以 取得“私有”变量了。为了避免这种访问，可以用一个闭包把 WeakMap 包装起来，这样就可以把弱映 射与外界完全隔离开了：
+
+```
+// 并不是真正私有的
+alert(wm.get(user)[user.idProperty]); // 456 
+```
+
+```
+const User = (() => { 
+ const wm = new WeakMap(); 
+ class User { 
+ constructor(id) { 
+ this.idProperty = Symbol('id'); 
+172 第 6 章 集合引用类型
+ this.setId(id); 
+ } 
+ setPrivate(property, value) { 
+ const privateMembers = wm.get(this) || {}; 
+ privateMembers[property] = value; 
+ wm.set(this, privateMembers); 
+ } 
+ getPrivate(property) { 
+ return wm.get(this)[property]; 
+ } 
+ setId(id) { 
+ this.setPrivate(this.idProperty, id); 
+ } 
+ getId(id) { 
+ return this.getPrivate(this.idProperty); 
+ } 
+ } 
+ return User; 
+})(); 
+const user = new User(123); 
+alert(user.getId()); // 123 
+user.setId(456); 
+alert(user.getId()); // 456
+```
+
+这样，拿不到弱映射中的健，也就无法取得弱映射中对应的值。虽然这防止了前面提到的访问，但 **整个代码也完全陷入了 ES6 之前的闭包私有变量模式**。
+
+2. **DOM 节点元数据**
+
+因为 WeakMap 实例不会妨碍垃圾回收，所以非常适合保存关联元数据。来看下面这个例子，其中 使用了常规的 Map：
+
+```
+const m = new Map(); 
+const loginButton = document.querySelector('#login'); 
+// 给这个节点关联一些元数据
+m.set(loginButton, {disabled: true}); 
+```
+
+假设在上面的代码执行后，页面被 JavaScript 改变了，原来的登录按钮从 DOM 树中被删掉了。但 由于映射中还保存着按钮的引用，所以对应的 DOM 节点仍然会逗留在内存中，**除非明确将其从映射中 删除或者等到映射本身被销毁。**
+
+## 6.6 Set
+
+## 6.7 WeakSet
+
+## 6.8 迭代与拓展操作
+
+ECMAScript 6 新增的迭代器和扩展操作符对**集合引用类型**特别有用。这些新特性让集合类型之间 相互操作、复制和修改变得异常方便
+
+这也意味着所有这些类型都兼容扩展操作符。扩展操作符在对可迭代对象执行浅复制时特别有用， 只需简单的语法就可以复制整个对象
+
+## 6.9 小结
+
+JavaScript 中的对象是引用值，可以通过几种内置引用类型创建特定类型的对象。
+
+- 引用类型与传统面向对象编程语言中的类相似，但实现不同。
+
+**JS是基于对象，java是面向对象**
+
+由于实现不同，js对象是动态的，可以动态添加或删除属性。
+
+- Object 类型是一个基础类型，所有引用类型都从它继承了基本的行为。
+- Array 类型表示一组有序的值，并提供了操作和转换值的能力。
+- 定型数组包含一套不同的引用类型，用于管理数值在内存中的类型。
+- Date 类型提供了关于日期和时间的信息，包括当前日期和时间以及计算。
+- RegExp 类型是 ECMAScript 支持的正则表达式的接口，提供了大多数基本正则表达式以及一些 高级正则表达式的能力。
+
+JavaScript 比较独特的一点是，函数其实是 Function 类型的实例，**这意味着函数也是对象**。由于 函数是对象，**因此也就具有能够增强自身行为的方法。** 因为原始值包装类型的存在，所以 JavaScript 中的原始值可以拥有类似对象的行为。有 3 种原始值 包装类型：Boolean、Number 和 String。它们都具有如下特点
+
+- 每种包装类型都映射到同名的原始类型
+- 在以读模式访问原始值时，后台会实例化一个原始值包装对象，通过这个对象可以操作数据。
+- 涉及原始值的语句只要一执行完毕，包装对象就会立即销毁。
+
+JavaScript 还有两个在一开始执行代码时就存在的内置对象：Global 和 Math。其中，Global 对 象在大多数 ECMAScript 实现中无法直接访问。不过浏览器将 Global 实现为 window 对象。所有全局 变量和函数都是 Global 对象的属性。Math 对象包含辅助完成复杂数学计算的属性和方法。
+
+ECMAScript 6 新增了一批引用类型：Map、WeakMap、Set 和 WeakSet。这些类型为组织应用程序 数据和简化内存管理提供了新能力。
+
+# Cap.7 迭代器与生成器
+
+## 7.1 理解迭代
+
+简单循环迭代
+
+- 迭代之前需要事先知道如何使用数据结构。数组中的每一项都只能先通过引用取得数组对象， 然后再通过[]操作符取得特定索引位置上的项。这种情况并不适用于所有数据结构。
+- 遍历顺序并不是数据结构固有的。通过递增索引来访问数据是特定于数组类型的方式，并不适 用于其他具有隐式顺序的数据结构。
+
+ES5 新增了 Array.prototype.forEach()方法，这个方法解决了单独记录索引和通过数组对象取得值的问题。不过，**没有办法标识迭代何时终止**。 **因此这个方法只适用于数组，而且回调结构也比较笨拙**。
+
+## 7.2 迭代器模式
+
+迭代器模式（特别是在 ECMAScript 这个语境下）描述了一个方案，即可以把有些结构称为“可迭 代对象”（iterable），因为它们实现了正式的 Iterable 接口，而且可以通过迭代器 Iterator 消费。
+
+任何实现 Iterable 接口的数据结构都可以被实现 Iterator 接口的结构“消费”（consume）。迭代器（iterator）是按需创建的一次性对象。每个**迭代器**都会关联一个**可迭代对象**，而迭代器会暴露迭代其关联可迭代对象的 API。迭代器无须了解与其关联的可迭代对象的结构，只需要知道如何取得连续的值。这种概念上的分离正是 Iterable 和 Iterator 的强大之处。
+
+### 7.2.1 可迭代协议
+
+在 ECMAScript 中，这意味着必须暴露一个属性作为“默认迭代器”，而 且这个属性必须使用特殊的 Symbol.iterator 作为键。这个默认迭代器属性必须**引用一个迭代器工厂 函数**，调用这个工厂函数必须返回一个新迭代器。
+
+```
+let str = 'abc'; 
+let arr = ['a', 'b', 'c']; 
+let map = new Map().set('a', 1).set('b', 2).set('c', 3); 
+let set = new Set().add('a').add('b').add('c'); 
+let els = document.querySelectorAll('div'); 
+// 这些类型都实现了迭代器工厂函数
+console.log(str[Symbol.iterator]); // f values() { [native code] } 
+console.log(arr[Symbol.iterator]); // f values() { [native code] } 
+console.log(map[Symbol.iterator]); // f values() { [native code] } 
+console.log(set[Symbol.iterator]); // f values() { [native code] } 
+console.log(els[Symbol.iterator]); // f values() { [native code] } 
+// 调用这个工厂函数会生成一个迭代器
+console.log(str[Symbol.iterator]()); // StringIterator {} 
+console.log(arr[Symbol.iterator]()); // ArrayIterator {} 
+console.log(map[Symbol.iterator]()); // MapIterator {} 
+console.log(set[Symbol.iterator]()); // SetIterator {} 
+console.log(els[Symbol.iterator]()); // ArrayIterator {} 
+```
+
+实际写代码过程中，不需要显式调用这个工厂函数来生成迭代器。实现可迭代协议的所有类型都会 自动兼容接收可迭代对象的任何语言特性。接收可迭代对象的原生语言特性包括：
+
+- for-of 循环
+- 数组解构
+- 扩展操作符
+- Array.from()
+- 创建集合
+- 创建映射
+- Promise.all()接收由期约组成的可迭代对象
+- Promise.race()接收由期约组成的可迭代对象
+- yield*操作符，在生成器中使用
+
+可迭代协议就是我们要在可迭代对象上定义这个原型属性，并引用一个迭代器工厂函数。
+
+### 7.2.2 迭代器协议
+
+迭代器是一种一次性使用的对象，用于迭代与其关联的可迭代对象。迭代器 API 使用 next()方法 在可迭代对象中遍历数据。每次成功调用 next()，都会返回一个 IteratorResult 对象，其中包含迭 代器返回的下一个值。若不调用 next()，则无法知道迭代器的当前位置。
+
+next()方法返回的迭代器对象 IteratorResult 包含两个属性：done 和 value。done 是一个布 尔值，表示是否还可以再次调用 next()取得下一个值；value 包含可迭代对象的下一个值（done 为 false），或者 undefined（done 为 true）。done: true 状态称为“耗尽”。可以通过以下简单的数 组来演示：
+
+```
+// 可迭代对象
+let arr = ['foo', 'bar']; 
+// 迭代器工厂函数
+console.log(arr[Symbol.iterator]); // f values() { [native code] } 
+// 迭代器
+let iter = arr[Symbol.iterator](); 
+console.log(iter); // ArrayIterator {} 
+// 执行迭代
+console.log(iter.next()); // { done: false, value: 'foo' } 
+console.log(iter.next()); // { done: false, value: 'bar' } 
+console.log(iter.next()); // { done: true, value: undefined }
+```
+
+迭代器维护着一个指向可迭代对象的引用，因此迭代器会阻止垃圾回收程序回收可 迭代对象。
+
+迭代器是iter，可迭代对象是数组。
+
+Iterator 接口，有next属性，迭代器实现了Iterator 接口接口。
+
+“迭代器”的概念有时候容易模糊，因为它可以指通用的迭代，也可以指接口，还可以指正式的迭 代器类型。下面的例子比较了一个显式的迭代器实现和一个原生的迭代器实现：
+
+```
+// 这个类实现了可迭代接口（Iterable） 
+// 调用默认的迭代器工厂函数会返回
+// 一个实现迭代器接口（Iterator）的迭代器对象
+class Foo { 
+ [Symbol.iterator]() { 
+   return { 
+     next() { 
+       return { done: false, value: 'foo' }; 
+     	} 
+   } 
+  } 
+} 
+let f = new Foo(); 
+// 打印出实现了迭代器接口的对象
+console.log(f[Symbol.iterator]()); // { next: f() {} } 
+// Array 类型实现了可迭代接口（Iterable）
+// 调用 Array 类型的默认迭代器工厂函数
+// 会创建一个 ArrayIterator 的实例
+let a = new Array(); 
+// 打印出 ArrayIterator 的实例
+console.log(a[Symbol.iterator]()); // Array Iterator {} 
+```
+
+### 7.2.3 自定义迭代器
+
+与 Iterable 接口类似，任何实现 Iterator 接口的对象都可以作为迭代器使用。下面这个例子中 的 Counter 类只能被迭代一定的次数：
+
+```
+class Counter { 
+ // Counter 的实例应该迭代 limit 次
+ constructor(limit) { 
+ this.count = 1; 
+ this.limit = limit; 
+ } 
+ next() { 
+ if (this.count <= this.limit) { 
+ return { done: false, value: this.count++ }; 
+ } else { 
+ return { done: true, value: undefined }; 
+ } 
+ } 
+ [Symbol.iterator]() { 
+ return this; 
+ } 
+} 
+let counter = new Counter(3); 
+for (let i of counter) { 
+ console.log(i); 
+} 
+// 1 
+// 2 
+// 3 
+```
+
+这个类实现了 Iterator 接口，但不理想。这是因为它的每个实例只能被迭代一次。
+
+为了让一个可迭代对象能够创建多个迭代器，必须每创建一个迭代器就对应一个新计数器。为此， 可以把计数器变量放到闭包里，然后通过闭包返回迭代器：
+
+```
+class Counter { 
+ constructor(limit) { 
+   this.limit = limit; 
+ } 
+ [Symbol.iterator]() { 
+   let count = 1, 
+   limit = this.limit; 
+   return { 
+     next() { 
+     if (count <= limit) { 
+     	return { done: false, value: count++ }; 
+     } else { 
+     	return { done: true, value: undefined }; 
+   	} 
+   } 
+  }; 
+ } 
+} 
+```
+
+### 7.2.4 提前终止迭代器
+
+可选的 return()方法用于指定在迭代器提前关闭时执行的逻辑。执行迭代的结构在想让迭代器知 道它不想遍历到可迭代对象耗尽时，就可以“关闭”迭代器。可能的情况包括：
+
+- for-of 循环通过 break、continue、return 或 throw 提前退出；
+- 解构操作并未消费所有值。
+
+return()方法必须返回一个有效的 IteratorResult 对象。简单情况下，可以只返回{ done: true }。 因为这个返回值只会用在**生成器的上下文中**，所以本章后面再讨论这种情况。
+
+```
+class Counter { 
+ constructor(limit) { 
+ 	this.limit = limit; 
+ } 
+ [Symbol.iterator]() { 
+   let count = 1, 
+   limit = this.limit; 
+   return { 
+     next() { 
+       if (count <= limit) { 
+       	return { done: false, value: count++ }; 
+       } else { 
+       	return { done: true }; 
+     	} 
+   	 }, 
+     return() { 
+       console.log('Exiting early'); 
+       return { done: true }; 
+     } 
+   }; 
+ } 
+} 
+```
+
+```
+let counter1 = new Counter(5); 
+for (let i of counter1) { 
+ if (i > 2) { 
+ 	break; 
+ } 
+ console.log(i); 
+} 
+// 1 
+// 2 
+// Exiting early
+```
+
+如果迭代器没有关闭，则还可以继续从上次离开的地方继续迭代。比如，**数组的迭代器就是不能关 闭的**：
+
+```
+let a = [1, 2, 3, 4, 5]; 
+let iter = a[Symbol.iterator](); 
+for (let i of iter) { 
+ console.log(i); 
+ if (i > 2) { 
+ 	break 
+ } 
+} 
+// 1 
+// 2 
+// 3 
+for (let i of iter) { 
+ console.log(i); 
+} 
+// 4 
+// 5 
+```
+
+因为 return()方法是可选的，所以并非所有迭代器都是可关闭的。要知道某个迭代器是否可关闭， 可以测试这个迭代器实例的 return 属性是不是函数对象。**不过，仅仅给一个不可关闭的迭代器增加这 个方法**并不能让它变成可关闭的。这是因为调用 return()不会强制迭代器进入关闭状态。即便如此， return()方法还是会被调用。
+
+## 7.3 生成器
+
+生成器是 ECMAScript 6 新增的一个极为灵活的结构，拥有在一个函数块内暂停和恢复代码执行的 能力。这种新能力具有深远的影响，比如，使用生成器可以**自定义迭代器**和实现协程。
+
+### 7.3.1 生成器基础
+
+生成器的形式是一个函数，函数名称前面加一个星号（*）表示它是一个生成器。只要是可以定义 函数的地方，就可以定义生成器。
+
+```
+// 生成器函数声明
+function* generatorFn() {} 
+// 生成器函数表达式
+let generatorFn = function* () {}
+// 作为对象字面量方法的生成器函数
+let foo = { 
+ * generatorFn() {} 
+} 
+// 作为类实例方法的生成器函数
+class Foo { 
+ * generatorFn() {} 
+} 
+// 作为类静态方法的生成器函数
+class Bar { 
+ static * generatorFn() {} 
+} 
+```
+
+**注意 箭头函数不能用来定义生成器函数。**
+
+**调用生成器函数会产生一个生成器对象**。生成器对象一开始处于暂停执行（suspended）的状态。与 迭代器相似，**生成器对象也实现了 Iterator 接口**，因此具有 next()方法。调用这个方法会让生成器 开始或恢复执行。
+
+next()方法的返回值类似于迭代器，有一个 done 属性和一个 value 属性。函数体为空的生成器 函数中间不会停留，调用一次 next()就会让生成器到达 done: true 状态。
+
+生成器对象实现了 Iterable 接口，它们默认的迭代器是自引用的（iterator返回this，因为这个对象有next()方法，参考7.2.3）：
+
+```
+function* generatorFn() {} 
+const g = generatorFn(); 
+console.log(g === g[Symbol.iterator]()); 
+// true 
+```
+
+### 7.3.2 通过 yield 中断执行
+
+遇到之前：正常执行
+
+遇到：返回参数给
+
+遇到之后：停止
+
+yield 关键字可以让生成器**停止**和**开始**执行，也是生成器最有用的地方。生成器函数在**遇到 yield 关键字之前会正常执行**。遇到这个关键字后，执行会停止，**函数作用域的状态会被保留**。停止执行的生 成器函数只能通过在生成器对象上调用 next()方法来恢复执行：
+
+```
+function* generatorFn() { 
+ yield; 
+} 
+let generatorObject = generatorFn(); 
+console.log(generatorObject.next()); // { done: false, value: undefined } 
+console.log(generatorObject.next()); // { done: true, value: undefined } 
+```
+
+此时的yield 关键字有点像函数的中间返回语句，**它生成的值会出现在 next()方法返回的对象里**。 通过 yield 关键字退出的生成器函数会处在 done: false 状态；**通过 return 关键字退出的生成器函 数会处于 done: true 状态**。
+
+```
+function* generatorFn() { 
+ yield 'foo'; 
+ yield 'bar'; 
+ return 'baz'; 
+} 
+let generatorObject = generatorFn(); 
+console.log(generatorObject.next()); // { done: false, value: 'foo' } 
+console.log(generatorObject.next()); // { done: false, value: 'bar' } 
+console.log(generatorObject.next()); // { done: true, value: 'baz' } 
+```
+
+生成器函数内部的执行流程会针对每个生成器对象区分作用域。在一个生成器对象上调用 next() 不会影响其他生成器：
+
+与迭代器一致。
+
+```
+function* generatorFn() { 
+ yield 'foo'; 
+ yield 'bar'; 
+ return 'baz'; 
+} 
+let generatorObject1 = generatorFn(); 
+let generatorObject2 = generatorFn(); 
+
+console.log(generatorObject1.next()); // { done: false, value: 'foo' } 
+console.log(generatorObject2.next()); // { done: false, value: 'foo' } 
+
+```
+
+- 生成器对象作为可迭代对象
+
+```
+function* generatorFn() { 
+ yield 1; 
+ yield 2; 
+ yield 3; 
+} 
+for (const x of generatorFn()) { 
+ console.log(x); 
+} 
+// 1 
+// 2 
+// 3 
+```
+
+- 使用 yield 实现输入和输出
+
+除了可以作为函数的中间返回语句使用，yield 关键字还可以作为**函数的中间参数使用**。上一次让 生成器函数暂停的 yield 关键字会接收到传给 next()方法的第一个值。这里有个地方不太好理解—— 第一次调用 next()传入的值不会被使用，因为这一次调用是为了开始执行生成器函数：
+
+```
+function* generatorFn(initial) { 
+ console.log(initial); 
+ console.log(yield); 
+ console.log(yield); 
+} 
+let generatorObject = generatorFn('foo'); 
+generatorObject.next('bar'); // foo 
+generatorObject.next('baz'); // baz 
+generatorObject.next('qux'); // qux
+```
+
+当初始化生成器对象时，传入了`foo`，而此时由于没有调用`next`，生成器内部的代码不会执行，第一次执行`next`输出的是`initial`然后遇到`yield`暂停了。
+
+之后`yield`接收到的都是调用`next`时传递的参数。
+
+- 产生可迭代对象
+
+可以使用**星号增强 yield 的行为**，让它能够**迭代一个可迭代对象**，从而一次产出一个值：
+
+```
+// 等价的 generatorFn： 
+// function* generatorFn() { 
+// for (const x of [1, 2, 3]) { 
+// yield x; 
+// } 
+// } 
+function* generatorFn() { 
+ yield* [1, 2, 3]; 
+} 
+```
+
+与生成器函数的星号类似，yield 星号两侧的空格不影响其行为：
+
+```
+function* generatorFn() { 
+ yield* [1, 2]; 
+ yield *[3, 4]; 
+ yield * [5, 6]; 
+}
+```
+
+- 使用 yield*实现递归算法
+
+yield***最有用的地方是实现递归操作**，此时生成器可以产生自身。看下面的例子：
+
+```
+function* nTimes(n) { 
+ if (n > 0) { 
+ yield* nTimes(n - 1); 
+ yield n - 1; 
+ } 
+} 
+for (const x of nTimes(3)) { 
+ console.log(x); 
+} 
+// 0 
+// 1 
+// 2
+```
+
+## 7.3.3 生成器作为默认迭代器
+
+因为生成器对象实现了 Iterable 接口，而且**生成器函数**和**默认迭代器**被调用之后都产生**迭代器**(有`next`方法)， 所以生成器格外适合作为默认迭代器。下面是一个简单的例子，这个类的默认迭代器可以用一行代码产 出类的内容：
+
+使用`*`标记该属性
+
+```
+class Foo { 
+ constructor() { 
+ 	this.values = [1, 2, 3]; 
+ }
+ * [Symbol.iterator]() { 
+ 	yield* this.values; 
+ } 
+} 
+```
+
+## 7.3.4 提前终止生成器
+
+与迭代器类似，生成器也支持“可关闭”的概念。一个实现 Iterator 接口的对象一定有 next() 方法，还有一个可选的 return()方法用于提前终止迭代器。**生成器对象除了有这两个方法，还有第三 个方法：throw()**。
+
+```
+function* generatorFn() {} 
+const g = generatorFn(); 
+console.log(g); // generatorFn {<suspended>} 
+console.log(g.next); // f next() { [native code] } 
+console.log(g.return); // f return() { [native code] } 
+console.log(g.throw); // f throw() { [native code] }
+```
+
+return()和 throw()方法都可以用于强制生成器进入关闭状态。
+
+- return()
+
+return()方法会强制生成器进入**关闭状态**。提供给 return()方法的值，就是终止迭代器对象的值：
+
+```
+function* generatorFn() { 
+ for (const x of [1, 2, 3]) { 
+ 	yield x; 
+ } 
+} 
+const g = generatorFn(); 
+console.log(g); // generatorFn {<suspended>} 
+console.log(g.return(4)); // { done: true, value: 4 } 
+console.log(g); // generatorFn {<closed>} 
+```
+
+与迭代器不同，所有生成器对象都有 return()方法，只要通过它进入关闭状态，就无法恢复了。 后续调用 next()会显示 done: true 状态，而提供的任何返回值都不会被存储或传播：
+
+迭代器需要自己定义return 方法。
+
+一旦执行return方法，生成器就不会被for-of等内置循环语句执行，退出循环。
+
+- throw
+
+throw()方法会在暂停的时候将一个提供的错误注入到生成器对象中。如果错误未被处理，生成器 就会关闭：
+
+```
+function* generatorFn() { 
+ for (const x of [1, 2, 3]) { 
+ 	yield x; 
+ } 
+} 
+const g = generatorFn(); 
+console.log(g); // generatorFn {<suspended>} 
+try { 
+ g.throw('foo'); 
+} catch (e) { 
+ console.log(e); // foo 
+} 
+console.log(g); // generatorFn {<closed>} 
+```
+
+不过，假如生成器函数内部处理了这个错误，那么生成器就不会关闭，而且还可以恢复执行。错误 处理会跳过对应的 yield，因此在这个例子中会跳过一个值。比如：
+
+```
+function* generatorFn() { 
+   for (const x of [1, 2, 3]) { 
+   try { 
+    yield x; 
+   } catch(e) {} 
+ } 
+} 
+
+const g = generatorFn(); 
+console.log(g.next()); // { done: false, value: 1} 
+g.throw('foo'); 
+console.log(g.next()); // { done: false, value: 3} 
+```
+
+在这个例子中，生成器在 try/catch 块中的 yield 关键字处暂停执行。**在暂停期间**，throw()方 法向生成器对象内部注入了一个错误：字符串"foo"。**这个错误会被 yield 关键字抛出**（在这里抛出错误，因为遇到yield暂停了）。因为错误是在 生成器的 try/catch 块中抛出的，所以仍然在生成器内部被捕获。可是，由于 yield 抛出了那个错误， 生成器就不会再产出值 2。此时，生成器函数继续执行，在下一次迭代再次遇到 yield 关键字时产出了 值 3。
+
+**如果生成器对象还没有开始执行**，那么调用 throw()抛出的错误不会在函数内部被 捕获，因为这相当于在函数块外部抛出了错误。
+
+## 7.4 小结
+
+迭代是一种所有编程语言中都可以看到的模式。ECMAScript 6 正式支持迭代模式并引入了两个新的 语言特性：迭代器和生成器。
+
+**迭代器是一个可以由任意对象实现的接口**，支持连续获取对象产出的每一个值。任何实现 Iterable 接口的对象都有一个 Symbol.iterator 属性，这个属性引用默认迭代器。默认迭代器就像一个迭代器 工厂，也就是一个函数，调用之后会产生一个实现 Iterator 接口的对象。
+
+迭代器必须通过连续调用 next()方法才能连续取得值，这个方法返回一个 **IteratorObject**。这 个对象包含一个 done 属性和一个 value 属性。前者是一个布尔值，表示是否还有更多值可以访问；后者包含迭代器返回的当前值。这个接口可以通过手动反复调用 next()方法来消费，也可以通过原生消 费者，比如 for-of 循环来自动消费	
+
+**生成器是一种特殊的函数**，调用之后会返回一个生成器对象。生成器对象实现了 Iterable 接口， 因此可用在任何消费可迭代对象的地方。生成器的独特之处在于支持 yield 关键字，这个关键字能够 暂停执行生成器函数。使用 yield 关键字还可以通过 next()方法接收输入和产生输出。在加上星号之 后，yield 关键字可以将跟在它后面的可迭代对象序列化为一连串值。
