@@ -534,3 +534,26 @@ type DeepReadonly<T> = {
 }
 ```
 
+## :zap:链式的Options
+
+https://github.com/type-challenges/type-challenges/blob/main/questions/00012-medium-chainable-options/README.md
+
+```
+const result1 = a
+  .option('foo', 123)
+  .option('bar', { value: 'Hello World' })
+  .option('name', 'type-challenges')
+  .get()
+```
+
+```
+type Chainable<R = {}> = {
+  option<P extends string, V extends any>(
+    key: P extends keyof R ? (V extends R[P] ? never : P) : P,
+    value: V
+  ): Chainable<R & { [K in P as K extends keyof R ? never : K]: V }>
+  get(): R
+}
+```
+
+最开始`a`是空的, R为`{}`；
