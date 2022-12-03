@@ -59,3 +59,104 @@ window 对象有一个属性 opener，指向打开它的窗口。这个属性只
 ![image-20221202201420305](assets/image-20221202201420305.png)
 
 ### 12.1.7 定时器
+
+最时机应用中，最好不要使用setInterval，因为上一次结束和下一次执行经历的时机是不确定。
+
+### 12.1.8 系统对话框
+
+系统提供的都是同步的模态对话框[弹框系统总结](./弹框系统总结.md)。
+
+[window.alert - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/alert)
+
+[Window.confirm() - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/confirm)	**`Window.confirm()`** 方法显示一个具有一个可选消息和两个按钮 (确定和取消) 的模态对话框。
+
+[window.prompt - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/prompt)显示一个对话框，对话框中包含一条文字信息，用来提示用户输入文字。
+
+## 12.2 location对象
+
+这个对象独特的地方在于，它既是 window 的属性，也是 document 的属性。也就是说， window.location 和 document.location 指向同一个对象。location 对象不仅保存着**当前加载文 档的信**息，也保存着把 **URL 解析为离散片段**后能够通过属性访问的信息（host，hostName，origin，search等）。
+
+### 12.2.1 查询字符串
+
+location.search 返回了从问号开始直到 URL 末尾的所有内容，但没有经过解析
+
+```js
+let getQueryStringArgs = function () {
+    // 取得没有开头问号的查询字符串
+    let qs = (location.search.length > 0 ? location.search.substring(1) : ""),
+        // 保存数据的对象
+        args = {};
+    // 把每个参数添加到 args 对象
+    for (let item of qs.split("&").map(kv => kv.split("="))) {
+        let name = decodeURIComponent(item[0]),
+            value = decodeURIComponent(item[1]);
+        if (name.length) {
+            args[name] = value;
+        }
+    } 
+    return args;
+} 
+```
+
+**URLSearchParams**提供了标准API：
+
+```js
+let qs = "?q=javascript&num=10";
+let searchParams = new URLSearchParams(qs);
+alert(searchParams.toString()); // " q=javascript&num=10" 
+searchParams.has("num"); // true 
+searchParams.get("num"); // 10 
+searchParams.set("page", "3");
+alert(searchParams.toString()); // " q=javascript&num=10&page=3" 
+searchParams.delete("q");
+alert(searchParams.toString()); // " num=10&page=3" 
+```
+
+### 12.2.2 操作地址
+
+[window.location - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/location)
+
+## 12.3 navigator对象
+
+[window.navigator - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/navigator)
+
+只读属性 **`Window.navigator`** 会返回一个 [`Navigator`](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator) 对象的引用，可以用于请求**运行当前代码**的应用程序的相关信息。
+
+### 12.3.1 检查插件
+
+`window.navigator.plugins`
+
+### 12.3.2 注册处理程序
+
+[Navigator.registerProtocolHandler() - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/registerProtocolHandler)
+
+## 12.4 screen对象
+
+保存的是客户端显示器的信息。
+
+## 12.5 history对象
+
+[Window.history - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/history)
+
+### 12.5.1 导航
+
+`go`, `back`, 'forward'.
+
+### 12.5.2 历史状态管理
+
+现代Web程序，用户每次点击都会触发页面更新的时代已经过去（动态渲染界面，不用重新请求页面）。
+
+`hashchange`事件。
+
+# Cap.13 客户端检测
+
+## 13.2 用户代理
+
+用户代理字符串：确定用户使用的是什么浏览器。
+
+渲染引擎：Gecko-firefox, WebKir-safari
+
+## 13.3 软件与硬件检测
+
+### 13.3.2 浏览器元数据
+
