@@ -124,7 +124,7 @@ const obj = {
 
 Object.keys(obj).forEach(key => {
   let value = obj[key];
-
+	// 这里会将数据属性变为访问器属性，因此创建了一个局部作用域的对象value，形成了闭包
   Object.defineProperty(obj, key, {
     set(newValue){
       console.log('监听' + key + '改变 ')

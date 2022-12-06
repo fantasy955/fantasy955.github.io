@@ -160,4 +160,61 @@ inner.addEventListener('click', onClick)
 
 ## Vue nextTick
 
-既然要放在页面更新后执行，那么这个函数就是创建了一个宏任务。
+[全局 API：常规 | Vue.js (vuejs.org)](https://cn.vuejs.org/api/general.html#nexttick)
+
+> [神奇的nextTick一定能获取到最新的dom么？ - 掘金 (juejin.cn)](https://juejin.cn/post/7166517557124415518)
+>
+> `vue`的`dom`更新操作时异步的，为了获取更新后的`dom`官方提供了相应的api`nextTick`,文档中对该api的描述为：`将回调延迟到下次 DOM 更新循环之后执行` , 所谓的下一次，到底是哪一次呢？`dom`更新是异步任务，`nextTick`的回调也是异步任务，`nextTick`的回调中一定就能获取到最新的dom么?
+
+> 当你在 Vue 中更改响应式状态时，最终的 DOM 更新并不是同步生效的，而是由 Vue 将它们缓存在一个队列中，直到下一个“tick”才一起执行。**这样是为了确保每个组件无论发生多少状态改变，都仅执行一次更新**。
+
+状态更新是一个微任务；
+
+nextTick也是微任务；
+
+先写状态更新，再写nextTick回调；
+
+状态更新会先创建一个微任务，并且代码块中的所有状态变化会集中到这个微任务进行，状态改变触发了DOM更新，创建了一个宏任务。
+
+界面更新宏任务结束后，立即调用nextTick微任务。
+
+## 类型
+
+```ts
+function nextTick(callback?: () => void): Promise<void>
+```
+
+## 实例
+
+由于返回的是Promise，因此可以在使用`await`等待DOM更新完成(vue3)。
+
+```js
+<script>
+import { nextTick } from 'vue'
+
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  methods: {
+    async increment() {
+      this.count++
+
+      // DOM 还未更新
+      console.log(document.getElementById('counter').textContent) // 0
+
+      await nextTick()
+      // DOM 此时已经更新
+      console.log(document.getElementById('counter').textContent) // 1
+    }
+  }
+}
+</script>
+
+<template>
+  <button id="counter" @click="increment">{{ count }}</button>
+</template>
+```
+
