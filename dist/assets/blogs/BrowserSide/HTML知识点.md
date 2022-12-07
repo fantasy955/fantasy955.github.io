@@ -120,6 +120,46 @@ href属性中的url可以是浏览器支持的任何协议，所以a标签可以
 
 SEO指的是搜索引擎优化，TDK其实就是`title`、`description`、`keywords`这三个标签，title表示标题标签，description是描述标签，keywords是关键词标签
 
+# 浮动元素
+
+[float - CSS: Cascading Style Sheets | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Web/CSS/float)
+
+`float` CSS 属性指定一个元素应沿其容器的左侧或右侧放置，允许文本和内联元素环绕它。该元素从网页的正常流动（文档流）中移除，尽管仍然保持部分的流动性（与[绝对定位](https://developer.mozilla.org/zh-CN/docs/Web/CSS/position#absolute_positioning)相反）。
+
+由于 `float` 意味着使用块布局，它在某些情况下会修改 [`display`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/display) 值的计算值（同时指定display和float，display的值可能发生改变）。
+
+浮动元素虽然脱离了文档流，但他们不会挡住其他内容。
+
+# BFC
+
+[面试官：请说说什么是BFC？大白话讲清楚 - 掘金 (juejin.cn)](https://juejin.cn/post/6950082193632788493)
+
+[块格式化上下文 - Web 开发者指南 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context)
+
+块级元素并不是BFC，inline-block元素是BFC。
+
+### 特点
+
+BFC会计算浮动元素的高度，BFC内部不会影响外部。
+
+格式化上下文影响布局，通常，我们为了**定位**和清除浮动创建新的 BFC，而不是更改布局，因为它将：
+
+- 包含内部浮动[块格式化上下文 - Web 开发者指南 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context#包含内部浮动)
+- 排除外部浮动[块格式化上下文 - Web 开发者指南 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context#排除外部浮动)
+- 阻止 [外边距重叠](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing)
+
+### 创建BFC
+
+- overflow
+
+使用 `overflow` 创建新的 BFC，是因为 `overflow` 属性会告**诉浏览器应该怎样处理溢出的内容**。如果使用它仅仅为了创建 BFC，你可能会遇到不希望出现的滚动条或阴影，需要注意。另外，对于后续的开发者，可能不清楚当时为什么使用 `overflow`，所以最好添加一些注释来解释为什么这样做。
+
+### 排除外部浮动
+
+排除外部浮动利用的BFC特性是：正常文档流中建立的 BFC 不得与元素本身所在的块格式化上下文中的任何浮动的外边距重叠。
+
+> 请注意，flexbox [Flexbox| MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)是在现代 CSS 中实现多列布局的更有效的方法。
+
 # CSS3中的变形处理
 
 ## transform
@@ -236,3 +276,66 @@ animation =
 
 对于关键帧动画来说，`timing function `作用于**一个关键帧周期**而非整个动画周期，即从关键帧开始开始，到关键帧结束结束。这意味着使用`ease-in`的话，每一帧的变化都是最开始比较慢，之后变快。
 
+# Flex布局
+
+[Flexbox - Learn web development | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox)
+
+外层容器（display属性为flex）称为flex容器，子元素称为flex item。
+
+主轴`main axis`是flex容器的排列方向，可以为`row`或`column`，那么另一个就是`corss axis`。使用`flex-direction`指定排列方向。在`flex-wrap`属性不为`wrap`时，会一直在这个方向上排列子元素。[Flexbox - Learn web development | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox#wrapping)
+
+## 控制每个flex item所占空间
+
+[:nth-of-type - CSS（层叠样式表） | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/CSS/:nth-of-type)
+
+- `felx：1`：表示flex item所占空间的比例。也可以指定最小值(`flex:2 200px`)。
+
+## 水平和垂直方向对齐
+
+- align-items
+
+  [`align-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/align-items) controls where the flex items sit on the cross axis. 默认值是`strech`，将在`cross-axis`上拉伸，以填满父级元素。
+
+  值为`center`时，在`cross-axis`上居中。
+
+  值为`flex-start`或`flex-end`，与`cross-axis`上第一个或最后一个对齐。
+
+  针对某个特定的item，可以使用`align-self`属性覆盖所处flex容器定义的`align-items`属性。
+
+- justify-content
+
+  `justify-content` controls where the flex items sit on the main axis.
+
+flex布局，`flex-direction: column; flex-wrap: wrap; jusctify-content: center; align-items: center`, flex item的宽度为500px；
+
+在`main-axis`上发生了换行，另起了一列。在`cross-axis`上居中（水平居中，因为方向是column）；
+
+`justify-content`控制在`main-axis`上居中（垂直居中）：
+
+![image-20221207104431421](assets/image-20221207104431421.png)
+
+## 排序
+
+[Flexbox - Learn web development | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox#ordering_flex_items)
+
+`order`属性。默认值是0。
+
+- order值越大，越排在后面。
+
+  将最后一个item的order设为-1.
+
+  ![image-20221207104633576](assets/image-20221207104633576.png)
+
+# position属性
+
+[position - CSS（层叠样式表） | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/CSS/position)
+
+CSS **`position`** 属性用于指定一个元素在文档中的定位方式。[`top`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/top)，[`right`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/right)，[`bottom`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/bottom) 和 [`left`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/left) 属性则决定了该元素的最终位置。
+
+- relative
+
+- absolute
+
+  元素会被移出正常文档流，并不为元素预留空间，通过指定元素相对于**最近的非 static 定位祖先元素的偏移**，来确定元素位置。绝对定位的元素可以设置外边距（margins），且不会与其他边距合并。
+
+  可以将父元素设置为`relative`。
