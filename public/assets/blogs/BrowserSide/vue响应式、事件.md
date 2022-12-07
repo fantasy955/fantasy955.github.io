@@ -130,8 +130,15 @@ Object.keys(obj).forEach(key => {
     }
   })
 })
-
 ```
+
+这里使用`defineProperty`重新定义了message和name，将他们从原本的**数据属性**变为了**访问器属性**：
+
+![image-20221129221324453](assets/image-20221129221324453.png)
+
+而访问器属性是没有value的，但是get和set保存了一个外部引用`value`，将值保存到这个外部引用上。
+
+
 
 **Object.defineProperty()监听对象属性的改变**
 **发布者订阅者模式通知需要改变的地方**

@@ -16,7 +16,7 @@ export const useCounterStore = defineStore('counter', {
 })
 ```
 
-## Setup Stores（组合式
+## Setup Stores（组合式）
 
 还有另一种可能的定义存储的语法。与Vue Composition API的setup函数类似，我们可以传入一个定义响应性属性和方法的函数，并返回一个带有我们想要公开的属性和方法的对象。
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            animation-name: change;
+            animation-name: change;
+            animation-duration: 20s;
+            animation-timing-function: ease-in;
+            animation-iteration-count: infinite;
+        }
+
+        /* div:hover {
+            animation-name: change;
+            animation-duration: 2s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+        } */
+
+        @keyframes change {
+            0% {
+                width: 100px;
+                height: 100px;
+                background-color: black;
+            }
+
+            30% {
+                width: 200px;
+                height: 500px;
+                background-color: pink;
+            }
+
+            60% {
+                width: 100px;
+                height: 100px;
+                background-color: green;
+            }
+
+            100% {
+                width: 600px;
+                height: 600px;
+                background-color: yellow;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+</body>
+
+</html>

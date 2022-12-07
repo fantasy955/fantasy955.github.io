@@ -107,3 +107,36 @@ function create(fn, ...args){
 console.log( create(student, 'wjl', 22) )
 ```
 
+
+
+# 异常捕获
+
+## 如何给所有的async函数添加try/catch？
+
+[阿里面试官：如何给所有的async函数添加try/catch？ - 掘金 (juejin.cn)](https://juejin.cn/post/7155434131831128094#comment)
+
+- babel，从代码角度添加
+- 事件捕获，添加全局事件
+
+```tsx
+async function fn() {
+await new Promise((resolve, reject) => { reject(new Errot('message')); });
+}
+fn();
+
+window.addEventListener('unhandledrejection', function (event) {
+console.log('event', event);
+console.log('message', event.message);
+event.preventDefault()
+});
+```
+
+需要reject Error，才能在全局事件中拿到信息。
+
+- 封装接口的时候全部resolve掉，然后处理错误信息，这样就不用写丑陋的trycatch
+
+- 可以参考一下vue中Vue.config.errorHandler的实现，其实我个人理解 面试官问你这道题 其实是想问你埋点监控相关的东西，全局捕获异常可以结合埋点做一些后续的开发。。。
+
+# 深拷贝
+
+[深拷贝](./对象拷贝.md)
