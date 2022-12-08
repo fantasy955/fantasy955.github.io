@@ -140,3 +140,7 @@ event.preventDefault()
 # 深拷贝
 
 [深拷贝](./对象拷贝.md)
+
+# 防抖和节流
+
+[编程篇(018)-手写防抖(debounce)和节流(throttle) - 腾讯云开发者社区-腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/2186216#:~:text=区别：,防抖动是将多次执行变为最后一次执行，节流是将多次执行变成每隔一段时间执行。)
