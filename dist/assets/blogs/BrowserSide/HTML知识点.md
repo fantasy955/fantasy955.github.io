@@ -290,6 +290,22 @@ animation =
 
 - `felx：1`：表示flex item所占空间的比例。也可以指定最小值(`flex:2 200px`)。
 
+`justify-cotent`描述了元素在主轴上的分布方式，告诉浏览器如何分配顺着弹性容器主轴 (或者网格行轴) 的元素之间及其周围的空间（分配元素之间的空间）；
+
+`align-items`描述了元素在交叉轴上的对齐方式（元素自身）；
+
+`justify-items`属性被忽略[justify-items - CSS（层叠样式表） | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/CSS/justify-items)；
+
+`align-content`属性对单行弹性盒子模型无效[align-content - CSS（层叠样式表） | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/CSS/align-content)，该属性设置了浏览器如何沿着[弹性盒子布局](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Flexible_Box_Layout)的纵轴和[网格布局](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Grid_Layout)的主轴在内容项之间和周围分配空间（也是空间，content表示空间，item表示元素自身，将外层容器的高度设置为900px，大于内容高度，同时align-content属性设置为`center`，在交叉轴上居中了（看右侧滑块位置）：
+
+[A Pen by fantasy955 (codepen.io)](https://codepen.io/fantasy995/pen/dyKawob)
+
+![image-20221207223729966](assets/image-20221207223729966.png)
+
+不设置的话元素被拉伸（strech）：
+
+![image-20221207223931124](assets/image-20221207223931124.png)
+
 ## 水平和垂直方向对齐
 
 - align-items
@@ -339,3 +355,22 @@ CSS **`position`** 属性用于指定一个元素在文档中的定位方式。[
   元素会被移出正常文档流，并不为元素预留空间，通过指定元素相对于**最近的非 static 定位祖先元素的偏移**，来确定元素位置。绝对定位的元素可以设置外边距（margins），且不会与其他边距合并。
 
   可以将父元素设置为`relative`。
+
+# flex布局和grid布局
+
+[一文搞懂grid布局 和 flex 布局及其区别 - 掘金 (juejin.cn)](https://juejin.cn/post/6940627375537258527)
+
+[flex布局](./flex布局.md),[grid布局](./grid布局.md)
+
+## align-content属性
+
+align-content属性定义了flex item在交叉轴上的对齐方式。
+
+如果`flex-direction`的值为`row`的话，交叉轴就是纵轴，由于高度比较难观察，因此将方向设为`column`进行演示：
+
+这里flex cantainer的高度设定为600px，因此发生了换行（产生了三列）。
+
+`align-content: flex-end`： 
+
+![image-20221207222430961](assets/image-20221207222430961.png)
+
