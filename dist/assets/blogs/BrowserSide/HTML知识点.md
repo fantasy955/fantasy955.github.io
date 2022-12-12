@@ -387,3 +387,50 @@ align-content属性定义了flex item在交叉轴上的对齐方式。
 
 ![image-20221207222430961](assets/image-20221207222430961.png)
 
+## grid布局
+
+[grid-template - CSS（层叠样式表） | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/CSS/grid-template)
+
+在不指定`grid-tempate`属性时，容器默认是一行一列：
+
+![image-20221208140246288](assets/image-20221208140246288.png)
+
+```html
+<div class="grid-cantainer">
+  <div class='item-1'></div>
+  <div class='item-1'></div>
+</div>
+```
+
+```css
+.grid-cantainer {
+  display: grid;
+  background-color: pink;
+  border: 1px solid;
+  margin: 12px;
+  width: auto;
+  height: 500px;
+}
+
+.item-1 {
+  width: 100px;
+  height: 50px;
+  margin: 12px;
+  background-color: aliceblue;
+}
+```
+
+当只有一个元素时，为了让它水平垂直居中，我们可以使用和`flex`布局一样的方式`justify-content`, `align-items`。
+
+### fr关键字
+
+`fr`属性指定某一列所占可用空间的比例。
+
+### minmax(函数)
+
+指定某一利用的最小和最大宽度（最小使用绝对值，最大使用比例）。
+
+### 固定列宽，不限制列数
+
+`grid-template-columns: repeat(auto-fit, 200px);`
+

@@ -76,3 +76,21 @@ const useSlide = (cb,direction) => {
 ```
 
 这段代码首先创建了一个ref对象，然后给ref对象绑定了事件回调。那么最终，与这个ref绑定的dom元素就添加了事件监听。
+
+# React Fiber
+
+[彻底搞懂 React 18 并发机制的原理 - 掘金 (juejin.cn)](https://juejin.cn/post/7171231346361106440)
+
+[React Fiber是什么 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/26027085)
+
+进程(process)  -> 线程(thread) -> Fiber；
+
+在**第一阶段**Reconciliation Phase，React Fiber会找出需要更新哪些DOM，这个阶段是可以被打断的；但是到了**第二阶段**Commit Phase，那就一鼓作气把DOM更新完，绝不会被打断。
+
+# 虚拟DOM
+
+[虚拟 DOM 到底是什么？ - 掘金 (juejin.cn)](https://juejin.cn/post/6844903870229905422)
+
+React 是通过 babel 将 jsx 转换为 h 函数渲染的形式，
+
+而 Vue 是使用 vue-loader 将**模版**转为 **h 函数**渲染的形式（也可以通过 babel-plugin-transform-vue-jsx 插件在 vue 中使用 jsx，本质还是转换为 h 函数渲染形式）
