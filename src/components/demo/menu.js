@@ -9,6 +9,9 @@ export default {
         }, {
             name: "Vue",
             path: 'vue',
+        }, {
+            name: '页面演示',
+            path: 'pages',
         }
     ]
 }

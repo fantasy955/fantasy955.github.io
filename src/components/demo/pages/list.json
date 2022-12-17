@@ -1,0 +1,9 @@
+{
+    "demos": [
+        {
+            "name": "FantasyVideo界面",
+            "description": "",
+            "path": "FanytasyVideo.vue"
+        }
+    ]
+}
