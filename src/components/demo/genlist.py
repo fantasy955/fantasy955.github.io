@@ -25,6 +25,7 @@ if __name__ == '__main__':
             existFiles = [item["path"] for item in json_dict["demos"]]
             existFileCount = {item["path"]: [0, i] for i, item in enumerate(json_dict["demos"])}
             components = os.listdir(os.path.join(os.getcwd(), category))
+            # print(components)
             
             for component in components:
                 if component.startswith('_'):
@@ -34,7 +35,7 @@ if __name__ == '__main__':
                     continue
                 if component == "list.json":
                     continue
-                if os.path.isdir(os.path.join(os.getcwd, component)):
+                if os.path.isdir(os.path.join(os.getcwd(), component)):
                     continue
                 json_dict['demos'].append({
                     "name": "",
@@ -53,4 +54,5 @@ if __name__ == '__main__':
             json_str = json.dumps(json_dict, ensure_ascii=False) 
             with open(target, 'w+', encoding='utf-8') as f:
                 json.dump(json_dict, f, ensure_ascii=False)
+                print(json_dict)
                 f.close()
