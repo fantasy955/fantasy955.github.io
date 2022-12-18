@@ -3,9 +3,9 @@
         <ul>
             <li>
                 <div>
-                    <a href="http://tencent:5000/" target="_blank" class="row demo-link">首页</a>
+                    <a href="http://43.139.126.249:5000/" target="_blank" class="row demo-link">首页</a>
                     <div class="frame-body">
-                        <iframe src="http://tencent:5000/"></iframe>
+                        <iframe src="http://43.139.126.249:5000/"></iframe>
                     </div>
 
                 </div>
