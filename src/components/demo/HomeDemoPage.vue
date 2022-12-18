@@ -1,39 +1,24 @@
 <template>
   <div></div>
   <div class="container-xxl main">
-    <RightAsideNavBar
-      v-if="showRightNavBar"
-      :mask="true"
-      @closeNav="handleCloseNav"
-    >
+    <RightAsideNavBar v-if="showRightNavBar" :mask="true" @closeNav="handleCloseNav">
       <template #header>
         <h3>效果演示</h3>
       </template>
       <template #main>
         <ul class="list-unstyled mb-0 py-3 pt-md-1">
           <li class="mb-1" v-for="category in categories" :key="category.name">
-            <button
-              class="btn d-inline-flex align-items-center rounded collapsed"
-              data-bs-toggle="collapse"
-              :data-bs-target="`#${category.name}-collapse`"
-              aria-expanded="false"
-              aria-current="true"
-            >
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
+              :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
               {{ category.name }}
             </button>
 
             <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
                 <li v-for="item in category.children" :key="item.path">
-                  <a
-                    :href="`/demo/details/${category.path}/${category.path}`"
-                    @click="
-                      (event) => viewDemoDetail(event, category.path, item.path)
-                    "
-                    class="d-inline-flex align-items-center rounded"
-                    aria-current="page"
-                    >{{ item.name }}</a
-                  >
+                  <a :href="`/demo/details/${category.path}/${category.path}`" @click="
+                    (event) => viewDemoDetail(event, category.path, item.path)
+                  " class="d-inline-flex align-items-center rounded" aria-current="page">{{ item.name }}</a>
                 </li>
               </ul>
             </div>
@@ -42,39 +27,22 @@
       </template>
     </RightAsideNavBar>
     <aside class="bd-sidebar">
-      <nav
-        class="bd-links collapse"
-        id="bd-demo-nav"
-        aria-label="Docs navigation"
-        style=""
-      >
+      <nav class="bd-links collapse" id="bd-demo-nav" aria-label="Docs navigation" style="">
         <ul class="list-unstyled mb-0 py-3 pt-md-1">
           <li class="mb-1" v-for="category in categories" :key="category.name">
-            <button
-              class="btn d-inline-flex align-items-center rounded collapsed"
-              data-bs-toggle="collapse"
-              :data-bs-target="`#${category.name}-collapse`"
-              aria-expanded="false"
-              aria-current="true"
-            >
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
+              :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
               {{ category.name }}
             </button>
 
             <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
                 <li v-for="item in category.children" :key="item.path">
-                  <a
-                    :href="`/demo/details/${category.path}/${category.path}`"
-                    @click="
-                      (event) => viewDemoDetail(event, category.path, item.path)
-                    "
-                    class="d-inline-flex align-items-center rounded"
-                    :class="{
-                      active: activeDemoPath === `./${category.path}/${item.path}`,
-                    }"
-                    aria-current="page"
-                    >{{ item.name }}</a
-                  >
+                  <a :href="`/demo/details/${category.path}/${category.path}`" @click="
+                    (event) => viewDemoDetail(event, category.path, item.path)
+                  " class="d-inline-flex align-items-center rounded" :class="{
+  active: activeDemoPath === `./${category.path}/${item.path}`,
+}" aria-current="page">{{ item.name }}</a>
                 </li>
               </ul>
             </div>
@@ -140,8 +108,8 @@ function viewDemoDetail(event, category, name) {
   if (component === undefined) {
     component = defineAsyncComponent(() =>
       // 这是如何实现的
-      // import(path) // 这样写不行
       import(`./${category}/${name}`)
+      // import(path) // 这样写不行
     );
     componentsList.push({
       path,
@@ -181,7 +149,7 @@ function handleTouchmove(event) {
 }
 
 // touchend 没有touch对象
-function handleTouchend(event) {}
+function handleTouchend(event) { }
 
 function handleCloseNav() {
   showRightNavBar.value = false;
@@ -234,6 +202,7 @@ onMounted(() => {
     padding-left: 0.25rem;
     margin-left: -0.25rem;
     overflow-y: auto;
+    width: 180px;
   }
 }
 
@@ -277,6 +246,7 @@ li::marker {
     grid-template-rows: auto 1fr;
     grid-template-columns: 4fr 1fr;
   }
+
   .bd-layout {
     grid-template-columns: 1fr 5fr;
   }
@@ -289,10 +259,12 @@ li::marker {
     grid-template-rows: auto auto 1fr;
     gap: inherit;
   }
+
   .my-md-4 {
     margin-top: 1.5rem !important;
     margin-bottom: 1.5rem !important;
   }
+
   .bd-layout {
     display: grid;
     grid-template-areas: "sidebar main";
