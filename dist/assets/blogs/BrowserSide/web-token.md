@@ -18,6 +18,12 @@
 
 访问令牌将用于**需要身份验证的后续 API 调用**，而**刷新令牌的目的是获取新的有效访问令牌**或只是撤销之前的访问令牌。
 
+[为什么要使用refresh token？为何会更安全？ - 简书 (jianshu.com)](https://www.jianshu.com/p/f73eec9d1096)
+
+在程序与服务器通信时，一般只传递access token，攻击者一般截取到的也是access token，但这个token有效期短，造成的损失比较小；
+
+黑客当然也可以想办法偷到两个token，此时就可以完全冒充了，只是难度增加了。
+
 ## jsonwebtoken
 
 [(103条消息) 如何使用jwt 完成注销(退出登录)功能_风狗的博客-CSDN博客_jwt注销token](https://blog.csdn.net/weixin_39813433/article/details/122287823)
