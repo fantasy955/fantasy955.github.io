@@ -1,5 +1,5 @@
 <template>
-  <router-view  v-slot="{ Component }">
+  <router-view v-slot="{ Component }">
     <keep-alive include="HomePage">
       <component :is="Component" />
     </keep-alive>
@@ -7,10 +7,20 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from "vue";
+import { ref, computed, defineEmits, onBeforeMount } from "vue";
 import HomePage from "./components/home/HomePage.vue";
 import BlogPage from "./components/blog/BlogPage.vue";
 import NotFound from "./components/common/NotFound.vue";
+
+onBeforeMount(() => {
+  var oMeta = document.createElement('meta');
+  Object.assign(oMeta, {
+    'http-equiv': "Content-Security-Policy",
+    content: 'upgrade-insecure-requests',
+  })
+  console.log(oMeta);
+  document.getElementsByTagName('head')[0].appendChild(oMeta);
+});
 
 // const routes = {
 //   '/': HomePage,
@@ -49,7 +59,6 @@ import NotFound from "./components/common/NotFound.vue";
 }
 
 .nav-link {
-    cursor: pointer;
+  cursor: pointer;
 }
-
 </style>
