@@ -1,15 +1,39 @@
 <template>
-    <div class="frame-body">
-        <div class="mask" @click="jump"></div>
-        <iframe :src=target></iframe>
+    <div class="frame-body" ref="body">
+        <div class="mask" @click="jump" v-show="showIFrame"></div>
+        <iframe :src=target v-show="showIFrame" ref="iframeRef"></iframe>
+        <div v-show="!showIFrame" class="error">{{ msg }}</div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, onUnmounted } from 'vue';
+import { defineProps, onMounted, onBeforeUnmount, ref } from 'vue';
 const props = defineProps({
-    target: String
+    target: String,
+    preview: {
+        type: String,
+        required: false,
+    },
 });
+const body = ref(null);
+const showIFrame = ref(true);
+const iframeRef = ref(null);
+const msg = ref('');
+
+const iframeBlockedHandler = function (error) {
+    showIFrame.value = false;
+    console.log(error);
+    msg.value = error
+}
+
+onMounted(() => {
+    iframeRef.value.addEventListener('error', iframeBlockedHandler, true);
+    // console.log(iframeRef.value);
+})
+
+onBeforeUnmount(() => {
+    iframeRef.value.removeEventListener('error', iframeBlockedHandler);
+})
 
 const jump = function () {
     const doJump = confirm('跳转到目标页面?');
@@ -53,5 +77,16 @@ const jump = function () {
     left: 0;
     top: 0;
     z-index: 0;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+    transform: scale(0.9);
+    color: red;
+    overflow: auto;
 }
 </style>

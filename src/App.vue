@@ -13,13 +13,13 @@ import BlogPage from "./components/blog/BlogPage.vue";
 import NotFound from "./components/common/NotFound.vue";
 
 onBeforeMount(() => {
-  var oMeta = document.createElement('meta');
-  Object.assign(oMeta, {
-    'http-equiv': "Content-Security-Policy",
-    content: 'upgrade-insecure-requests',
-  })
-  console.log(oMeta);
-  document.getElementsByTagName('head')[0].appendChild(oMeta);
+  // var oMeta = document.createElement('meta');
+  // Object.assign(oMeta, {
+  //   'http-equiv': "Content-Security-Policy",
+  //   content: 'upgrade-insecure-requests',
+  // })
+  // console.log(oMeta);
+  // document.getElementsByTagName('head')[0].appendChild(oMeta);
 });
 
 // const routes = {
