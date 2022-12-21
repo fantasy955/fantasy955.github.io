@@ -27,12 +27,12 @@ const iframeBlockedHandler = function (error) {
 }
 
 onMounted(() => {
-    iframeRef.value.addEventListener('error', iframeBlockedHandler, true);
+    document.addEventListener('error', iframeBlockedHandler, true);
     // console.log(iframeRef.value);
 })
 
 onBeforeUnmount(() => {
-    iframeRef.value.removeEventListener('error', iframeBlockedHandler);
+    document.removeEventListener('error', iframeBlockedHandler);
 })
 
 const jump = function () {
