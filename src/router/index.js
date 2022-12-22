@@ -5,6 +5,7 @@ import NotFound from '../components/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
 import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
 import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
+const EnergyFlow = () => import('../components/demo/pages/_EnergyFlow.vue');
 
 const routes = [
     {
@@ -34,6 +35,11 @@ const routes = [
         name: 'blog', component: BlogPage, props: true
     }
 ]
+
+routes.push({
+    path: '/pages/energyflow',
+    component: EnergyFlow,
+});
 
 const router = createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。

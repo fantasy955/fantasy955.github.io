@@ -16,5 +16,15 @@
       "scripthost"
     ]
   },
-  "exclude": ["assets", "dist", "build", "public"]
+  "path": {
+    "/@/*": [
+      "src/*"
+    ]
+  },
+  "exclude": [
+    "assets",
+    "dist",
+    "build",
+    "public"
+  ]
 }

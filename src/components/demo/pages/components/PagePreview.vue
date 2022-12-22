@@ -1,44 +1,28 @@
 <template>
-    <div class="frame-body" ref="body">
-        <div class="mask" @click="jump" v-show="showIFrame"></div>
-        <iframe :src=target v-show="showIFrame" ref="iframeRef"></iframe>
-        <div v-show="!showIFrame" class="error">{{ msg }}</div>
+    <div class="frame-body">
+        <div class="mask" @click="jump"></div>
+        <slot>
+            <iframe :src=target></iframe>
+        </slot>
     </div>
 </template>
 
 <script setup>
 import { defineProps, onMounted, onBeforeUnmount, ref } from 'vue';
 const props = defineProps({
-    target: String,
-    preview: {
+    target: {
         type: String,
         required: false,
     },
 });
-const body = ref(null);
-const showIFrame = ref(true);
-const iframeRef = ref(null);
-const msg = ref('');
 
-const iframeBlockedHandler = function (error) {
-    showIFrame.value = false;
-    console.log(error);
-    msg.value = error
-}
-
-onMounted(() => {
-    document.addEventListener('error', iframeBlockedHandler, true);
-    // console.log(iframeRef.value);
-})
-
-onBeforeUnmount(() => {
-    document.removeEventListener('error', iframeBlockedHandler);
-})
 
 const jump = function () {
-    const doJump = confirm('跳转到目标页面?');
-    if (doJump) {
-        window.open(props.target);
+    if (props.target) {
+        const doJump = confirm('跳转到目标页面?');
+        if (doJump) {
+            window.open(props.target);
+        }
     }
 }
 

@@ -9,7 +9,8 @@ import math
 import argparse
 
 os.chdir(r"E:\Users\lenovo\fantasy995.github.io\src\components\demo")
-parser = argparse.ArgumentParser(description='generate list.json for each category')
+parser = argparse.ArgumentParser(
+    description='generate list.json for each category')
 if __name__ == '__main__':
     for category in os.listdir(os.getcwd()):
         if os.path.isdir(category):
@@ -23,10 +24,11 @@ if __name__ == '__main__':
                     'demos': [],
                 }
             existFiles = [item["path"] for item in json_dict["demos"]]
-            existFileCount = {item["path"]: [0, i] for i, item in enumerate(json_dict["demos"])}
+            existFileCount = {item["path"]: [0, i]
+                              for i, item in enumerate(json_dict["demos"])}
             components = os.listdir(os.path.join(os.getcwd(), category))
             # print(components)
-            
+
             for component in components:
                 if component.startswith('_'):
                     continue
@@ -35,7 +37,7 @@ if __name__ == '__main__':
                     continue
                 if component == "list.json":
                     continue
-                if os.path.isdir(os.path.join(os.getcwd(), component)):
+                if os.path.isdir(os.path.join(os.getcwd(), category, component)):
                     continue
                 json_dict['demos'].append({
                     "name": "",
@@ -51,8 +53,8 @@ if __name__ == '__main__':
                     if value[0] == 0:
                         target_item = json_dict['demos'][value[1]]
                         json_dict['demos'].remove(target_item)
-            json_str = json.dumps(json_dict, ensure_ascii=False) 
+            json_str = json.dumps(json_dict, ensure_ascii=False)
             with open(target, 'w+', encoding='utf-8') as f:
                 json.dump(json_dict, f, ensure_ascii=False)
-                print(json_dict)
+                # print(json_dict)
                 f.close()

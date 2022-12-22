@@ -4,6 +4,15 @@
             "name": "FantasyVideo界面",
             "description": "",
             "path": "FanytasyVideo.vue"
+        },
+        {
+            "name": "独立组件演示",
+            "description": "",
+            "path": "DemoComponents.vue"
+        },{
+            "name": "AntV案例",
+            "description": "",
+            "path": "AntVDemos.vue"
         }
     ]
 }
