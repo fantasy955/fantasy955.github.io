@@ -34,8 +34,15 @@ const data = {
 };
 
 watch(screenSize,
-    debounce(() => {
-        console.log(screenSize.height);
+    // 第三个参数onCleanup
+    // 我们在主代码中写onCleanup要执行的内容：
+    // onCleanup(()=>{do something});
+    // 因此只有调用过watch的回调函数后，才知道onCleanup要执行的操作
+    // 因此第一次不会调用
+    // 而且当cleanup事件注册后，与watch回调函数无关了，cleanup内的代码会在每次监听到状态改变后执行
+    // 没有防抖效果
+    debounce((value, pre) => {
+       graph.changeSize(screenSize.width, screenSize.height);
     }, 500)
 );
 

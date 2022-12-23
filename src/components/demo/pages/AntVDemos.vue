@@ -3,11 +3,7 @@
         <li>
             <div>
                 <a class="demo-link">流编辑</a>
-                <PagePreview>
-                    <div>
-                        <img src="./assets/fantasyvideohome.png" style="width: 100%; height: 100%;" />
-                    </div>
-                </PagePreview>
+                <PagePreview target="#/pages/energyflow"></PagePreview>
             </div>
         </li>
     </Cantainer>
