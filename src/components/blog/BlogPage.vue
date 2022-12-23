@@ -5,7 +5,7 @@
         <!-- <BlogHeader :blogName="blogName" :category="categorySname"></BlogHeader> -->
         <nav class="pl-5" aria-label="breadcrumb">
           <ol class="breadcrumb" style="margin-top: 1rem">
-            <li class="breadcrumb-item"><router-link to="/">Home</router-link ></li>
+            <li class="breadcrumb-item"><router-link to="/blog">Home</router-link ></li>
             <li class="breadcrumb-item" aria-current="page">
               {{ categorySname }}
             </li>

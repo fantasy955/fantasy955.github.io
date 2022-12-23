@@ -184,12 +184,7 @@ onMounted(() => {
 }
 
 .demo-content {
-  /* display: flex; */
-  text-align: center;
   width: 100%;
-  justify-items: center;
-  justify-content: center;
-  align-items: center;
 }
 
 @media (min-width: 768px) {

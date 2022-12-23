@@ -1,4 +1,5 @@
-import HomePage from '../components/home/HomePage.vue';
+import HomePage from '@/components/home/HomePage.vue';
+import HomeContent from '@/pages/HomePage.vue';
 import BlogPage from '../components/blog/BlogPage.vue';
 import HomeBlog from '../components/blog/HomeBlog';
 import NotFound from '../components/common/NotFound.vue';
@@ -11,23 +12,26 @@ const routes = [
     {
         path: '/',
         component: HomePage,
-        children: [{
-            path: '',
-            redirect: '/blog',
-            component: HomeBlog,
-        }, {
-            path: 'demo',
-            component: HomeDemoPage,
-            // children: [{
-            //     name: 'demodetail',
-            //     path: 'details',
-            //     component: DemoContent,
-            //     props: true
-            // }]
-        }, {
-            path: 'blog',
-            component: HomeBlog
-        }]
+        children: [
+            // {
+            //     path: '',
+            //     redirect: '/blog',
+            // },
+            {
+                path: 'home',
+                component: HomeContent,
+            },
+            {
+                path: 'demo',
+                component: HomeDemoPage,
+
+            }, {
+                path: 'blog',
+                component: HomeBlog
+            },
+        ],
+        // 默认路由配置方法
+        redirect: 'blog',
     }, {
         path: '/blog/:categorySname/:blogName/:path',
         // meta: {title: '博客', withTitle: true},
@@ -57,6 +61,6 @@ const router = createRouter({
 
 //后置守卫
 // router.afterEach((to, from) => {
-    
+
 // })
 export default router;

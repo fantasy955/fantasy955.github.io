@@ -3,7 +3,7 @@ export default {
         name: '博客',
         path: 'blog',
     }, {
-        name: 'Demo',
+        name: '演示',
         path: 'demo',
     }]
 }

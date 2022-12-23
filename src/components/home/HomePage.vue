@@ -3,50 +3,29 @@
     <PageHeader>
       <template #topLeft>
         <div class="nav-category navbar-collapse collapse mr-auto">
-          <a
-            v-for="category in categories"
-            :key="category.path"
-            @click="toCategoryHome(category.path)"
-            class="m-1 pointer fw-bold"
-            role="button"
-            >{{ category.name }}</a
-          >
+          <a @click="toCategoryHome('home')"
+            class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
+          <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
+            class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
         </div>
         <WeatherHeader />
       </template>
       <template #topLeftCollapsed>
-        <button
-          class="navbar-toggler collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#homecategory"
-          aria-controls="homecategory"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          @click="topBarExpand = !topBarExpand"
-        >
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#homecategory"
+          aria-controls="homecategory" aria-expanded="false" aria-label="Toggle navigation"
+          @click="topBarExpand = !topBarExpand">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div
-          class="nav-category collapse"
-          id="homecategory"
-          style="flex-basis: 100%"
-        >
-          <a
-            v-for="category in categories"
-            :key="category.path"
-            @click="toCategoryHome(category.path)"
-            class="m-1 pointer fw-bold"
-            role="button"
-            >{{ category.name }}</a
-          >
+        <div class="nav-category collapse" id="homecategory" style="flex-basis: 100%">
+          <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
+            class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
         </div>
       </template>
     </PageHeader>
-    
-    <router-view v-slot="{ Component }">
+
+    <router-view v-slot="{ Component, route }">
       <keep-alive>
-        <component :is="Component" />
+        <component :is="Component" :key="route.meta.usePathKey ? route.path : undefined" />
       </keep-alive>
     </router-view>
     <PageFooter></PageFooter>
@@ -92,7 +71,7 @@ function toCategoryHome(category) {
 onUnmounted(() => {
   console.log('首页卸载了');
 })
- 
+
 onActivated(() => {
   console.log('首页激活了');
 })
@@ -109,7 +88,7 @@ onDeactivated(() => {
   /* column-gap: 12px; */
 }
 
-.nav-category > a {
+.nav-category>a {
   text-decoration-line: none;
   color: aliceblue;
   padding-left: 12px;

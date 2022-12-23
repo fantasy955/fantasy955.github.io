@@ -1,6 +1,6 @@
 <template>
   <span v-if="screenType === smallScreen">左滑显示导航栏</span>
-  <span v-if="screenType !== smallScreen">Hello Wolrd</span>
+  <span v-if="screenType !== smallScreen">点击左侧导航栏查看示例</span>
 </template>
 
 <script setup>
