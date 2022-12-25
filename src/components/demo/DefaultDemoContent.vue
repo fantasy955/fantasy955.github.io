@@ -5,9 +5,10 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { defineProps, defineAsyncComponent } from "vue";
+import { defineProps, defineAsyncComponent, watch } from "vue";
 import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
 const screenType = useScreenType();
+// console.log(screenType);
 </script>
 
 <style scoped>

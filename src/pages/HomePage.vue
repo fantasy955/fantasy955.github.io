@@ -1,5 +1,6 @@
 <template>
     <div>
+        暂时没有内容
         <div class="friends"></div>
     </div>
 </template>

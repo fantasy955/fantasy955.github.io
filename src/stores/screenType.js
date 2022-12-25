@@ -1,15 +1,17 @@
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue';
 import { useScreenWidth } from "@/stores/screenWidth";
-import config from '@/config'
+import config from '@/config';
 
-const screenWidth = useScreenWidth()
-const smallScreenSize = config.globalParams.smallScreenSize
-export const useScreenType = () => {
-    return computed(()=>{
-        return screenWidth.value <= smallScreenSize
-    })
-}
+const smallScreenSize = config.globalParams.smallScreenSize;
 
-export const smallScreen = true
-export const largeScreen = false
+export const smallScreen = true;
+export const largeScreen = false;
+
+const screenWidth = useScreenWidth();
+const screenType = ref(smallScreen);
+watch(screenWidth, () => {
+    screenType.value = screenWidth.value <= smallScreenSize;
+}, {immediate: true});
+
+export const useScreenType = () => screenType;
 

@@ -1,11 +1,11 @@
 import { ref, onMounted, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import { debounce } from '@/utils/common';
 
 const screenWidth = ref(document.body.clientWidth);
-window.onresize = () =>
-    (() => {
-        screenWidth.value = document.body.clientWidth;
-    })();
+window.addEventListener('resize', () => {
+    screenWidth.value = document.body.clientWidth;
+});
 
 export function useScreenWidth() {
     return screenWidth;
