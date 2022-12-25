@@ -3,20 +3,20 @@
     <PageHeader>
       <template #topLeft>
         <div class="nav-category navbar-collapse collapse mr-auto">
-          <a @click="toCategoryHome('home')"
-            class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
+          <a @click="toCategoryHome('home')" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
           <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
             class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
         </div>
         <WeatherHeader />
       </template>
       <template #topLeftCollapsed>
-        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#homecategory"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#homecategory"
           aria-controls="homecategory" aria-expanded="false" aria-label="Toggle navigation"
-          @click="topBarExpand = !topBarExpand">
+          @click="topBarExpand = !topBarExpand" ref="collapsedBtn">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="nav-category collapse" id="homecategory" style="flex-basis: 100%">
+        <div class="nav-category collapse" id="homecategory" style="flex-basis: 100%" v-if="showCollaspedCategory">
+          <a @click="toCategoryHome('home')" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
           <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
             class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
         </div>
@@ -25,25 +25,13 @@
 
     <router-view v-slot="{ Component, route }">
       <keep-alive>
-        <component :is="Component" :key="route.meta.usePathKey ? route.path : undefined" />
+        <component :is="Component" :key="route.path" />
       </keep-alive>
     </router-view>
     <PageFooter></PageFooter>
   </div>
 </template>
 
-<!-- 选项式 -->
-<!-- <script>
-import IndexTop from './components/IndexTop.vue';
-export default {
-    name: 'App',
-    components: {
-        IndexTop
-    }
-}
-</script> -->
-
-<!-- 最多包含一个script语句块和一个 script setup语句块-->
 <script>
 </script>
 
@@ -54,10 +42,11 @@ export default {
 import WeatherHeader from "../common/WeatherHeader.vue";
 import { useRoute, useRouter } from "vue-router";
 import menu from "./menu";
-import { ref, defineProps, onUnmounted, onActivated, onDeactivated } from "vue";
+import { ref, defineProps, onUnmounted, onMounted, onActivated, onDeactivated, watch, computed } from "vue";
 import PageFooter from "../common/PageFooter.vue";
 import PageHeader from "../common/PageHeader.vue";
 
+const collapsedBtn = ref(null);
 const topCategory = ["blog", "demo"];
 const rounte = useRoute();
 const rounter = useRouter();
@@ -67,17 +56,23 @@ function toCategoryHome(category) {
   category = category.toLowerCase();
   rounter.push(`/${category.toLowerCase()}`);
 }
+const showCollaspedCategory = ref(false);
+
+const checkCollapsedCategory = function () {
+  if (collapsedBtn.value && collapsedBtn.value.offsetParent !== null) {
+    showCollaspedCategory.value = true;
+  } else {
+    showCollaspedCategory.value = false;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('resize', checkCollapsedCategory, true);
+  checkCollapsedCategory();
+})
 
 onUnmounted(() => {
-  console.log('首页卸载了');
-})
-
-onActivated(() => {
-  console.log('首页激活了');
-})
-
-onDeactivated(() => {
-  console.log('首页失活了');
+  window.removeEventListener('resize', checkCollapsedCategory);
 })
 </script>
 

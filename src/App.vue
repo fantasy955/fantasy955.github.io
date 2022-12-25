@@ -1,7 +1,7 @@
 <template>
-  <router-view v-slot="{ Component }">
-    <keep-alive include="HomePage">
-      <component :is="Component" />
+  <router-view v-slot="{ Component, route }">
+    <keep-alive>
+      <component :is="Component" :key="route.path" />
     </keep-alive>
   </router-view>
 </template>
