@@ -3,7 +3,7 @@ const { defineConfig } = require('@vue/cli-service');
 const { BlogListGenerationPlugin } = require('./src/utils/BlogListGenerationPlugin');
 module.exports = defineConfig({
   configureWebpack: {
-    plugins: [new BlogListGenerationPlugin({ options: true })],
+    // plugins: [new BlogListGenerationPlugin({ options: true })],
   },
   transpileDependencies: true,
   devServer: {
