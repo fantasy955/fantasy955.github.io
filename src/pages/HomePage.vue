@@ -1,10 +1,11 @@
 <template>
     <div class="cantainer">
-        <vue-particles class="canvas" color="#dedede" :particleOpacity="0.7" :particlesNumber="80" shapeType="circle" :particleSize="4"
-            linesColor="#dedede" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4" :linesDistance="150"
-            :moveSpeed="3" :hoverEffect="true" hoverMode="grab" :clickEffect="true" clickMode="push">
+        <vue-particles class="canvas" color="#dedede" :particleOpacity="0.7" :particlesNumber="80" shapeType="circle"
+            :particleSize="4" linesColor="#dedede" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4"
+            :linesDistance="150" :moveSpeed="3" :hoverEffect="true" hoverMode="grab" :clickEffect="true"
+            clickMode="push">
         </vue-particles>
-        <div>没有内容</div>
+        <IntroductionPanel />
         <div class="friends"></div>
         <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
     </div>
@@ -12,6 +13,7 @@
 
 <script setup>
 import { onMounted } from "vue";
+import IntroductionPanel from '@/components/home/IntroductionPanel.vue';
 
 </script>
 
@@ -28,6 +30,8 @@ import { onMounted } from "vue";
     width: 100%;
     height: 100%;
     min-height: 900px;
+    padding: 12px;
+    text-align: center;
 }
 
 .canvas {

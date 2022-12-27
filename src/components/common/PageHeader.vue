@@ -1,16 +1,11 @@
 <template>
   <div>
     <header class="navbar navbar-expand-md navbar-dark bd-navbar">
-      <nav
-        class="container-xxl navbar-nav flex-wrap flex-md-nowrap"
-        aria-label="Main navigation"
-      >
+      <nav class="container-xxl navbar-nav flex-wrap flex-md-nowrap" aria-label="Main navigation">
         <slot name="topLeft"></slot>
         <div class="d-flex flex-sm-row">
           <img src="../../assets/figures/progile_photo.png" class="avatar" />
-          <a class="navbar-brand nav-link"
-            ><strong>{{ $globalParams.real_name }}</strong></a
-          >
+          <a class="navbar-brand nav-link"><strong>{{ $globalParams.real_name }}</strong></a>
         </div>
         <slot name="topLeftCollapsed"></slot>
       </nav>
@@ -19,7 +14,7 @@
 </template>
   
 <script setup>
-import {onMounted, onUnmounted} from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 // onMounted(() =>{
 //   console.log('PageHeader 挂载了');
@@ -31,11 +26,12 @@ import {onMounted, onUnmounted} from 'vue';
 </script>
   
   
-  <style scoped>
+<style scoped>
 .avatar {
   width: 2.5rem;
   height: 2.5rem;
 }
+
 .bd-navbar {
   --bs-gutter-x: $bd-gutter-x;
   --bs-gutter-y: $bd-gutter-x;
@@ -56,7 +52,5 @@ header {
   color: aliceblue;
 }
 
-@media (min-width: 768px) {
-}
-
+@media (min-width: 768px) {}
 </style>

@@ -78,11 +78,6 @@ onUnmounted(() => {
 
 
 <style scoped>
-.nav-category {
-  display: flex;
-  /* column-gap: 12px; */
-}
-
 .nav-category>a {
   text-decoration-line: none;
   color: aliceblue;
