@@ -5,17 +5,14 @@
     <div class="col-md-10" role="main">
       <HomeBlogNav :menu="menu"></HomeBlogNav>
       <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->
-      <HomeBlogCategory
-        v-for="categoryInfo in categoryInfoList"
-        :key="categoryInfo.aname"
-        :categoryInfo="categoryInfo"
-      ></HomeBlogCategory>
+      <HomeBlogCategory v-for="categoryInfo in categoryInfoList" :key="categoryInfo.aname" :categoryInfo="categoryInfo">
+      </HomeBlogCategory>
     </div>
     <div></div>
   </div>
 </template>
   
-  <script setup>
+<script setup>
 import axios from "axios";
 import HomeBlogCategory from "./HomeBlogCategory.vue";
 import HomeBlogLeftSide from "./HomeBlogLeftSide.vue";
@@ -57,5 +54,8 @@ Promise.all(filesPromises).then((res) => {
 </script>
   
   
-<style>
+<style scoped>
+.row {
+  margin-inline: 0;
+}
 </style>

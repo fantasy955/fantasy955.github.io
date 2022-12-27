@@ -11,8 +11,6 @@
 <style scoped>
 .main {
     display: flex;
-    border: 1px solid darkslategrey;
-    background-color: rgba(47, 79, 79, 0.5);
     border-radius: 12px;
     padding: 12px;
     user-select: none;
