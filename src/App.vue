@@ -1,46 +1,26 @@
 <template>
-  <router-view v-slot="{ Component, route }">
-    <keep-alive>
-      <component :is="Component" :key="route.path" />
-    </keep-alive>
-  </router-view>
+  <div class="cantainer">
+    <canvas class="background"></canvas>
+    <router-view v-slot="{ Component, route }">
+      <keep-alive>
+        <component :is="Component" :key="route.path" />
+      </keep-alive>
+    </router-view>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed, defineEmits, onBeforeMount } from "vue";
-import HomePage from "./components/home/HomePage.vue";
-import BlogPage from "./components/blog/BlogPage.vue";
-import NotFound from "./components/common/NotFound.vue";
+import { Particles } from 'particlesjs';
+import { onMounted } from "vue";
 
-onBeforeMount(() => {
-  // var oMeta = document.createElement('meta');
-  // Object.assign(oMeta, {
-  //   'http-equiv': "Content-Security-Policy",
-  //   content: 'upgrade-insecure-requests',
-  // })
-  // console.log(oMeta);
-  // document.getElementsByTagName('head')[0].appendChild(oMeta);
-});
+var particles = null;
 
-// const routes = {
-//   '/': HomePage,
-//   '/blog': BlogPage
-// }
-// const currentPath = ref(window.location.hash)
-
-// // window.location.hash这个属性可读可写。读取时，可以用来判断网页状态是否改变；写入时，则会在不重载网页的前提下，创造一条访问历史记录。
-// // 这是一个HTML 5新增的事件，当#值发生变化时，就会触发这个事件。IE8+、Firefox 3.6+、Chrome 5+、Safari 4.0+支持该事件。
-// window.addEventListener('hashchange', () => {
-//   currentPath.value = window.location.hash
-// })
-
-// const currentView = computed(() => {
-//   let hashValue = currentPath.value.slice(1);
-//   if (hashValue.startsWith('/blog')){
-//     return BlogPage;
-//   }
-//   return routes[hashValue.slice(1) || '/'] || NotFound
-// })
+onMounted(() => {
+  particles = Particles.init({
+    selector: '.background',
+    connectParticles: true,
+  });
+})
 </script>
 
 
@@ -60,5 +40,19 @@ onBeforeMount(() => {
 
 .nav-link {
   cursor: pointer;
+}
+
+.cantainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.background {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 </style>
