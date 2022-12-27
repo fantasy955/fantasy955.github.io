@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="
+  <div class="
       container
       jumbotron jumbotron-fluid
       mb-3
@@ -8,64 +7,40 @@
       pb-0
       bg-gray
       position-relative
-    "
-    style="margin-bottom: 5px"
-    v-bind:id="`div-${categoryInfo.sname}`"
-    ref="main"
-  >
+    " style="margin-bottom: 5px" v-bind:id="`div-${categoryInfo.sname}`" ref="main">
     <div class="category-header">
       <h5 class="m-1 btn btn-dark font-weight-bold">
         <span style="padding-bottom: 5px">{{ categoryInfo.aname }}</span>
       </h5>
-      <input
-        class="keyword-input"
-        type="text"
-        placeholder="标题关键字"
-        v-model="keyword"
-      />
+      <input class="keyword-input" type="text" placeholder="标题关键字" v-model="keyword" />
     </div>
     <div class="mb-1 d-flex justify-content-center border-bottom"></div>
     <ol class="list-group" v-bind:id="['ol-files-' + categoryInfo.sname]">
-      <li
-        class="li-file d-flex"
-        v-for="(file, index) in currentPageFiles"
-        :key="file.name"
-      >
+      <li class="li-file d-flex" v-for="(file, index) in currentPageFiles" :key="file.name">
         <span class="li-file-number">{{ baseIndex + index + 1 }}</span>
         <div class="pl-3 justify-content-center">
           <h2 class="mb-1 h6 font-weight-bold">
-            <a
-              class="text-dark"
-              v-bind:href="`/#/blog/${categoryInfo.sname}/${file.name}`"
-              style="cursor: pointer"
-              v-on:click.prevent="(event) => viewBlog(file)"
-              >{{ file.name }}</a
-            >
+            <!-- <a class="text-dark" v-bind:href="`/#/blog/${categoryInfo.sname}/${file.name}`" style="cursor: pointer"
+              v-on:click.prevent="(event) => viewBlog(file)">{{ file.name }}</a> -->
+            <router-link class="text-dark"
+              :to="{ name: 'blog', params: { path: file.relapath, categorySname: probs.categoryInfo.sname, blogName: file.name } }">
+              {{ file.name }}
+            </router-link>
           </h2>
           <div class="card-text text-muted small">Fantasy955</div>
-          <small class="text-muted"
-            >{{ file.updatetime.year }}年{{ file.updatetime.mon }}月{{
-              file.updatetime.day
-            }}日 更新</small
-          >
+          <small class="text-muted">{{ file.updatetime.year }}年{{ file.updatetime.mon }}月{{
+    file.updatetime.day
+}}日 更新</small>
         </div>
       </li>
     </ol>
     <div class="card-text mr-1 mt-2" v-if="readMore">
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary"
-        v-on:click="(event) => showAll()"
-      >
+      <button type="button" class="btn btn-sm btn-outline-secondary" v-on:click="(event) => showAll()">
         View ALL
       </button>
     </div>
     <div class="card-text mr-1 mt-2 pb-2" v-if="layaside">
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary"
-        v-on:click="(event) => layAside(event)"
-      >
+      <button type="button" class="btn btn-sm btn-outline-secondary" v-on:click="(event) => layAside(event)">
         收起
       </button>
     </div>
@@ -74,28 +49,18 @@
         总共 {{ totalPage }} 页, 当前第 {{ pageIndex }} 页
       </p>
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
-      <button
-        type="button"
-        v-on:click="(event) => prePage(event)"
-        class="btn btn-sm mr-1"
-        :class="[
-          pageIndex <= 1
-            ? 'button-disabled btn-outline-danger'
-            : 'btn-outline-secondary',
-        ]"
-      >
+      <button type="button" v-on:click="(event) => prePage(event)" class="btn btn-sm mr-1" :class="[
+  pageIndex <= 1
+    ? 'button-disabled btn-outline-danger'
+    : 'btn-outline-secondary',
+]">
         上一页
       </button>
-      <button
-        type="button"
-        v-on:click="(event) => nextPage(event)"
-        class="btn btn-sm"
-        :class="[
-          pageIndex >= totalPage
-            ? 'button-disabled btn-outline-danger'
-            : 'btn-outline-secondary',
-        ]"
-      >
+      <button type="button" v-on:click="(event) => nextPage(event)" class="btn btn-sm" :class="[
+  pageIndex >= totalPage
+    ? 'button-disabled btn-outline-danger'
+    : 'btn-outline-secondary',
+]">
         下一页
       </button>
     </div>
@@ -289,6 +254,7 @@ a.text-dark:focus {
 .bg-gray {
   fill: #ced4da !important;
 }
+
 .bg-gray {
   background-color: #ced4da !important;
 }

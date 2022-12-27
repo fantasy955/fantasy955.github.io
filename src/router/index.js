@@ -31,7 +31,7 @@ const routes = [
             },
         ],
         // 默认路由配置方法
-        redirect: 'blog',
+        redirect: 'home',
     }, {
         path: '/blog/:categorySname/:blogName/:path',
         // meta: {title: '博客', withTitle: true},
