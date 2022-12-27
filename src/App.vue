@@ -1,26 +1,13 @@
 <template>
-  <div class="cantainer">
-    <canvas class="background"></canvas>
     <router-view v-slot="{ Component, route }">
       <keep-alive>
         <component :is="Component" :key="route.path" />
       </keep-alive>
     </router-view>
-  </div>
 </template>
 
 <script setup>
-import { Particles } from 'particlesjs';
-import { onMounted } from "vue";
 
-var particles = null;
-
-onMounted(() => {
-  particles = Particles.init({
-    selector: '.background',
-    connectParticles: true,
-  });
-})
 </script>
 
 
@@ -42,17 +29,5 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.cantainer {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
 
-.background {
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
 </style>
