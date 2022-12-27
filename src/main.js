@@ -1,5 +1,6 @@
 import { createApp, createSSRApp, defineComponent, h } from 'vue';
 import { createPinia } from 'pinia';
+import Particles from 'vue-particles';
 import App from "./App.vue";
 import axios from 'axios';
 // Vue 的服务端渲染 API 位于 `vue/server-renderer` 路径下
@@ -9,6 +10,7 @@ import uConifg from './config';
 
 const pinia = createPinia()
 const app = createApp(App);
+app.use(Particles);
 app.use(router);
 app.use(pinia)
 app.use(uConifg);

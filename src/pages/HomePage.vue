@@ -1,23 +1,17 @@
 <template>
     <div class="cantainer">
-        <canvas class="background"></canvas>
+        <vue-particles color="#dedede" :particleOpacity="0.7" :particlesNumber="80" shapeType="circle" :particleSize="4"
+            linesColor="#dedede" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4" :linesDistance="150"
+            :moveSpeed="3" :hoverEffect="true" hoverMode="grab" :clickEffect="true" clickMode="push">
+        </vue-particles>
         <div>没有内容</div>
         <div class="friends"></div>
+        <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
     </div>
 </template>
 
 <script setup>
-import { Particles } from 'particlesjs';
 import { onMounted } from "vue";
-
-var particles = null;
-
-onMounted(() => {
-    particles = Particles.init({
-        selector: '.background',
-        connectParticles: true,
-    });
-})
 
 </script>
 
@@ -34,13 +28,5 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     min-height: 900px;
-}
-
-.background {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 0;
-    z-index: 0;
 }
 </style>
