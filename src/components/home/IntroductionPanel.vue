@@ -21,6 +21,10 @@ import introduction from './introduction.md';
     padding: 12px;
 }
 
+.main * {
+    background: none;
+}
+
 .main p,
 h3,
 h4,
