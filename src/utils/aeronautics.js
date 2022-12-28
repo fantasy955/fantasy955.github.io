@@ -9,10 +9,10 @@ window.requestAnimFrame = (function () {
         };
 })();
 
-export const initAeronautics = function (canvas, cantainer) {
-    var _w,
-        _h,
-        sc = 8;
+export const initAeronautics = function (canvas, width, height) {
+    const _w = width;
+    const _h = height;
+    var sc = 8;
 
     var noise = function (w, h) {
         var img = [];
@@ -41,9 +41,6 @@ export const initAeronautics = function (canvas, cantainer) {
     }
 
     var c = document.getElementById(canvas);
-    var cc = document.getElementById(cantainer);
-    _w = c.width = cc.clientWidth;
-    _h = c.height = cc.clientHeight;
     var c1 = c.cloneNode(true);
     var c2 = c.cloneNode(true);
     var $, $$, $$$;
@@ -81,12 +78,6 @@ export const initAeronautics = function (canvas, cantainer) {
         x: 0,
         y: 0
     };
-
-    window.addEventListener('resize', function () {
-        console.log('resize');
-        c.width = _w = window.innerWidth;
-        c.height = _h = window.innerHeight;
-    }, false);
 
     window.addEventListener("load", function () {
         (function draw() {

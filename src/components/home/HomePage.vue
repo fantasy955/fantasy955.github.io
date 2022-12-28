@@ -3,9 +3,9 @@
     <PageHeader>
       <template #topLeft>
         <div class="nav-category navbar-collapse collapse mr-auto">
-          <a @click="toCategoryHome('home')" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
-          <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
-            class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
+          <router-link to="home" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</router-link>
+          <router-link v-for="category in categories" :key="category.path" :to="category.path.toLowerCase()"
+            class="m-1 pointer fw-bold" role="button">{{ category.name }}</router-link>
         </div>
         <WeatherHeader />
       </template>
@@ -16,9 +16,9 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="nav-category collapse" id="homecategory" style="flex-basis: 100%" v-if="showCollaspedCategory">
-          <a @click="toCategoryHome('home')" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</a>
-          <a v-for="category in categories" :key="category.path" @click="toCategoryHome(category.path)"
-            class="m-1 pointer fw-bold" role="button">{{ category.name }}</a>
+          <router-link to="home" class="m-1 pointer fw-bold" role="button">{{ '首页' }}</router-link>
+          <router-link v-for="category in categories" :key="category.path" :to="category.path.toLowerCase()"
+            class="m-1 pointer fw-bold" role="button">{{ category.name }}</router-link>
         </div>
       </template>
     </PageHeader>

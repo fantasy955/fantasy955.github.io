@@ -1,13 +1,16 @@
 <template>
   <div class="row justify-content-start cantainer">
+    <div class="canvas-cantainer">
+      <canvas id="canvas" class="canvas"></canvas>
+    </div>
     <HomeBlogLeftSide></HomeBlogLeftSide>
     <div class="col-md-10" role="main">
-      <HomeBlogNav :menu="menu" ></HomeBlogNav>
+      <HomeBlogNav :menu="menu"></HomeBlogNav>
       <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->
+      <!-- 对于过高的元素，不能用sticky属性限制其距离顶部的高度 -->
       <HomeBlogCategory v-for="categoryInfo in categoryInfoList" :key="categoryInfo.aname" :categoryInfo="categoryInfo">
       </HomeBlogCategory>
     </div>
-    <div></div>
   </div>
 </template>
   
@@ -18,11 +21,11 @@ import HomeBlogLeftSide from "./HomeBlogLeftSide.vue";
 import HomeBlogNav from "./HomeBlogNav.vue";
 import { computed, defineProps, inject, ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
+import { initAeronautics } from '@/utils/aeronautics';
 
 const menuJson = require("../blog/menu.json");
 const categoryInfoList = ref([]);
 const menu = ref([]);
-const cantainerRef = ref(null);
 
 const router = useRouter();
 
@@ -51,6 +54,10 @@ Promise.all(filesPromises).then((res) => {
     return a.order - b.order;
   });
 });
+
+onMounted(() => {
+  // initAeronautics('canvas', 1920, 1080);
+})
 </script>
   
   
@@ -62,8 +69,20 @@ Promise.all(filesPromises).then((res) => {
 .cantainer {
   position: relative;
 }
-.cantainer::before{
-  position: absolute;
-  inset: 0;
+
+.canvas-cantainer {
+  position: fixed;
+  /* background: hsla(223, 30%, 45%, 1); */
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  padding: 0;
+  z-index: -999;
+}
+
+.canvas-cantainer>.canvas {
+  width: 1920px;
+  height: 1080px;
+  padding: 0;
 }
 </style>
