@@ -47,9 +47,10 @@
     <div class="category-footer pl-3 pb-2" v-if="!layaside && totalPage && totalPage > 1">
       <p class="text-muted card-text small" style="padding: 0; margin: 0">
         总共 {{ totalPage }} 页, 当前第
-        <input
+        {{ pageIndex }}
+        <!-- <input
           style="width: 32px; background-color: inherit; border: none; border-bottom: 1px solid; text-align: center;"
-          v-model="pageIndex" />
+          v-model="pageIndex" /> -->
         页
       </p>
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
