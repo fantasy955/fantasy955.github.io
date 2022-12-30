@@ -54,7 +54,7 @@
         页
       </p>
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
-      <div style="display: inline-block;">
+      <div style="display: flex; justify-content: center;">
         <button type="button" v-on:click="(event) => prePage(event)" class="btn btn-sm mr-1" :class="[
   pageIndex <= 1
     ? 'button-disabled btn-outline-danger'
@@ -247,12 +247,22 @@ ol.list-featured li:before {
 }
 
 .category-footer {
-  display: flex;
-  flex-wrap: wrap;
   width: 100%;
-  column-gap: 12px;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  margin-inline: auto;
+}
+.category-footer > p{
+  text-align: center;
+}
+
+@media(min-width: 470px) {
+  .category-footer {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 
 .font-weight-bold {
