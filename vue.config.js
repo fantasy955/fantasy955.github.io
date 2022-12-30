@@ -1,11 +1,21 @@
 // 供node.js读取，使用CommonJS规范
 const { defineConfig } = require('@vue/cli-service');
 const { BlogListGenerationPlugin } = require('./src/utils/BlogListGenerationPlugin');
+const AutoImport = require('unplugin-auto-import/webpack')
+const Components = require('unplugin-vue-components/webpack')
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 const path = require('path');
 
 module.exports = defineConfig({
   configureWebpack: {
-    // plugins: [new BlogListGenerationPlugin({ options: true })],
+    plugins: [
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
   },
   chainWebpack: (config) => {
     // config.module

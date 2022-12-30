@@ -2,7 +2,7 @@
   <!-- fixed-top -->
   <!-- fix 与 sticky的区别 -->
   <nav class="navbar navbar-blog sticky-top" :class="topBarExpand ? bgW : bgW50">
-    <a class="nav-link" @click="toTop">Top</a>
+    <a class="nav-link category-item" @click="toTop">Top</a>
     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
       aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"
       @click="topBarExpand = !topBarExpand">
@@ -13,9 +13,10 @@
       <ul id="categorylist" class="navbar-nav mr-auto d-flex align-items-center">
         <!-- mr-auto使得其始终位于左边 -->
         <li class="nav-item" v-for="item in menu" :key="item.sname">
-          <a class="nav-link" style="padding-right: 0rem" v-on:click="scrollIntoView" v-bind:name="item.sname">{{
+          <a class="nav-link category-item" style="padding-right: 0rem" v-on:click="scrollIntoView"
+            v-bind:name="item.sname">{{
     item.sname
-}}</a>
+            }}</a>
         </li>
       </ul>
     </div>
@@ -51,6 +52,19 @@ function toTop() {
 </script>
 
 <style scoped>
+.category-item {
+  /* border-radius: 8px; */
+}
+
+.category-item:hover {
+  background-color: rgb(64, 74, 78);
+  color: white !important;
+}
+
+.navbar-blog .nav-link {
+  color: #1d1f20;
+}
+
 .navbar-nav {
   flex-direction: column;
 }
@@ -70,10 +84,6 @@ button.navbar-toggler {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox=%270 0 30 30%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath stroke=%27rgba%280, 0, 0, 0.5%29%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3E%3C/svg%3E");
 }
 
-.navbar-blog .nav-link {
-  color: #1d1f20 !important;
-}
-
 
 @media (min-width: 576px) {
   .navbar-blog {
@@ -85,6 +95,7 @@ button.navbar-toggler {
   .navbar-blog {
     max-width: 720px;
   }
+
   .navbar-collapse {
     display: flex !important;
     flex-basis: auto;
@@ -100,20 +111,20 @@ button.navbar-toggler {
   }
 }
 
-@media (min-width: 992px){
-  .navbar-blog{
+@media (min-width: 992px) {
+  .navbar-blog {
     max-width: 960px;
   }
 }
 
-@media (min-width: 1200px){
-  .navbar-blog{
+@media (min-width: 1200px) {
+  .navbar-blog {
     max-width: 1140px;
   }
 }
 
-@media (min-width: 1400px){
-  .navbar-blog{
+@media (min-width: 1400px) {
+  .navbar-blog {
     max-width: 1320px;
   }
 }

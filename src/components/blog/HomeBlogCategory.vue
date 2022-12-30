@@ -44,25 +44,39 @@
         收起
       </button>
     </div>
-    <div class="category-footer pl-3 pb-2" v-if="!layaside && totalPage > 1">
+    <div class="category-footer pl-3 pb-2" v-if="!layaside && totalPage && totalPage > 1">
       <p class="text-muted card-text small" style="padding: 0; margin: 0">
-        总共 {{ totalPage }} 页, 当前第 {{ pageIndex }} 页
+        总共 {{ totalPage }} 页, 当前第
+        <input
+          style="width: 32px; background-color: inherit; border: none; border-bottom: 1px solid; text-align: center;"
+          v-model="pageIndex" />
+        页
       </p>
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
-      <button type="button" v-on:click="(event) => prePage(event)" class="btn btn-sm mr-1" :class="[
+      <div style="display: inline-block;">
+        <button type="button" v-on:click="(event) => prePage(event)" class="btn btn-sm mr-1" :class="[
   pageIndex <= 1
     ? 'button-disabled btn-outline-danger'
     : 'btn-outline-secondary',
 ]">
-        上一页
-      </button>
-      <button type="button" v-on:click="(event) => nextPage(event)" class="btn btn-sm" :class="[
+          上一页
+        </button>
+        <button type="button" style="margin-left: 8px;" v-on:click="(event) => nextPage(event)" class="btn btn-sm"
+          :class="[
   pageIndex >= totalPage
     ? 'button-disabled btn-outline-danger'
     : 'btn-outline-secondary',
 ]">
-        下一页
-      </button>
+          下一页
+        </button>
+      </div>
+      <p class="text-muted card-text small" style="padding: 0; margin: 0">
+        每页
+        <select style="width: min-content; background-color: inherit;" v-model="max_file_items">
+          <option v-for="num in itemPerPageOptions" :key="num" :label="num" :value="num" />
+        </select>
+        条
+      </p>
     </div>
   </div>
 </template>
@@ -70,6 +84,8 @@
 <script setup>
 import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { ElSelect, ElOption } from 'element-plus';
+import 'element-plus/es/components/select/style/css';
 
 const globalParams = inject("globalParams");
 const route = useRoute();
@@ -82,14 +98,15 @@ const probs = defineProps({
   },
 });
 
+const itemPerPageOptions = [5, 10, 15, 20];
+var max_file_items = globalParams.max_file_items;
+max_file_items = ref(max_file_items);
+
 const main = ref(null);
 const keyword = ref("");
 
 var pageIndex = 1;
 pageIndex = ref(pageIndex);
-
-var max_file_items = globalParams.max_file_items;
-max_file_items = ref(max_file_items);
 
 var layaside = false;
 layaside = ref(layaside);
