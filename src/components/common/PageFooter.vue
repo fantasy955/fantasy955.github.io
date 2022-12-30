@@ -36,12 +36,14 @@ export default {
 footer {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 footer div {
   display: flex;
   align-items: center;
   justify-items: center;
+  flex-wrap: wrap;
 }
 .ml-1 {
   margin-left: 8px;

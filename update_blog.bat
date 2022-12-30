@@ -1,5 +1,5 @@
 python .\public\assets\blogs\genlist.py
-xcopy .\public\assets\blogs\* .\dist\assets\blogs\ /S /Y
+npm run build
 git add ./dist/assets/blogs
 git add ./public/blogs
 git commit -m "blogs: update blogs"

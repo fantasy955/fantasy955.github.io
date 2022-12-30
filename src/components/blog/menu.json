@@ -6,6 +6,11 @@
             "dirName": "BrowserSide",
             "path": "./assets/blogs/BrowserSide"
         },{
+            "sname": "NestJS", 
+            "aname": "NestJS",
+            "dirName": "NestJS",
+            "path": "./assets/blogs/NestJS"
+        },{
             "sname": "leetcode", 
             "aname": "leetcode",
             "dirName": "leetcode",
