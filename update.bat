@@ -1,4 +1,3 @@
+python .\public\assets\blogs\genlist.py
+python .\src\components\demo\genlist.py
 npm run build
-git add .
-git commit -m "update blog contents"
-git push
