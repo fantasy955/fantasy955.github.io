@@ -4,46 +4,15 @@
 
 （也许存在为组件库开发的项目创建命令，待发现...）
 
-## 1.1初始化脚手架
+## 1.1初始化项目
 
-```
-npx create-react-app myapp --typescript
-```
 
- 注意使用 node 为较高版本 >10.15.0
 
-[使用create-react-app 构建react应用(react-scripts) - 一路向北√ - 博客园 (cnblogs.com)](https://www.cnblogs.com/it-Ren/p/13458930.html#:~:text=react-scripts 是一个生成的项目所需要的开发依赖 一般我们开始创建react web应用程序的时候%2C要自己通过,npm 或者 yarn 安装项目的全部依赖，再写webpack.config.js%2C一系列复杂的配置%2C搭建好开发环境后写src源代码。)
+## 1.2
 
-[facebook/create-react-app at v5.0.0 (github.com)](https://github.com/facebook/create-react-app/tree/v5.0.0)
 
-得到的项目结构如下：
 
-![image-20230103173858211](assets/image-20230103173858211.png)
-
-生成的项目非常简洁，这是因为该脚手架将打包相关的操作（例如`webpack.config.js`）集成到专门的包中了，可以从`package.json`文件中验证这一点：
-
-![image-20230103174101223](assets/image-20230103174101223.png)
-
-![image-20230103174120262](assets/image-20230103174120262.png)
-
-## 1.2 释放webpack配置文件
-
-对于普通web应用开发来说，`react-scripts`是非常方便的，它帮我们配置好了：
-
-> React, JSX, ES6, and Flow syntax support.
-> Language extras beyond ES6 like the object spread operator.
-> Import CSS and image files directly from JavaScript.
-> Autoprefixed CSS, so you don’t need -webkit or other prefixes.
-> A build script to bundle JS, CSS, and images for production, with sourcemaps.
-> A dev server that lints for common errors.
-
-但是对于组件库开发，类似启动webpackDevServer的功能对我们来说是不必要的，在最基础的情况下，我们只需要build js代码。
-
-同时，参考`antd`和`elment-ui`，我们可能需要配置多个命令，不单单只是启动一个web server，对前端应用进行`build`。
-
-[react项目关于webpack配置修改 - 掘金 (juejin.cn)](https://juejin.cn/post/6974572885763424270)介绍了三种释放配置文件的方法，本文选择`npm run eject`进行释放，这个命令是由`react-scripts`提供的。运行该命令后，在项目中，我们得到了两个新目录：`config`和`scripts`，`config`内包含`webpack`配置所需的文件，`scripts`包含`start`，`build`和`test`脚本。
-
-## 1.4 添加ts、eslint配置，重新组件项目结构
+## 1.4 添加ts、eslint配置
 
 `ts`和`eslint`的配置参考：
 
@@ -53,10 +22,278 @@ https://github.com/ant-design/ant-design
 
 ![image-20230103180241803](assets/image-20230103180241803.png)
 
-`webpack`的路径配置在`config/path.js`中给出，我们进行必要的修改，主要是将目录`src`修改为`components`，对于纯组件库开发来说，不需要`public`目录，但为了在开发过程中检查组件效果，这个功能还是必要的。
+## 1.5 配置路径映射
 
-这意味着，在开发过程和组件发布过程，项目的入口文件是不同的。开发过程，相当于开发一个只展示组件的前端应用；组件发布过程，项目的入口文件只需要包含组件的导出声明。
+配置路径映射需要注意两个方面，一个是开发过程，一个是打包过程。
+
+对开发过程有效的是`tsconfig.json`，对打包过程有效的是`webpack.config.js`；
+
+在配置`tsconfig.json`时，需要注意不能配置`include`属性：[(127条消息) TS(tsconfig) 中路径映射的坑_NeverSettle101的博客-CSDN博客_tsconfig 路径映射](https://blog.csdn.net/qq_21265915/article/details/105499184?spm=1001.2101.3001.4242.2&utm_relevant_index=4)。
+
+## 1.6 编译打包
+
+此时不用指定是生产环境还是开发环境，这应该由组件使用者决定。
+
+# 2. 单元测试
+
+## 2.1 安装依赖
+
+```shell
+npm i jest ts-jest @testing-library/react @testing-library/jest-dom identity-obj-proxy @types/jest @types/testing-library__react --dev
+```
+
+- [jest](https://jestjs.io/): JavaScript 测试框架，专注于简洁明快；
+- [ts-jest](https://github.com/kulshekhar/ts-jest)：为`TypeScript`编写`jest`测试用例提供支持；
+- [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro)：简单而完整的`React DOM`测试工具，鼓励良好的测试实践；
+- [@testing-library/jest-dom](https://testing-library.com/docs/ecosystem-jest-dom)：自定义的`jest`匹配器(`matchers`)，用于测试`DOM`的状态（即为`jest`的`except`方法返回值增加更多专注于`DOM`的`matchers`）；
+- [identity-obj-proxy](https://www.npmjs.com/package/identity-obj-proxy)：一个工具库，此处用来`mock`样式文件。
+
+jest配置：https://jestjs.io/docs/configuration
+
+# 3. 标准发布流程
+
+标准流程包括：
+
+1. 版本更新
+2. 生成 CHANGELOG
+3. 推送至 git 仓库
+4. 组件库打包
+5. 发布至 npm
+6. 打 tag 并推送至 git
+
+**package.json**
+
+```
+"scripts": {
++ "release": "ts-node ./scripts/release.ts"
+},
+```
+
+```
+/* eslint-disable  import/no-extraneous-dependencies,@typescript-eslint/camelcase, no-console */
+import inquirer from 'inquirer';
+import fs from 'fs';
+import path from 'path';
+import child_process from 'child_process';
+import util from 'util';
+import chalk from 'chalk';
+import semverInc from 'semver/functions/inc';
+import { ReleaseType } from 'semver';
+
+import pkg from '../package.json';
+
+const exec = util.promisify(child_process.exec);
+
+const run = async (command: string) => {
+  console.log(chalk.green(command));
+  await exec(command);
+};
+
+const currentVersion = pkg.version;
+
+const getNextVersions = (): { [key in ReleaseType]: string | null } => ({
+  major: semverInc(currentVersion, 'major'),
+  minor: semverInc(currentVersion, 'minor'),
+  patch: semverInc(currentVersion, 'patch'),
+  premajor: semverInc(currentVersion, 'premajor'),
+  preminor: semverInc(currentVersion, 'preminor'),
+  prepatch: semverInc(currentVersion, 'prepatch'),
+  prerelease: semverInc(currentVersion, 'prerelease'),
+});
+
+const timeLog = (logInfo: string, type: 'start' | 'end') => {
+  let info = '';
+  if (type === 'start') {
+    info = `=> 开始任务：${logInfo}`;
+  } else {
+    info = `✨ 结束任务：${logInfo}`;
+  }
+  const nowDate = new Date();
+  console.log(
+    `[${nowDate.toLocaleString()}.${nowDate.getMilliseconds().toString().padStart(3, '0')}] ${info}
+    `,
+  );
+};
+
+/**
+ * 询问获取下一次版本号
+ */
+async function prompt(): Promise<string> {
+  const nextVersions = getNextVersions();
+  const { nextVersion } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'nextVersion',
+      message: `请选择将要发布的版本 (当前版本 ${currentVersion})`,
+      choices: (Object.keys(nextVersions) as Array<ReleaseType>).map((level) => ({
+        name: `${level} => ${nextVersions[level]}`,
+        value: nextVersions[level],
+      })),
+    },
+  ]);
+  return nextVersion;
+}
+
+/**
+ * 更新版本号
+ * @param nextVersion 新版本号
+ */
+async function updateVersion(nextVersion: string) {
+  pkg.version = nextVersion;
+  timeLog('修改package.json版本号', 'start');
+  await fs.writeFileSync(path.resolve(__dirname, './../package.json'), JSON.stringify(pkg));
+  await run('npx prettier package.json --write');
+  timeLog('修改package.json版本号', 'end');
+}
+
+/**
+ * 生成CHANGELOG
+ */
+async function generateChangelog() {
+  timeLog('生成CHANGELOG.md', 'start');
+  await run(' npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0');
+  timeLog('生成CHANGELOG.md', 'end');
+}
+
+/**
+ * 将代码提交至git
+ */
+async function push(nextVersion: string) {
+  timeLog('推送代码至git仓库', 'start');
+  await run('git add package.json CHANGELOG.md');
+  await run(`git commit -m "v${nextVersion}" -n`);
+  await run('git push');
+  timeLog('推送代码至git仓库', 'end');
+}
+
+/**
+ * 组件库打包
+ */
+async function build() {
+  timeLog('组件库打包', 'start');
+  await run('npm run build');
+  timeLog('组件库打包', 'end');
+}
+
+/**
+ * 发布至npm
+ */
+async function publish() {
+  timeLog('发布组件库', 'start');
+  await run('npm publish');
+  timeLog('发布组件库', 'end');
+}
+
+/**
+ * 打tag提交至git
+ */
+async function tag(nextVersion: string) {
+  timeLog('打tag并推送至git', 'start');
+  await run(`git tag v${nextVersion}`);
+  await run(`git push origin tag v${nextVersion}`);
+  timeLog('打tag并推送至git', 'end');
+}
+
+async function main() {
+  try {
+    const nextVersion = await prompt();
+    const startTime = Date.now();
+    // =================== 更新版本号 ===================
+    await updateVersion(nextVersion);
+    // =================== 更新changelog ===================
+    await generateChangelog();
+    // =================== 代码推送git仓库 ===================
+    await push(nextVersion);
+    // =================== 组件库打包 ===================
+    await build();
+    // =================== 发布至npm ===================
+    await publish();
+    // =================== 打tag并推送至git ===================
+    await tag(nextVersion);
+    console.log(`✨ 发布流程结束 共耗时${((Date.now() - startTime) / 1000).toFixed(3)}s`);
+  } catch (error) {
+    console.log('💣 发布失败，失败原因：', error);
+  }
+}
+
+main();
+```
+
+## 其他
+
+每次初始化一个组件就要新建许多文件（夹），复制粘贴也可，不过还可以使用更高级一点的偷懒方式。
+
+思路如下：
+
+1. 创建组件模板，预留动态信息插槽（组件名称，组件描述等等）；
+2. 基于`inquirer.js`询问动态信息；
+3. 将信息插入模板，渲染至`components`文件夹下；
+4. 向 components/index.ts 插入导出语句。
+
+我们只需要配置好模板以及问题，至于询问以及渲染就交给[plop.js](https://plopjs.com/)吧。
+
+```
+yarn add plop --dev
+```
+
+新增脚本命令。
+
+**package.json**
+
+```
+"scripts": {
++ "new": "plop --plopfile ./scripts/plopfile.ts",
+},
+```
+
+新增配置文件以及组件模板，详情可见：
+
+- 配置文件：[scripts/plopfile.ts](https://github.com/worldzhao/react-ui-library-tutorial/blob/master/scripts/plopfile.ts)
+- 模板文件：[templates/component](https://github.com/worldzhao/react-ui-library-tutorial/tree/master/templates/component)
+
+# 4. 配置Github pages
+
+## 4.1 build
+
+添加Action:
+
+```
+name: github pages
+
+on:
+  push:
+    branches:
+      - master # default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm run build:site
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc-site
+
+```
+
+关键的命令：
+
+`peaceiris/actions-gh-pages@v3`: [GitHub Pages action · Actions · GitHub Marketplace](https://github.com/marketplace/actions/github-pages-action)
+
+这个命令将会把输出的目录发布到指定的分支：`gh-pages`
+
+## 4.2 部署
+
+![image-20230104172515904](assets/image-20230104172515904.png)
 
 # 参考资料
 
 [如何快速构建React组件库 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/196758730)
+
+# 构建工具对比
+
+[webpack、rollup、gulp对比 - 简书 (jianshu.com)](https://www.jianshu.com/p/cea946fa3c58)
