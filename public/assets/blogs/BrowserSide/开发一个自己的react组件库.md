@@ -4,35 +4,222 @@
 
 （也许存在为组件库开发的项目创建命令，待发现...）
 
-## 1.1初始化项目
+目标：初始化项目结构，配置代码规范（eslint，prettier，stylelint），添加typescript支持
 
+## 1.1 初始化项目结构
 
+```
+mkdir fanasy-ui-react
+cd fantasy-ui-react
+npm init --y 
+mkdir components && mkdir styles && cd components && touch index.ts
+```
 
-## 1.2
+## 1.2 代码规范
 
+### 1.2.1 前置准备
 
+```
+npm i @umijs/fabric --dev
+npm i prettier --dev # 因为@umijs/fabric没有将prettier作为依赖 所以我们需要手动安装
 
-## 1.4 添加ts、eslint配置
+npm i lint-staged -D   # 本地暂存代码检查工具
+npm i husky  # 操作 git 钩子的工具
+```
 
-`ts`和`eslint`的配置参考：
+**lint 工具简史**
 
-https://github.com/ant-design/ant-design
+> 在计算机科学中，lint是一种工具的名称，它用来标记代码中，某些可疑的、不具结构性（可能造成bug）的语句。它是一种静态程序分析工具，最早适用于C语言，在UNIX平台上开发出来。后来它成为通用术语，可用于描述在任何一种编程语言中，用来标记代码中有疑义语句的工具。    -- by wikipedia
 
-我们将项目结构修改为：
+![image](assets/16c372c1318fdfd7tplv-t2oaga2asx-zoom-in-crop-mark4536000.webp)
 
-![image-20230103180241803](assets/image-20230103180241803.png)
+### 1.2.2  代码检查
 
-## 1.5 配置路径映射
+**.eslintrc.js**
 
-配置路径映射需要注意两个方面，一个是开发过程，一个是打包过程。
+```
+module.exports = {
+  extends: [require.resolve('@umijs/fabric/dist/eslint')],
+};
+```
 
-对开发过程有效的是`tsconfig.json`，对打包过程有效的是`webpack.config.js`；
+### 1.2.3 代码风格
 
-在配置`tsconfig.json`时，需要注意不能配置`include`属性：[(127条消息) TS(tsconfig) 中路径映射的坑_NeverSettle101的博客-CSDN博客_tsconfig 路径映射](https://blog.csdn.net/qq_21265915/article/details/105499184?spm=1001.2101.3001.4242.2&utm_relevant_index=4)。
+**.prettierrc.js**
 
-## 1.6 编译打包
+```
+const fabric = require('@umijs/fabric');
 
-此时不用指定是生产环境还是开发环境，这应该由组件使用者决定。
+module.exports = {
+  ...fabric.prettier,
+};
+```
+
+### 1.2.4 css代码规范
+
+**.stylelintrc.js**
+
+```
+module.exports = {
+  extends: [require.resolve('@umijs/fabric/dist/stylelint')],
+};
+```
+
+### 1.2.5 提交检查
+
+**package.json**配置：文件控制检查和操作方式（取代`.lintstagedrc.json`）：
+
+`lint-staged`: 代码暂存检查；
+
+```
+"lint-staged": {
+  "components/**/*.ts?(x)": [
+    "prettier --write",
+    "eslint --fix",
+    "git add"  # 不需要添加这条了，https://github.com/okonet/lint-staged/issues/775
+  ],
+  "src/**/*.less": [
+    "stylelint --syntax less --fix",
+    "git add"
+  ]
+},
+"styles": {
+  "hooks": {
+    "pre-commit": "lint-staged"
+  }
+}
+```
+
+使用`lint-staged`进行暂存区代码检查：
+
+`package.json`
+
+```
+"scripts": {
+	// others
+	"pre-commit": "lint-staged",
+	// others
+}
+```
+
+```shell
+git add components/*
+npm run pre-commit
+```
+
+**Commit message 检测**
+
+**安装辅助提交依赖**
+
+```
+npm i @commitlint/cli @commitlint/config-conventional commitizen cz-conventional-changelog --dev
+```
+
+新增`.commitlintrc.js`，写入：
+
+```
+module.exports = { extends: ['@commitlint/config-conventional'] };
+```
+
+**安装指令和命令行的展示信息**
+
+```
+npm set-script commit "git-cz" # package.json 中添加 commit 指令, 执行 `git-cz` 指令
+```
+
+`pacakage.json`：
+
+```
+"scripts": {
+	// others
+	"commit": "git-cz",
+	// others
+}
+```
+
+## 1.3 TypeScript
+
+```
+npm i  typescript --save-dev
+```
+
+新建`tsconfig.json`并写入以下内容
+
+```
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@/fantasyui/*": [
+                "components/*"
+            ],
+            "@/styles/*": [
+                "styles/*"
+            ],
+            "fantasyui": [
+                "components/index.ts"
+            ],
+            "fantasyui/es/*": [
+                "components/*"
+            ],
+            "fantasyui/lib/*": [
+                "components/*"
+            ],
+            "fantasyui/locale/*": [
+                "components/locale/*"
+            ]
+        },
+        "resolveJsonModule": true,
+        "strictNullChecks": true,
+        "declarationDir": "lib",
+        "module": "commonjs",
+        "target": "es6",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "jsxFactory": "React.createElement",
+        "jsxFragmentFactory": "React.Fragment",
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "noImplicitAny": true,
+        "lib": [
+            "dom",
+            "es2017"
+        ],
+        "skipLibCheck": true,
+        "stripInternal": true,
+        "outDir": "dist", // 生成目录
+        "declaration": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "exclude": [
+        "node_modules",
+        "lib",
+        "es"
+    ]
+}
+```
+
+`paths`属性配置别名，我们编程中可以使用别名导入项目中的模块。
+
+## 1.4 总结
+
+完成上述操作后，我们生成了一个标准的react ui组件库开发项目，能够进行代码检查，风格检查，git提交检查，规范生成commit message，**我们可以开始编码工作，但不能进行构建**。
+
+## 1.5 参考资料
+
+- [深入理解 ESlint - 掘金 (juejin.cn)](https://juejin.cn/post/6844903901292920846)
+
+- [Eslint + Prettier + Husky + Commitlint+ Lint-staged 规范前端工程代码规范 - 掘金 (juejin.cn)](https://juejin.cn/post/7038143752036155428)
+
+  包含如何自定义commit message
+
+- [Home | Stylelint 中文文档 (bootcss.com)](https://stylelint.bootcss.com/)
+
+- [什么是npx？ - 掘金 (juejin.cn)](https://juejin.cn/post/7142666525365764104)
+
+- [TypeScript Compiler Configuration - tsconfig.json (howtodoinjava.com)](https://howtodoinjava.com/typescript/tsconfig-json/)
 
 # 2. 单元测试
 
