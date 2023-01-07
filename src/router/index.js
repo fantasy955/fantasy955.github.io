@@ -20,14 +20,23 @@ const routes = [
             {
                 path: 'home',
                 component: HomeContent,
+                meta: {
+                    keepAlive: true,
+                }
             },
             {
                 path: 'demo',
                 component: HomeDemoPage,
+                meta: {
+                    keepAlive: true,
+                }
 
             }, {
                 path: 'blog',
-                component: HomeBlog
+                component: HomeBlog,
+                meta: {
+                    keepAlive: true,
+                }
             },
         ],
         // 默认路由配置方法
@@ -36,7 +45,10 @@ const routes = [
         path: '/blog/:categorySname/:blogName/:path',
         // meta: {title: '博客', withTitle: true},
         // 只有独享前置路由守卫
-        name: 'blog', component: BlogPage, props: true
+        name: 'blog', component: BlogPage, props: true,
+        meta: {
+            keepAlive: false,
+        }
     }
 ]
 
