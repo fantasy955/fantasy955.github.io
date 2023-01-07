@@ -10,7 +10,7 @@ import router from './router/index';
 import uConifg from './config';
 
 const pinia = createPinia()
-const app = createApp(App);
+const app = createSSRApp(App);
 app.use(Particles);
 app.use(router);
 app.use(pinia)
