@@ -221,6 +221,66 @@ npm i  typescript --save-dev
 
 - [TypeScript Compiler Configuration - tsconfig.json (howtodoinjava.com)](https://howtodoinjava.com/typescript/tsconfig-json/)
 
+# 2. 编写一个示例组件
+
+在目录`compoents`下创建各种组件，每个组件单独创建一个目录：
+
+![image-20230107130454569](assets/image-20230107130454569.png)
+
+## 2.1 创建alert组件
+
+创建`alert`目录，并创建`index.tsx`文件进行组件定义：
+
+```tsx
+import React from 'react';
+import t from 'prop-types';
+// https://react.docschina.org/docs/typechecking-with-proptypes.html
+
+export type AlertProps = {
+    kind?: 'info' | 'positive' | 'negative' | 'warning';
+} & React.HTMLAttributes<any>
+
+export type KindMap = Record<Required<AlertProps>['kind'], string>;
+
+const prefixCls = 'fantasy-alert';
+
+const kinds: KindMap = {
+    info: '#5352ED',
+    positive: '#2ED573',
+    negative: '#FF4757',
+    warning: '#FFA502',
+};
+
+const Alert: React.FC<AlertProps> = ({ children, kind = 'info', ...rest }) => (
+    <div
+        className={prefixCls}
+        style={{
+            background: kinds[kind],
+        }}
+        {...rest}
+    >
+        {children}
+    </div>
+);
+
+// props类型检查
+Alert.propTypes = {
+    kind: t.oneOf(['info', 'positive', 'negative', 'warning']),
+};
+
+export default Alert;
+```
+
+## 2.2 组件导出
+
+在`components/index.ts`文件内进行所有组件的导出：
+
+```
+export { default as Alert } from './alert';
+```
+
+
+
 # 2. 单元测试
 
 ## 2.1 安装依赖
