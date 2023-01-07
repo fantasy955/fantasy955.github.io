@@ -162,6 +162,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.querySelector('#article-body').innerHTML = "加载中";
+  document.querySelector('#article-toc').innerHTML = '';
   console.log("博客详细页面将要卸载");
 });
 </script>
