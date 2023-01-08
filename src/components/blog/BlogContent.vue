@@ -35,12 +35,12 @@
         id="article-toc"
       ></div>
     </div>
-    <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
+    <component src="/assets/js/MathJaxConfig.js" :is="'script'"></component>
   </div>
 </template>
 
 <script setup>
-import { useScreenWidth, useScreenWidthStore } from "@/stores/screenWidth";
+import { useScreenWidth } from "@/stores/screenWidth";
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
 import {
@@ -74,7 +74,7 @@ const smallSceenSize = globalParams.smallScreenSize;
 const first = ref("order-0");
 const second = ref("order-2");
 
-var getBlogContent = axios.get(probs.blogPath);
+var getBlogContent = axios.get(probs.blogPath.replace(/^.\//, '/'));
 
 const screenWidth = useScreenWidth();
 
@@ -88,7 +88,7 @@ onMounted(() => {
       let dirName = tmp[tmp.length - 1 - 1];
       mdcontent = mdcontent.replace(
         /\]\(assets/g,
-        "](./assets/blogs/" + dirName + "/assets"
+        "](/assets/blogs/" + dirName + "/assets"
       );
 
       el.innerHTML = "";
@@ -171,7 +171,7 @@ onBeforeUnmount(() => {
 .toc-scroll {
   /*要设置滚动条的容器样式*/
   overflow-y: auto;
-  width: auto;
+  width: 100%;
   max-height: 500px;
 }
 

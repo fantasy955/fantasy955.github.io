@@ -1,14 +1,15 @@
 import HomePage from '@/components/home/HomePage.vue';
-import HomeContent from '@/pages/HomePage.vue';
+import HomeContent from '@/pages/home/HomePage.vue';
 import BlogPage from '../components/blog/BlogPage.vue';
 import HomeBlog from '../components/blog/HomeBlog';
 import NotFound from '../components/common/NotFound.vue';
-import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
 import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
 const EnergyFlow = () => import('../components/demo/pages/_EnergyFlow.vue');
+const TestPage = () => import('@/pages/test/TestPage.vue');
 
-const routes = [
+export const routes = [
     {
         path: '/',
         component: HomePage,
@@ -55,6 +56,11 @@ const routes = [
 routes.push({
     path: '/pages/energyflow',
     component: EnergyFlow,
+});
+
+routes.push({
+    path: '/test',
+    component: TestPage,
 });
 
 const router = createRouter({

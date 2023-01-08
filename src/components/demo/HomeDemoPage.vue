@@ -81,13 +81,14 @@ const showRightNavBar = ref(false);
 const tmpFlag = ref(true);
 
 categories.value.forEach((category) => {
-  const childrenJson = require(`./${category.path}/list.json`);
-  childrenJson.demos.map((demo) => {
-    if (demo.name.trim() == "") {
-      demo.name = demo.path.split(".")[0];
-    }
-  });
-  category.children = childrenJson.demos;
+  import(`./${category.path}/list.json`).then((childrenJson) => {
+    childrenJson.demos.map((demo) => {
+      if (demo.name.trim() == "") {
+        demo.name = demo.path.split(".")[0];
+      }
+    });
+    category.children = childrenJson.demos;
+  })
 });
 
 const activeDemoPath = ref("");
@@ -97,7 +98,8 @@ const componentsList = [];
 
 function viewDemoDetail(event, category, name) {
   event.preventDefault();
-  let path = `./${category}/${name}`;
+  let path = `./${category}/${name.split('.')[0]}.vue`;
+  console.log(path);
   if (activeDemoPath.value === path) {
     return;
   }
@@ -108,7 +110,7 @@ function viewDemoDetail(event, category, name) {
   if (component === undefined) {
     component = defineAsyncComponent(() =>
       // 这是如何实现的
-      import(`./${category}/${name}`)
+      import(`./${category}/${name.split('.')[0]}.vue`)
       // import(path) // 这样写不行
     );
     componentsList.push({

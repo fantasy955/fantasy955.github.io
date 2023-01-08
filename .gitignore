@@ -1,6 +1,8 @@
 # ./demos
-./.vscodea
+.vscodea
 ./React
+.vite-ssg-temp
+dist
 
 .DS_Store
 node_modules

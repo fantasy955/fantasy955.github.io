@@ -22,8 +22,8 @@ import HomeBlogNav from "./HomeBlogNav.vue";
 import { computed, defineProps, inject, ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { initAeronautics } from '@/utils/aeronautics';
+import menuJson from "../blog/menu.json";
 
-const menuJson = require("../blog/menu.json");
 const categoryInfoList = ref([]);
 const menu = ref([]);
 

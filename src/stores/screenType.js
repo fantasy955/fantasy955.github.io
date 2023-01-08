@@ -9,9 +9,11 @@ export const largeScreen = false;
 
 const screenWidth = useScreenWidth();
 const screenType = ref(smallScreen);
-watch(screenWidth, () => {
-    screenType.value = screenWidth.value <= smallScreenSize;
-}, {immediate: true});
+watch(() => screenWidth, () => {
+    if (screenWidth) {
+        screenType.value = screenWidth.value <= smallScreenSize;
+    }
+}, { immediate: true });
 
 export const useScreenType = () => screenType;
 

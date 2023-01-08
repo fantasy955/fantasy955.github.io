@@ -1,19 +1,29 @@
 <template>
     <div class="cantainer">
+        <Particles id="particles" :particlesInit="particlesInit" :particlesLoaded="particlesLoaded" class="particle"
+            :options="options" v-if="mounted" />
         <IntroductionPanel />
         <div class="friends"></div>
         <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
-        <vue-particles class="particle" color="#dedede" :particleOpacity="0.7" :particlesNumber="160" shapeType="circle"
-            :particleSize="4" linesColor="#dedede" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4"
-            :linesDistance="150" :moveSpeed="3" :hoverEffect="true" hoverMode="grab" :clickEffect="true"
-            clickMode="push">
-        </vue-particles>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import { options } from './particleOptions';
+import { loadFull } from "tsparticles"  // must import
 import IntroductionPanel from '@/components/home/IntroductionPanel.vue';
+const particlesInit = async (engine) => {
+    await loadFull(engine)
+}
+const particlesLoaded = async (container) => {
+    console.log('Particles container loaded', container)
+}
+const mounted = ref(false);
+
+onMounted(()=>{
+    mounted.value = true;
+});
 
 </script>
 
@@ -37,6 +47,6 @@ import IntroductionPanel from '@/components/home/IntroductionPanel.vue';
 .particle {
     position: absolute;
     inset: 0;
-    z-index: -999;
+    z-index: -999;  
 }
 </style>
