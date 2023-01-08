@@ -7,13 +7,13 @@ const smallScreenSize = config.globalParams.smallScreenSize;
 export const smallScreen = true;
 export const largeScreen = false;
 
-const screenWidth = useScreenWidth();
-const screenType = ref(smallScreen);
-watch(() => screenWidth, () => {
-    if (screenWidth) {
-        screenType.value = screenWidth.value <= smallScreenSize;
-    }
-}, { immediate: true });
-
-export const useScreenType = () => screenType;
+export const useScreenType = function () {
+    const screenWidth = useScreenWidth();
+    const screenType = ref(smallScreen);
+    watch(() => screenWidth, () => {
+        if (screenWidth) {
+            screenType.value = screenWidth.value <= smallScreenSize;
+        }
+    }, { immediate: true });
+};
 

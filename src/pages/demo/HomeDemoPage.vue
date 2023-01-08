@@ -69,10 +69,7 @@ import {
 import axios from "axios";
 import { useRoute } from "vue-router";
 import DefaultDemoContent from "./DefaultDemoContent.vue";
-import RightAsideNavBar from "../nav/RightAsideNavBar.vue";
-// import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
-// fs是服务端模块，无法使用
-// import { readFile } from 'fs';
+import RightAsideNavBar from "@/components/demo/RightAsideNavBar.vue";
 
 const route = useRoute();
 const categories = ref(menu.categories);
@@ -82,12 +79,16 @@ const tmpFlag = ref(true);
 
 categories.value.forEach((category) => {
   import(`./${category.path}/list.json`).then((childrenJson) => {
-    childrenJson.demos.map((demo) => {
-      if (demo.name.trim() == "") {
-        demo.name = demo.path.split(".")[0];
-      }
-    });
-    category.children = childrenJson.demos;
+    if (childrenJson) {
+      childrenJson.demos.map((demo) => {
+        if (demo.name.trim() == "") {
+          demo.name = demo.path.split(".")[0];
+        }
+      });
+      category.children = childrenJson.demos;
+    }
+  }).catch((err)=>{
+    // console.log(err);
   })
 });
 

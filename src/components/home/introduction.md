@@ -1,3 +1,7 @@
+[toc]
+
+
+
 ### 你好! 欢迎来到我的页面
 
 ### This is Fantasy955 
@@ -9,3 +13,9 @@ Fantasy来自于周杰伦专辑《范特西》, 955来自于本人名字的26键
 能够熟练使用Vue, React框架, 关注Svelte, Qwick等新兴框架
 
 Keep Studying, Keep Writing
+
+```js
+let a = 3;
+const b = 1;
+```
+

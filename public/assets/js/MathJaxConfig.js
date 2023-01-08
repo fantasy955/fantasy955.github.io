@@ -1,5 +1,5 @@
 (function (res) {
-    console.log('config mathjax');
+    // console.log('config mathjax');
 
     // console.log(res);
     // ƒ (){

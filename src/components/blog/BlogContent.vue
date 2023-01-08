@@ -10,11 +10,7 @@
             <a class="a2a_button_facebook"></a>
             <a class="a2a_button_twitter"></a>
           </div>
-          <component
-            src="https://static.addtoany.com/menu/page.js"
-            :is="'script'"
-            async
-          >
+          <component src="https://static.addtoany.com/menu/page.js" :is="'script'" async>
           </component>
           <!-- AddToAny END -->
         </div>
@@ -22,18 +18,10 @@
     </div>
 
     <div class="col-xl-8 border order-1" role="main">
-      <div id="article-body">加载中</div>
+      <div id="article-body" class="markdown-body editormd-html-preview">加载中</div>
     </div>
-    <div
-      class="col-md-2 pl-3"
-      :class="screenWidth <= 1200 ? first : second"
-      id="div-article-toc"
-    >
-      <div
-        class="sticky-top mr-1 toc-scroll"
-        style="top: 90px"
-        id="article-toc"
-      ></div>
+    <div class="col-md-2 pl-3" :class="screenWidth <= 1200 ? first : second" id="div-article-toc">
+      <div class="sticky-top mr-1 toc-scroll" style="top: 90px" id="article-toc"></div>
     </div>
     <component src="/assets/js/MathJaxConfig.js" :is="'script'"></component>
   </div>
@@ -42,7 +30,8 @@
 <script setup>
 import { useScreenWidth } from "@/stores/screenWidth";
 import axios from "axios";
-import editormd from "editor.md/src/editormd";
+// import editormd from "editor.md/src/editormd";
+import MarkdownIt from 'markdown-it';
 import {
   defineProps,
   onMounted,
@@ -57,11 +46,14 @@ import {
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from 'pinia'
+import hljs from 'highlight.js';
+import mdContainer from 'markdown-it-container';
 
 const route = useRoute();
 const router = useRouter();
 const globalParams = inject("globalParams");
-const editor = editormd();
+// const editor = editormd();
+const markdown = new MarkdownIt();
 
 const probs = defineProps({
   blogPath: {
@@ -78,8 +70,39 @@ var getBlogContent = axios.get(probs.blogPath.replace(/^.\//, '/'));
 
 const screenWidth = useScreenWidth();
 
-onMounted(() => {
-  getBlogContent.then((res) => {
+const md2html = async function (content) {
+  markdown.set({
+    linkify: true, // 将类似 URL 的文本自动转换为链接。
+    html: false, // Enable HTML tags in source
+    // 代码高亮
+    highlight: function (str, lang) {
+      lang = lang || 'shell'
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return (
+            '<pre class="hljs"><code>' +
+            hljs.highlight(lang, str, true).value +
+            '</code></pre>'
+          )
+        } catch (__) { }
+      }
+
+      return (
+        '<pre class="hljs"><code>' + markdown.utils.escapeHtml(str) + '</code></pre>'
+      )
+    }
+  });
+
+  // 自定义容器，:::tip 会转换为 <div class="tip">
+    markdown.use(mdContainer, 'tip');
+    markdown.use(mdContainer, 'warning');
+
+  const html = markdown.render(content);
+  return html;
+}
+
+onMounted(async () => {
+  getBlogContent.then(async (res) => {
     {
       let mdcontent = res.data;
       let el = document.getElementById("article-body");
@@ -94,64 +117,67 @@ onMounted(() => {
       el.innerHTML = "";
       mdcontent = mdcontent.trim().length > 0 ? mdcontent : "**等待填坑**";
 
-      let md2html = new Promise(function (resolve, reject) {
-        editor.markdownToHTML("article-body", {
-          markdown: mdcontent,
-          tocContainer: "#article-toc",
-          tocDropown: true,
-          tex: true, // 默认不解析
-        });
-        resolve();
-      });
-      md2html.then(() => {
-        const titleElments = document.querySelectorAll(".reference-link");
-        // https://www.qy.cn/jszx/detail/6411.html
-        // 监听元素是否可见
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              console.log(entry.target);
-            }
-          });
-        });
-        let tocContainer = document.querySelector(".markdown-toc-list");
-        let liElements = tocContainer.getElementsByTagName("li");
-        for (let i = 0; i < liElements.length; i++) {
-          let el = liElements[i].firstChild;
-          el.addEventListener("click", function (event) {
-            event.preventDefault();
-            titleElments[i].scrollIntoView({
-              behavior: "smooth",
-            });
-          });
-          observer.observe(titleElments[i]);
-        }
-        let aElements = el.querySelectorAll("a");
-        for (let aEl of aElements) {
-          let href = aEl.getAttribute("href");
-          // href.length-1 对应最后一个
-          if (href !== null && href.search(/.md/) == href.length - 3) {
-            aEl.addEventListener("click", (event) => {
-              event.preventDefault();
-              let targetBlogName = href.split("./")[1];
-              let targetPath = route.params.path;
-              targetPath =
-                targetPath.substring(0, targetPath.lastIndexOf("/") + 1) +
-                targetBlogName;
-              let targetParams = route.params;
-              targetParams.path = targetPath;
-              targetParams.blogName = targetBlogName;
-              let targetRouter = router.resolve({
-                query: {
-                  blogName: targetBlogName,
-                  path: targetPath,
-                },
-              });
-              window.open(targetRouter.href);
-            });
-          }
-        }
-      });
+      const html = await md2html(mdcontent);
+      el.innerHTML = html;
+
+      // let md2html = new Promise(function (resolve, reject) {
+      //   editor.markdownToHTML("article-body", {
+      //     markdown: mdcontent,
+      //     tocContainer: "#article-toc",
+      //     tocDropown: true,
+      //     tex: true, // 默认不解析
+      //   });
+      //   resolve();
+      // });
+      // md2html.then(() => {
+      //   const titleElments = document.querySelectorAll(".reference-link");
+      //   // https://www.qy.cn/jszx/detail/6411.html
+      //   // 监听元素是否可见
+      //   const observer = new IntersectionObserver((entries, observer) => {
+      //     entries.forEach((entry) => {
+      //       if (entry.isIntersecting) {
+      //         // console.log(entry.target);
+      //       }
+      //     });
+      //   });
+      //   let tocContainer = document.querySelector(".markdown-toc-list");
+      //   let liElements = tocContainer.getElementsByTagName("li");
+      //   for (let i = 0; i < liElements.length; i++) {
+      //     let el = liElements[i].firstChild;
+      //     el.addEventListener("click", function (event) {
+      //       event.preventDefault();
+      //       titleElments[i].scrollIntoView({
+      //         behavior: "smooth",
+      //       });
+      //     });
+      //     observer.observe(titleElments[i]);
+      //   }
+      //   let aElements = el.querySelectorAll("a");
+      //   for (let aEl of aElements) {
+      //     let href = aEl.getAttribute("href");
+      //     // href.length-1 对应最后一个
+      //     if (href !== null && href.search(/.md/) == href.length - 3) {
+      //       aEl.addEventListener("click", (event) => {
+      //         event.preventDefault();
+      //         let targetBlogName = href.split("./")[1];
+      //         let targetPath = route.params.path;
+      //         targetPath =
+      //           targetPath.substring(0, targetPath.lastIndexOf("/") + 1) +
+      //           targetBlogName;
+      //         let targetParams = route.params;
+      //         targetParams.path = targetPath;
+      //         targetParams.blogName = targetBlogName;
+      //         let targetRouter = router.resolve({
+      //           query: {
+      //             blogName: targetBlogName,
+      //             path: targetPath,
+      //           },
+      //         });
+      //         window.open(targetRouter.href);
+      //       });
+      //     }
+      //   }
+      // });
     }
   });
 });
@@ -168,6 +194,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
+@import 'highlight.js/styles/monokai-sublime';
 .toc-scroll {
   /*要设置滚动条的容器样式*/
   overflow-y: auto;

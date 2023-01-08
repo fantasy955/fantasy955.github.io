@@ -25,15 +25,11 @@
 </template>
 
 <script setup>
-import { ref } from "@vue/reactivity";
-import { computed, defineProps, onDeactivated, onMounted, onUnmounted } from "vue";
+import { computed } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
-import BlogContentVue from "./BlogContent.vue";
-import PageFooter from "../common/PageFooter.vue";
-import PageHeader from "../common/PageHeader.vue";
-
-var route = useRoute();
-var router = useRouter();
+import BlogContentVue from "../../../components/blog/BlogContent.vue";
+import PageFooter from "@/components/common/PageFooter.vue";
+import PageHeader from "@/components/common/PageHeader.vue";
 
 const probs = defineProps(['categorySname', 'blogName', 'path']);
 

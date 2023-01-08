@@ -4,8 +4,6 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import { defineProps, defineAsyncComponent, watch } from "vue";
 import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
 const screenType = useScreenType();
 // console.log(screenType);

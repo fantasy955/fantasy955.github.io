@@ -1,26 +1,27 @@
-import HomePage from '@/components/home/HomePage.vue';
-import HomeContent from '@/pages/home/HomePage.vue';
-import BlogPage from '../components/blog/BlogPage.vue';
-import HomeBlog from '../components/blog/HomeBlog';
-import NotFound from '../components/common/NotFound.vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
-import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
-import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
-const EnergyFlow = () => import('../components/demo/pages/_EnergyFlow.vue');
+// const HomePage = () => import('@/components/home/HomePage.vue');
+// const HomeContent = () => import('@/pages/home/HomePage.vue');
+// const BlogPage = () => import('@/pages/blog/BlogPage.vue');
+// const HomeBlog = () => import('@/pages/blog/HomeBlog');
+// const NotFound = () => import('@/pages/common/NotFound.vue');
+import Layout from '@/pages/Layout.vue';
+import HomePage from '@/pages/home/HomePage.vue';
+import BlogPage from '@/pages/blog/content/BlogPage.vue';
+import HomeBlog from '@/pages/blog/HomeBlog';
+import NotFound from '@/pages/NotFound.vue';
+// import { createRouter, createWebHashHistory } from 'vue-router';
+const HomeDemoPage = () => import('@/pages/demo/HomeDemoPage.vue');
+// const DefaultDemoContent = () => import('@/pages/demo/DefaultDemoContent.vue');
+const EnergyFlow = () => import('@/pages/demo/pages/_EnergyFlow.vue');
 const TestPage = () => import('@/pages/test/TestPage.vue');
 
 export const routes = [
     {
         path: '/',
-        component: HomePage,
+        component: Layout,
         children: [
-            // {
-            //     path: '',
-            //     redirect: '/blog',
-            // },
             {
                 path: 'home',
-                component: HomeContent,
+                component: HomePage,
                 meta: {
                     keepAlive: true,
                 }
@@ -32,7 +33,8 @@ export const routes = [
                     keepAlive: true,
                 }
 
-            }, {
+            },
+            {
                 path: 'blog',
                 component: HomeBlog,
                 meta: {
@@ -40,8 +42,13 @@ export const routes = [
                 }
             },
         ],
-        // 默认路由配置方法
+        // 默认路由配置方法1
         redirect: 'home',
+        // 方法2
+        // {
+        //     path: '',
+        //     redirect: '/blog',
+        // },
     }, {
         path: '/blog/:categorySname/:blogName/:path',
         // meta: {title: '博客', withTitle: true},
@@ -63,12 +70,12 @@ routes.push({
     component: TestPage,
 });
 
-const router = createRouter({
-    // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
-    history: createWebHashHistory(),
-    // history: createWebHistory(),
-    routes,
-});
+// const router = createRouter({
+//     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
+//     history: createWebHashHistory(),
+//     // history: createWebHistory(),
+//     routes,
+// });
 
 // 全局前置路由守卫
 // 初始化，切换前调用（url不会改变）
@@ -81,4 +88,4 @@ const router = createRouter({
 // router.afterEach((to, from) => {
 
 // })
-export default router;
+// export default router;

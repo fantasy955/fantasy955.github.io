@@ -9,19 +9,21 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { options } from './particleOptions';
+import { onMounted, ref, reactive } from "vue";
+import { getParticlesOptions } from './particleOptions';
 import { loadFull } from "tsparticles"  // must import
 import IntroductionPanel from '@/components/home/IntroductionPanel.vue';
 const particlesInit = async (engine) => {
     await loadFull(engine)
 }
 const particlesLoaded = async (container) => {
-    console.log('Particles container loaded', container)
+    // console.log('Particles container loaded', container)
 }
 const mounted = ref(false);
 
-onMounted(()=>{
+const options = getParticlesOptions();
+
+onMounted(() => {
     mounted.value = true;
 });
 
@@ -47,6 +49,6 @@ onMounted(()=>{
 .particle {
     position: absolute;
     inset: 0;
-    z-index: -999;  
+    z-index: -999;
 }
 </style>
