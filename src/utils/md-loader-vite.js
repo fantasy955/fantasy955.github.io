@@ -29,15 +29,15 @@ export default function () {
                         if (lang && hljs.getLanguage(lang)) {
                             try {
                                 return (
-                                    '<pre class="hljs" style="color: #000;"><code>' +
-                                    hljs.highlight(lang, str, true).value +
+                                    '<pre class="hljs"><code>' +
+                                    hljs.highlight(strl, { lang }).value +
                                     '</code></pre>'
                                 )
                             } catch (__) { }
                         }
 
                         return (
-                            '<pre class="hljs" style="color: #000;"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
+                            '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
                         )
                     }
                 })

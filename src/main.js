@@ -5,6 +5,7 @@ import App from "./App.vue";
 import VueMarkdown from 'vue-markdown'
 import { routes } from './router/index';
 import uConifg from './config';
+import 'highlight.js/styles/github.css';
 
 export const createApp = ViteSSG(
     // the root component

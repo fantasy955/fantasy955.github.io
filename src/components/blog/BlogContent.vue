@@ -33,27 +33,67 @@ import axios from "axios";
 // import editormd from "editor.md/src/editormd";
 import MarkdownIt from 'markdown-it';
 import {
-  defineProps,
   onMounted,
   inject,
-  computed,
   ref,
-  watch,
-  onDeactivated,
-  onUnmounted,
   onBeforeUnmount,
-  nextTick,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from 'pinia'
 import hljs from 'highlight.js';
 import mdContainer from 'markdown-it-container';
+import markdownItTocAndAnchor from "markdown-it-toc-and-anchor";
+import markDownItTocDoneRight from 'markdown-it-toc-done-right';
 
 const route = useRoute();
 const router = useRouter();
 const globalParams = inject("globalParams");
 // const editor = editormd();
-const markdown = new MarkdownIt();
+const markdown = new MarkdownIt({
+  linkify: true, // 将类似 URL 的文本自动转换为链接。
+  html: false, // Enable HTML tags in source
+  // 代码高亮
+  highlight: function (str, lang) {
+    lang = lang || 'shell'
+    if (lang && hljs.getLanguage(lang)) {
+      // console.log(lang);
+      try {
+        return (
+          '<pre class="hljs"><code>' +
+          hljs.highlight(lang, str, true).value +
+          '</code></pre>'
+        )
+      } catch (__) { }
+    }
+
+    return (
+      '<pre class="hljs"><code>' + markdown.utils.escapeHtml(str) + '</code></pre>'
+    )
+  }
+});
+markdown.use(markdownItTocAndAnchor, {
+  permalink: true,
+  permalinkBefore: true,
+  permalinkSymbol: '§',
+  slugify: (str) => {
+    // console.log(str);
+    return str;
+  }
+});
+markdown.use(markDownItTocDoneRight, {
+  callback: (html, ast) => {
+    document.querySelector('#article-toc').innerHTML = html;
+    // console.log(html);
+    // console.log(ast);
+  },
+  slugify: (str) =>{
+    // console.log(str);
+    return str;
+  }
+});
+// 自定义容器，:::tip 会转换为 <div class="tip">
+markdown.use(mdContainer, 'tip');
+markdown.use(mdContainer, 'warning');
 
 const probs = defineProps({
   blogPath: {
@@ -71,34 +111,12 @@ var getBlogContent = axios.get(probs.blogPath.replace(/^.\//, '/'));
 const screenWidth = useScreenWidth();
 
 const md2html = async function (content) {
-  markdown.set({
-    linkify: true, // 将类似 URL 的文本自动转换为链接。
-    html: false, // Enable HTML tags in source
-    // 代码高亮
-    highlight: function (str, lang) {
-      lang = lang || 'shell'
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return (
-            '<pre class="hljs"><code>' +
-            hljs.highlight(lang, str, true).value +
-            '</code></pre>'
-          )
-        } catch (__) { }
-      }
-
-      return (
-        '<pre class="hljs"><code>' + markdown.utils.escapeHtml(str) + '</code></pre>'
-      )
-    }
-  });
-
-  // 自定义容器，:::tip 会转换为 <div class="tip">
-    markdown.use(mdContainer, 'tip');
-    markdown.use(mdContainer, 'warning');
-
-  const html = markdown.render(content);
-  return html;
+  try {
+    const html = markdown.render(content);
+    return html;
+  } catch (__) {
+    return '加载失败';
+  }
 }
 
 onMounted(async () => {
@@ -120,64 +138,32 @@ onMounted(async () => {
       const html = await md2html(mdcontent);
       el.innerHTML = html;
 
-      // let md2html = new Promise(function (resolve, reject) {
-      //   editor.markdownToHTML("article-body", {
-      //     markdown: mdcontent,
-      //     tocContainer: "#article-toc",
-      //     tocDropown: true,
-      //     tex: true, // 默认不解析
-      //   });
-      //   resolve();
-      // });
-      // md2html.then(() => {
-      //   const titleElments = document.querySelectorAll(".reference-link");
-      //   // https://www.qy.cn/jszx/detail/6411.html
-      //   // 监听元素是否可见
-      //   const observer = new IntersectionObserver((entries, observer) => {
-      //     entries.forEach((entry) => {
-      //       if (entry.isIntersecting) {
-      //         // console.log(entry.target);
-      //       }
-      //     });
-      //   });
-      //   let tocContainer = document.querySelector(".markdown-toc-list");
-      //   let liElements = tocContainer.getElementsByTagName("li");
-      //   for (let i = 0; i < liElements.length; i++) {
-      //     let el = liElements[i].firstChild;
-      //     el.addEventListener("click", function (event) {
-      //       event.preventDefault();
-      //       titleElments[i].scrollIntoView({
-      //         behavior: "smooth",
-      //       });
-      //     });
-      //     observer.observe(titleElments[i]);
-      //   }
-      //   let aElements = el.querySelectorAll("a");
-      //   for (let aEl of aElements) {
-      //     let href = aEl.getAttribute("href");
-      //     // href.length-1 对应最后一个
-      //     if (href !== null && href.search(/.md/) == href.length - 3) {
-      //       aEl.addEventListener("click", (event) => {
-      //         event.preventDefault();
-      //         let targetBlogName = href.split("./")[1];
-      //         let targetPath = route.params.path;
-      //         targetPath =
-      //           targetPath.substring(0, targetPath.lastIndexOf("/") + 1) +
-      //           targetBlogName;
-      //         let targetParams = route.params;
-      //         targetParams.path = targetPath;
-      //         targetParams.blogName = targetBlogName;
-      //         let targetRouter = router.resolve({
-      //           query: {
-      //             blogName: targetBlogName,
-      //             path: targetPath,
-      //           },
-      //         });
-      //         window.open(targetRouter.href);
-      //       });
-      //     }
-      //   }
-      // });
+      // 站点内文章跳转
+      let aElements = el.querySelectorAll("a");
+      for (let aEl of aElements) {
+        let href = aEl.getAttribute("href");
+        // href.length-1 对应最后一个
+        if (href !== null && href.search(/.md/) == href.length - 3) {
+          aEl.addEventListener("click", (event) => {
+            event.preventDefault();
+            let targetBlogName = href.split("./")[1];
+            let targetPath = route.params.path;
+            targetPath =
+              targetPath.substring(0, targetPath.lastIndexOf("/") + 1) +
+              targetBlogName;
+            let targetParams = route.params;
+            targetParams.path = targetPath;
+            targetParams.blogName = targetBlogName;
+            let targetRouter = router.resolve({
+              query: {
+                blogName: targetBlogName,
+                path: targetPath,
+              },
+            });
+            window.open(targetRouter.href);
+          });
+        }
+      }
     }
   });
 });
@@ -189,12 +175,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.querySelector('#article-body').innerHTML = "加载中";
   document.querySelector('#article-toc').innerHTML = '';
-  console.log("博客详细页面将要卸载");
+  // console.log("博客详细页面将要卸载");
 });
 </script>
 
-<style>
-@import 'highlight.js/styles/monokai-sublime';
+<style scoped>
 .toc-scroll {
   /*要设置滚动条的容器样式*/
   overflow-y: auto;
@@ -222,8 +207,6 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   background: #ededed;
 }
-
-
 
 @media (max-width: 500px) {
   .toc-scroll {

@@ -1,10 +1,10 @@
 <template>
-    <router-view v-slot="{ Component, route }">
-      <keep-alive>
-        <component :is="Component" :key="route.path" v-if="route.meta.keepAlive" />
-      </keep-alive>
-      <component :is="Component" :key="route.path" v-if="!route.meta.keepAlive" />
-    </router-view>
+  <router-view v-slot="{ Component, route }">
+    <keep-alive>
+      <component :is="Component" :key="route.path" v-if="route.meta.keepAlive" />
+    </keep-alive>
+    <component :is="Component" :key="route.path" v-if="!route.meta.keepAlive" />
+  </router-view>
 </template>
 
 <script setup>
@@ -34,5 +34,14 @@
   height: 100%;
 }
 
+nav.table-of-contents>ol {
+  list-style-type: disc;
+}
 
+nav.table-of-contents>ol>li>ol {
+  list-style-type: circle;
+}
+nav.table-of-contents>ol>li>ol>li>ol {
+  list-style-type: square;
+}
 </style>

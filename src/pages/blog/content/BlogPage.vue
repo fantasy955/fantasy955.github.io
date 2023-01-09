@@ -38,11 +38,11 @@ const showName = computed(() => {
   return res[res.length - 2];
 });
 
-onBeforeRouteUpdate ((to, from, next) => {
-  document.title = to.params.blogName.split('.md')[0];
-  console.log(to, from)
-  next();
-})
+// onBeforeRouteUpdate ((to, from, next) => {
+//   document.title = to.params.blogName.split('.md')[0];
+//   console.log(to, from)
+//   next();
+// })
 </script>
 
 <style scoped>
