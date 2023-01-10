@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     HomeBlogCategory: typeof import('./src/components/blog/HomeBlogCategory.vue')['default']
     HomeBlogLeftSide: typeof import('./src/components/blog/HomeBlogLeftSide.vue')['default']
     HomeBlogNav: typeof import('./src/components/blog/HomeBlogNav.vue')['default']
+    Introduction: typeof import('./src/components/home/introduction.md')['default']
     IntroductionPanel: typeof import('./src/components/home/IntroductionPanel.vue')['default']
     PageFooter: typeof import('./src/components/common/PageFooter.vue')['default']
     PageHeader: typeof import('./src/components/common/PageHeader.vue')['default']

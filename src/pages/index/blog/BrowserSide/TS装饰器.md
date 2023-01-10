@@ -1,0 +1,1 @@
+[装饰器 · TypeScript中文网 · TypeScript——JavaScript的超集 (tslang.cn)](https://www.tslang.cn/docs/handbook/decorators.html)

@@ -39,7 +39,6 @@ import {
   onBeforeUnmount,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { storeToRefs } from 'pinia'
 import hljs from 'highlight.js';
 import mdContainer from 'markdown-it-container';
 import markdownItTocAndAnchor from "markdown-it-toc-and-anchor";
@@ -71,32 +70,41 @@ const markdown = new MarkdownIt({
     )
   }
 });
-markdown.use(markdownItTocAndAnchor, {
-  permalink: true,
-  permalinkBefore: true,
-  permalinkSymbol: '§',
-  slugify: (str) => {
-    // console.log(str);
-    return str;
-  }
-});
-markdown.use(markDownItTocDoneRight, {
-  callback: (html, ast) => {
-    document.querySelector('#article-toc').innerHTML = html;
-    // console.log(html);
-    // console.log(ast);
-  },
-  slugify: (str) =>{
-    // console.log(str);
-    return str;
-  }
-});
+
+if (markdownItTocAndAnchor.apply instanceof Function) {
+  markdown.use(markdownItTocAndAnchor, {
+    permalink: true,
+    permalinkBefore: true,
+    permalinkSymbol: '§',
+    slugify: (str) => {
+      // console.log(str);
+      return str;
+    }
+  });
+}
+if (markDownItTocDoneRight.apply instanceof Function) {
+  markdown.use(markDownItTocDoneRight, {
+    callback: (html, ast) => {
+      document.querySelector('#article-toc').innerHTML = html;
+      // console.log(html);
+      // console.log(ast);
+    },
+    slugify: (str) => {
+      // console.log(str);
+      return str;
+    }
+  });
+}
 // 自定义容器，:::tip 会转换为 <div class="tip">
 markdown.use(mdContainer, 'tip');
 markdown.use(mdContainer, 'warning');
 
-const probs = defineProps({
-  blogPath: {
+const props = defineProps({
+  category: {
+    type: String,
+    required: true,
+  },
+  blogname: {
     type: String,
     required: true,
   },
@@ -106,9 +114,7 @@ const smallSceenSize = globalParams.smallScreenSize;
 const first = ref("order-0");
 const second = ref("order-2");
 
-var getBlogContent = axios.get(probs.blogPath.replace(/^.\//, '/'));
-
-const screenWidth = useScreenWidth();
+var getBlogContent = axios.get(`/assets/blogs/${props.category}/${props.blogname}.md`);
 
 const md2html = async function (content) {
   try {
@@ -119,17 +125,19 @@ const md2html = async function (content) {
   }
 }
 
+let screenWidth = undefined;
+
 onMounted(async () => {
+  screenWidth = useScreenWidth();
+
   getBlogContent.then(async (res) => {
     {
       let mdcontent = res.data;
       let el = document.getElementById("article-body");
 
-      let tmp = probs.blogPath.split("/");
-      let dirName = tmp[tmp.length - 1 - 1];
       mdcontent = mdcontent.replace(
         /\]\(assets/g,
-        "](/assets/blogs/" + dirName + "/assets"
+        "](/assets/blogs/" + props.category + "/assets"
       );
 
       el.innerHTML = "";

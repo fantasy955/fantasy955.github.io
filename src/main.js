@@ -3,7 +3,7 @@ import Particles from 'particles.vue3';
 import { ViteSSG } from 'vite-ssg'
 import App from "./App.vue";
 import VueMarkdown from 'vue-markdown'
-import { routes } from './router/index';
+import routes from './router/index';
 import uConifg from './config';
 import 'highlight.js/styles/github.css';
 

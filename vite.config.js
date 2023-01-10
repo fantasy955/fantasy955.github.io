@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import Vue from '@vitejs/plugin-vue'
 // const { BlogListGenerationPlugin } = require('./src/utils/BlogListGenerationPlugin.cjs');
 // const AutoImport = require('unplugin-auto-import/vite')
 // const Components = require('unplugin-vue-components/vite')
@@ -11,6 +11,11 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import { resolve } from 'path';
 import mdLoader from './src/utils/md-loader-vite.js';
+import Markdown from 'vite-plugin-vue-markdown';
+import Pages from 'vite-plugin-pages';
+import mdContainer from 'markdown-it-container';
+import hljs from 'highlight.js';
+
 
 const pathResolve = (dir) => {
     return resolve(__dirname, '.', dir)
@@ -20,12 +25,38 @@ const pathResolve = (dir) => {
 export default defineConfig({
     plugins: [
         mdLoader(),
-        vue(),
+        Vue({
+            customElement: true,
+            include: [/\.vue$/],
+        }),
         AutoImport({
             resolvers: [ElementPlusResolver()],
         }),
         Components({
             resolvers: [ElementPlusResolver({ importStyle: 'css', ssr: true })],
+            extensions: ['vue', 'md'],
+            include: [/\.vue$/, /\.vue\?vue/],
+        }),
+        Pages({
+            extensions: ['vue'],
+            dirs: [
+                { dir: 'src/pages', baseRoute: '' },
+            ],
+            exclude: [
+                'src/pages/index/blog/**/assets',
+            ],
+            extendRoute(route, parent) {
+                if (route.path === '/') {
+                    route['redirect'] = 'home';
+                }
+                route.meta = {};
+                if (route.path === 'blog' || route.path === 'home' || route.path === 'demo'){
+                    route.meta['keepAlive'] = true;
+                }
+                route.name = route.name.replace(/^index-/, '');
+                // console.log(route);
+                return route;
+            },
         }),
     ],
     resolve: {
@@ -41,8 +72,12 @@ export default defineConfig({
             console.log(routes);
             return paths;
         },
+
     },
     ssr: {
         noExternal: ['element-plus'],
     },
+    assetsInclude: [
+        '*.md',
+    ]
 })

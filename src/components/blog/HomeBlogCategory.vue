@@ -23,7 +23,7 @@
             <!-- <a class="text-dark" v-bind:href="`/#/blog/${categoryInfo.sname}/${file.name}`" style="cursor: pointer"
               v-on:click.prevent="(event) => viewBlog(file)">{{ file.name }}</a> -->
             <router-link class="text-dark"
-              :to="{ name: 'blog', params: { path: file.relapath, categorySname: probs.categoryInfo.sname, blogName: file.name } }">
+              :to="{ name: 'blog-category-blogname', params: { category: probs.categoryInfo.dirName, blogname: file.name.replace(/.md$/, '') } }">
               {{ file.name }}
             </router-link>
           </h2>
@@ -98,6 +98,8 @@ const probs = defineProps({
     required: true,
   },
 });
+
+// console.log(probs.categoryInfo);
 
 const itemPerPageOptions = [5, 10, 15, 20];
 var max_file_items = globalParams.max_file_items;

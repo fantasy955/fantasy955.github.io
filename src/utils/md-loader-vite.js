@@ -10,42 +10,40 @@ import MarkdownIt from 'markdown-it';
 import mdContainer from 'markdown-it-container';
 import compileSFC from '@vue/compiler-sfc';
 import compileDOM from '@vue/compiler-dom';
-// import 'highlight.js/styles/github.css';
 const fileRegex = /\.(md)$/
 const md = new MarkdownIt();
+md.set({
+    linkify: true, // 将类似 URL 的文本自动转换为链接。
+    html: false, // Enable HTML tags in source
+    typographer: true,  //启用一些语言中立的替换 + 引号美化
+    // 代码高亮
+    highlight: function (str, lang) {
+        lang = lang || 'shell';
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return (
+                    '<pre class="hljs"><code>' +
+                    hljs.highlight(lang, str, true).value +
+                    '</code></pre>'
+                )
+            } catch (__) { }
+        }
+
+        return (
+            '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
+        )
+    }
+})
+
+// 自定义容器，:::tip 会转换为 <div class="tip">
+md.use(mdContainer, 'tip')
+md.use(mdContainer, 'warning')
 
 export default function () {
     return {
         name: 'md-loader',
         transform(source, id) {
             if (fileRegex.test(id)) {
-                md.set({
-                    linkify: true, // 将类似 URL 的文本自动转换为链接。
-                    html: false, // Enable HTML tags in source
-                    typographer: true,  //启用一些语言中立的替换 + 引号美化
-                    // 代码高亮
-                    highlight: function (str, lang) {
-                        lang = lang || 'shell';
-                        if (lang && hljs.getLanguage(lang)) {
-                            try {
-                                return (
-                                    '<pre class="hljs"><code>' +
-                                    hljs.highlight(strl, { lang }).value +
-                                    '</code></pre>'
-                                )
-                            } catch (__) { }
-                        }
-
-                        return (
-                            '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
-                        )
-                    }
-                })
-
-                // 自定义容器，:::tip 会转换为 <div class="tip">
-                md.use(mdContainer, 'tip')
-                md.use(mdContainer, 'warning')
-
                 const html = md.render(source)
 
                 const $ = load(html, {
