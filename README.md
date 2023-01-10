@@ -10,6 +10,8 @@
 
 后期考虑使用JavaScript生产`list.json`文件，将其插入到`build`过程中。
 
+2）博客内容无法进行SEO。
+
 # Next Version
 
 采用服务端生成（SSG）策略。
