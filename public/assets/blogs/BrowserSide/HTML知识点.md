@@ -120,6 +120,14 @@ href属性中的url可以是浏览器支持的任何协议，所以a标签可以
 
 SEO指的是搜索引擎优化，TDK其实就是`title`、`description`、`keywords`这三个标签，title表示标题标签，description是描述标签，keywords是关键词标签
 
+## JS脚本加载策略
+
+- **async**
+  浏览器对脚本的**请求是异步**的，如果请求回来HTML还未完成解析，则会中断解析过程，执行脚本。
+  不可控，多个async脚本的执行顺序无法确定。
+- **defer**
+  延迟。异步发起请求。一定会等到HTML解析完成后才执行，可以确定多个defer脚本的执行顺序。
+
 # 浮动元素
 
 [float - CSS: Cascading Style Sheets | MDN (mozilla.org)](https://developer.mozilla.org/en-US/docs/Web/CSS/float)
