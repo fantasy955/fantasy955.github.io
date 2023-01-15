@@ -12,7 +12,7 @@
 mkdir fanasy-ui-react
 cd fantasy-ui-react
 npm init --y 
-mkdir components && mkdir styles && cd components && touch index.ts
+mkdir src && cd src && touch index.ts
 ```
 
 ## 1.2 代码规范
@@ -73,7 +73,7 @@ module.exports = {
 
 ```
 "lint-staged": {
-  "components/**/*.ts?(x)": [
+  "src/**/*.ts?(x)": [
     "prettier --write",
     "eslint --fix",
     "git add"  # 不需要添加这条了，https://github.com/okonet/lint-staged/issues/775
@@ -103,7 +103,7 @@ module.exports = {
 ```
 
 ```shell
-git add components/*
+git add src/*
 npm run pre-commit
 ```
 
@@ -150,28 +150,16 @@ npm i  typescript --save-dev
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
-            "@/fantasyui/*": [
-                "components/*"
+            "@fantasyui/*": [
+                "src/*"
             ],
-            "@/styles/*": [
-                "styles/*"
-            ],
-            "fantasyui": [
-                "components/index.ts"
-            ],
-            "fantasyui/es/*": [
-                "components/*"
-            ],
-            "fantasyui/lib/*": [
-                "components/*"
-            ],
-            "fantasyui/locale/*": [
-                "components/locale/*"
+            "@fantasy955/fantasy-ui-react": [
+                "src/index.ts"
             ]
         },
         "resolveJsonModule": true,
         "strictNullChecks": true,
-        "declarationDir": "lib",
+        "eclarationDir": "lib",
         "module": "commonjs",
         "target": "es6",
         "moduleResolution": "node",
@@ -190,8 +178,7 @@ npm i  typescript --save-dev
         "skipLibCheck": true,
         "stripInternal": true,
         "outDir": "dist", // 生成目录
-        "declaration": true,
-        "allowSyntheticDefaultImports": true
+        "declaration": true
     },
     "exclude": [
         "node_modules",
@@ -221,6 +208,10 @@ npm i  typescript --save-dev
 
 - [TypeScript Compiler Configuration - tsconfig.json (howtodoinjava.com)](https://howtodoinjava.com/typescript/tsconfig-json/)
 
+- [Linting Your React+Typescript Project with ESLint and Prettier!](https://medium.com/@dors718/linting-your-react-typescript-project-with-eslint-and-prettier-2423170c3d42)
+
+- [使用 ESLint+Prettier 规范 React+Typescript 项目](https://zhuanlan.zhihu.com/p/62401626)
+
 # 2. 编写一个示例组件
 
 在目录`compoents`下创建各种组件，每个组件单独创建一个目录：
@@ -228,6 +219,8 @@ npm i  typescript --save-dev
 ![image-20230107130454569](assets/image-20230107130454569.png)
 
 ## 2.1 创建alert组件
+
+### 2.1.1 组件定义
 
 创建`alert`目录，并创建`index.tsx`文件进行组件定义：
 
@@ -271,19 +264,48 @@ Alert.propTypes = {
 export default Alert;
 ```
 
+### 2.1.1 组件样式
+
+创建`src/alert/style/index.less`文件：
+
+```
+@popupPrefix: fantasy-alert;
+
+.@{popupPrefix} {
+  padding: 20px;
+  background: white;
+  border-radius: 3px;
+  color: white;
+}
+```
+
+以及`src/alert/style/index.ts`文件：
+
+```
+import './index.less';
+```
+
+> 样式文件里为什么存在一个index.ts - 按需加载样式 管理样式依赖 后面章节会提到
+
 ## 2.2 组件导出
 
-在`components/index.ts`文件内进行所有组件的导出：
+在`src/index.ts`文件内进行所有组件的导出：
 
 ```
 export { default as Alert } from './alert';
 ```
 
+## 2.3 提交
 
+```
+git add .
+npm run commit // 执行 git-cz
+git push
+```
 
-# 2. 单元测试
+## 2.4 组件测试
 
-## 2.1 安装依赖
+### 2.4.1 安装依赖
 
 ```shell
 npm i jest ts-jest @testing-library/react @testing-library/jest-dom identity-obj-proxy @types/jest @types/testing-library__react --dev
@@ -297,7 +319,144 @@ npm i jest ts-jest @testing-library/react @testing-library/jest-dom identity-obj
 
 jest配置：https://jestjs.io/docs/configuration
 
-# 3. 标准发布流程
+# 3. 站点开发
+
+选择 [dumi](https://d.umijs.org/zh-CN) 作为文档站点工具，并**兼具开发调试**功能（可以展示所创建的组件）。
+
+## 3.1 安装依赖
+
+```
+np i dumi serve --dev
+```
+
+## 3.2 创建dumi脚本
+
+```json
+"scripts": {
+  "dev": "dumi dev", // 启动开发环境 在文档站点中调试组件
+  "build:site": "rimraf doc-site && dumi build", // 构建文档站点 后续会部署到 github pages
+  "preview:site": "npm run build:site && serve doc-site" // 本地预览构建后的文档站点
+},
+```
+
+## 3.3 配置dumi
+
+创建`.umirc.ts`文件：
+
+```ts
+import { defineConfig } from 'dumi';
+
+export default defineConfig({
+  title: 'Happy UI', // 站点名称
+  mode: 'site',
+  outputPath: 'doc-site', // 输出文件夹
+  exportStatic: {}, // 后续会部署到 github pages 直接全部生成静态页面 不走前端路由
+  dynamicImport: {}, // 拆包 站点过大时可以优化首屏加载速度
+});
+```
+
+指定dumi的打包目录为`doc-site`，项目目录使用默认值`docs`；
+
+在`docs`目录下创建以下文件：
+
+![image-20230114203637660](assets/image-20230114203637660.png)
+
+具体内容见仓库：https://github.com/fantasy995/fantasy-ui-react/blob/master/docs/index.md
+
+> 一个问题
+>
+> 编写dumi文档时，最开始使用components做完项目源文件的目录，但在`alert/demo/basic.tsx`中，想要以npm库的方式导入本地组件（[在DEMO中引入组件](https://d.umijs.org/guide/write-demo#%E5%9C%A8-demo-%E4%B8%AD%E5%BC%95%E5%85%A5%E7%BB%84%E4%BB%B6)），但是webpack的构建过程报错，提升`can't resolve`对应引入。
+>
+> 将components更名为src后正常。
+
+## 3.4 遇到的问题
+
+- dumi构建过程报错
+
+- 无法引入`less`样式
+
+  无法通过`index.ts`引入`index.less`，只能直接`import "index.less"`。
+
+  在`index.ts`中添加打印操作，证实没有执行`index.ts`中的代码。
+
+  **fix**：
+  
+  是由`sideEffects`配置项导致的（`package.json`）：
+  
+  ```
+    "//sideEffects": [
+      "dist/*",
+      "esm/styles/*",
+      "lib/styles/*",
+      "*.less"
+    ],
+  ```
+
+# 4. 组件库打包
+
+我们的目标是：
+
+1. 导出**类型声明文件**；
+2. 导出 `UMD`/`Commonjs module`/`ES module` 等 **3 种形式产物**供使用者引入；
+3. 支持样式文件 `css` 引入，而非只有`less`，减少业务方接入成本；
+4. 支持按需加载。
+
+## 4.1 导出类型声明文件
+
+在`package.json`中添加以下属性：
+
+```json
+{
+  "typings": "lib/index.d.ts", // 定义类型入口文件
+  "scripts": {
+    "build:types": "tsc -p tsconfig.build.json && cpr lib esm" // 执行tsc命令生成类型声明文件
+  }
+}
+```
+
+`tsconfig.build.json`文件：
+
+```
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "emitDeclarationOnly": true }, // 只生成声明文件
+  "exclude": ["**/__tests__/**", "**/demo/**", "node_modules", "lib", "esm"] // 排除示例、测试以及打包好的文件夹
+}
+```
+
+`typings`指定了类型的入口文件（`package.json`是组件库使用中可以得到的，这个属性告诉`ts`到哪里去找类型定义）。
+
+> 值得注意的是：此处使用`cpr`(需要手动安装)将`lib`的声明文件拷贝了一份，并将文件夹重命名为`esm`，用于后面存放 ES module 形式的组件。这样做的原因是保证用户手动按需引入组件时依旧可以获取自动提示。
+
+> 最开始的方式是将声明文件单独存放在`types`文件夹，但这样只有通过'happy-ui'引入才可以获取提示，而'happy-ui/esm/xxx'和'happy-ui/lib/xxx'就无法获取提示。
+
+执行`npm run build:types`，可以发现根目录下已经生成了`lib`文件夹（`tsconfig.json`中定义的`declarationDir`字段）以及`esm`文件夹（拷贝而来），目录结构与`src`文件夹保持一致，如下：
+
+**lib**
+
+```
+├── alert
+│   ├── index.d.ts
+│   └── style
+│       └── index.d.ts
+└── index.d.ts
+```
+
+这样使用者引入`npm` 包时，便能得到自动提示，也能够复用相关组件的类型定义。
+
+接下来将`ts(x)`等文件处理成`js`文件。
+
+> 需要注意的是，我们需要输出`Commonjs module`以及`ES module`两种模块类型的文件（暂不考虑`UMD`），以下使用`cjs`指代`Commonjs module`，`esm`指代`ES module`。对此有疑问的同学推荐阅读：[import、require、export、module.exports 混合详解](https://github.com/ShowJoy-com/showjoy-blog/issues/39)
+
+## 4.2导出 Commonjs 模块
+
+4.1节讲述生成了类型声明文件，并得到了
+
+## 4.3 参考资料
+
+- [发布声明文件](https://www.tslang.cn/docs/handbook/declaration-files/publishing.html)
+
+# 4. 标准发布流程
 
 标准流程包括：
 
@@ -466,7 +625,7 @@ async function main() {
 main();
 ```
 
-## 其他
+## 4.1 流水线创建新组件模板
 
 每次初始化一个组件就要新建许多文件（夹），复制粘贴也可，不过还可以使用更高级一点的偷懒方式。
 
@@ -474,8 +633,8 @@ main();
 
 1. 创建组件模板，预留动态信息插槽（组件名称，组件描述等等）；
 2. 基于`inquirer.js`询问动态信息；
-3. 将信息插入模板，渲染至`components`文件夹下；
-4. 向 components/index.ts 插入导出语句。
+3. 将信息插入模板，渲染至`src`文件夹下；
+4. 向 src/index.ts 插入导出语句。
 
 我们只需要配置好模板以及问题，至于询问以及渲染就交给[plop.js](https://plopjs.com/)吧。
 
@@ -498,9 +657,9 @@ yarn add plop --dev
 - 配置文件：[scripts/plopfile.ts](https://github.com/worldzhao/react-ui-library-tutorial/blob/master/scripts/plopfile.ts)
 - 模板文件：[templates/component](https://github.com/worldzhao/react-ui-library-tutorial/tree/master/templates/component)
 
-# 4. 配置Github pages
+# 5. 配置Github pages
 
-## 4.1 build
+## 5.1 build
 
 添加Action:
 
@@ -533,14 +692,14 @@ jobs:
 
 这个命令将会把输出的目录发布到指定的分支：`gh-pages`
 
-## 4.2 部署
+## 5.2 部署
 
 ![image-20230104172515904](assets/image-20230104172515904.png)
 
 # 参考资料
 
-[如何快速构建React组件库 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/196758730)
+- [如何快速构建React组件库 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/196758730)
 
 # 构建工具对比
 
-[webpack、rollup、gulp对比 - 简书 (jianshu.com)](https://www.jianshu.com/p/cea946fa3c58)
+- [webpack、rollup、gulp对比 - 简书 (jianshu.com)](https://www.jianshu.com/p/cea946fa3c58)
