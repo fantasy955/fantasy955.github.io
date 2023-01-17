@@ -392,6 +392,71 @@ export default defineConfig({
     ],
   ```
 
+[Tree Shaking | webpack 中文文档 (docschina.org)](https://webpack.docschina.org/guides/tree-shaking/#:~:text=通过 package.json 的 "sideEffects" 属性，来实现这种方式。 { "name"%3A "your-project"%2C,false } 如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 false ，来告知 webpack 它可以安全地删除未用到的 export。)
+
+> **Tip**
+>
+>  "side effect(副作用)" 的定义是，在导入时会执行特殊行为的代码，而不是仅仅暴露一个 export 或多个 export。举例说明，例如 polyfill，它影响全局作用域，并且通常不提供 export。
+
+## 3.5 部署到Github Pages
+
+### 3.5.1 配置public path和Github路由
+
+托管在 `Github Pages`，所以应用是挂在 `${username}.github.io/${repo}` 下面，我们站点应用的静态资源路径`publicPath`以及路由`basename`都需要进行适配。
+
+编辑`.umirc.ts` ，在构建过程中，更改所需资源的路径：
+
+```
+if (process.env.SITE_BUILD_ENV === 'PREVIEW') {
+  base = undefined;
+  publicPath = undefined;
+}
+```
+
+本地环境打包，`public path`仍然是`./`，增加本地打包命令，需要指定环境变量，因此需要`cross-env`包：
+
+`package.json`，本地打包脚本：
+
+```
+"scripts": {
+  "preview:site": "cross-env SITE_BUILD_ENV=PREVIEW npm run build:site && serve doc-site",
+},
+```
+
+### 3.5.2 Github Actions
+
+工作流，`.github/workflows/gh-pages.yml`：
+
+```
+name: github pages
+
+on:
+  push:
+    branches:
+      - master # default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm run
+      - run: npm run build:site
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc-site
+```
+
+这里使用了`peaceiris/actions-gh-pages@v3`: [GitHub Pages action · Actions · GitHub Marketplace](https://github.com/marketplace/actions/github-pages-action)
+
+这个命令将会把输出的目录发布到指定的分支：`gh-pages`。
+
+### 3.5.3设定 deploy branch
+
+![image-20230104172515904](assets/image-20230104172515904.png)
+
 # 4. 组件库打包
 
 我们的目标是：
@@ -428,7 +493,7 @@ export default defineConfig({
 
 > 值得注意的是：此处使用`cpr`(需要手动安装)将`lib`的声明文件拷贝了一份，并将文件夹重命名为`esm`，用于后面存放 ES module 形式的组件。这样做的原因是保证用户手动按需引入组件时依旧可以获取自动提示。
 
-> 最开始的方式是将声明文件单独存放在`types`文件夹，但这样只有通过'happy-ui'引入才可以获取提示，而'happy-ui/esm/xxx'和'happy-ui/lib/xxx'就无法获取提示。
+> 最开始的方式是将声明文件单独存放在`types`文件夹，但这样只有通过'@fantasy955/fantasy-ui-react'引入才可以获取提示，而'@fantasy955/fantasy-ui-react/esm/xxx'和'@fantasy955/fantasy-ui-react/lib/xxx'就无法获取提示。
 
 执行`npm run build:types`，可以发现根目录下已经生成了`lib`文件夹（`tsconfig.json`中定义的`declarationDir`字段）以及`esm`文件夹（拷贝而来），目录结构与`src`文件夹保持一致，如下：
 
@@ -450,13 +515,550 @@ export default defineConfig({
 
 ## 4.2导出 Commonjs 模块
 
-4.1节讲述生成了类型声明文件，并得到了
+4.1节讲述生成了类型声明文件，并生成了所有目录结构。
 
-## 4.3 参考资料
+接下来使用`gulp`对代码进行编译（其实完全可以使用`babel`或`tsc`命令行工具进行代码编译处理（实际上很多工具库就是这样做的），此处借助 `gulp` 来串起这个流程。）。
+
+> 为什么是 `gulp` 而不是 `webpack` 或 `rollup` ？因为我们要做的是代码编译而非代码打包，同时需要考虑到**样式处理及其按需加载**。
+
+### babel 配置
+
+首先安装`babel`及其相关依赖
+
+```
+npm run add @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript @babel/plugin-proposal-class-properties  @babel/plugin-transform-runtime --dev
+npm run add @babel/runtime-corejs3
+```
+
+新建`.babelrc.js`文件，写入以下内容：
+
+**.babelrc.js**
+
+```js
+module.exports = {
+  presets: ['@babel/env', '@babel/typescript', '@babel/react'],
+  plugins: [
+    '@babel/proposal-class-properties',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        corejs: 3,
+        helpers: true,
+      },
+    ],
+  ],
+};
+```
+
+关于`@babel/plugin-transform-runtime`与`@babel/runtime-corejs3`：
+
+- 若`helpers`选项设置为`true`，可抽离代码编译过程重复生成的 `helper` 函数（`classCallCheck`,`extends`等），减小生成的代码体积；
+- 若`corejs`设置为`3`，可引入不污染全局的按需`polyfill`，常用于类库编写（我更推荐：不引入`polyfill`，转而告知使用者需要引入何种`polyfill`，避免重复引入或产生冲突，后面会详细提到）。
+
+更多参见[官方文档-@babel/plugin-transform-runtime](https://babeljs.io/docs/en/next/babel-plugin-transform-runtime)
+
+**配置目标环境**
+
+为了避免转译浏览器原生支持的语法，新建`.browserslistrc`文件，根据适配需求，写入支持浏览器范围，作用于`@babel/preset-env`。
+
+**.browserslistrc**
+
+```
+>0.2%
+not dead
+not op_mini all
+```
+
+很遗憾的是，`@babel/runtime-corejs3`无法在按需引入的基础上根据目标浏览器支持程度再次减少`polyfill`的引入，参见[@babel/runtime for target environment ](https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#babelruntime-for-target-environment)。
+
+这意味着`@babel/runtime-corejs3` 甚至会在针对现代引擎的情况下注入所有可能的 `polyfill`：不必要地增加了最终捆绑包的大小。
+
+对于组件库（代码量可能很大），个人建议将`polyfill`的选择权交还给使用者，在宿主环境进行`polyfill`。若使用者具有兼容性要求，自然会使用`@babel/preset-env + core-js + .browserslistrc`进行全局`polyfill`，这套组合拳引入了最低目标浏览器不支持`API`的全部 `polyfill`。
+
+> 顺带一提，业务开发中，若将`@babel/preset-env`的`useBuiltIns`选项值设置为 `usage`，同时把`node_modules`从`babel-loader`中`exclude`，会导致`babel` 无法检测到`nodes_modules`中所需要的`polyfill`。["useBuiltIns: usage" for node_modules without transpiling #9419](https://github.com/babel/babel/issues/9419)，在未支持该`issue`提到的内容之前，请将`useBuiltIns`设置为`entry`，或者不要把`node_modules`从`babel-loader`中`exclude`。
+
+所以组件库不用画蛇添足，引入多余的`polyfill`，写好文档说明，比什么都重要（就像[zent](https://github.com/youzan/zent#required-polyfills)和[antd](https://ant.design/docs/react/getting-started-cn#兼容性)这样）。
+
+现在`@babel/runtime-corejs3`更换为`@babel/runtime`，只进行`helper`函数抽离。
+
+```
+npm run remove @babel/runtime-corejs3
+
+npm run add @babel/runtime
+```
+
+**.babelrc.js**
+
+```
+module.exports = {
+  presets: ['@babel/env', '@babel/typescript', '@babel/react'],
+  plugins: ['@babel/plugin-transform-runtime', '@babel/proposal-class-properties'],
+};
+```
+
+> `@babel/transform-runtime`的`helper`选项默认为`true`。
+
+### gulp 配置
+
+再来安装`gulp`相关依赖
+
+```
+npm run add gulp gulp-babel --dev
+```
+
+新建`gulpfile.js`，写入以下内容：
+
+**gulpfile.js**
+
+```js
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+
+const paths = {
+  dest: {
+    lib: 'lib', // commonjs 文件存放的目录名 - 本块关注
+    esm: 'esm', // ES module 文件存放的目录名 - 暂时不关心
+    dist: 'dist', // umd文件存放的目录名 - 暂时不关心
+  },
+  styles: 'src/**/*.less', // 样式文件路径 - 暂时不关心
+  scripts: ['src/**/*.{ts,tsx}', '!src/**/demo/*.{ts,tsx}'], // 脚本文件路径
+};
+
+function compileCJS() {
+  const { dest, scripts } = paths;
+  return gulp
+    .src(scripts)
+    .pipe(babel()) // 使用gulp-babel处理
+    .pipe(gulp.dest(dest.lib));
+}
+
+// 并行任务 后续加入样式处理 可以并行处理
+const build = gulp.parallel(compileCJS);
+
+exports.build = build;
+
+exports.default = build;
+```
+
+目前将js代码编译并输出到`lib`文件夹（CJS模块），不包括样式文件。
+
+修改`package.json`
+
+**package.json**
+
+```
+{
+- "main": "index.js",
++ "main": "lib/index.js",
+  "scripts": {
+    ...
++   "clean": "rimraf lib esm dist",
++   "build": "npm run clean && npm run build:types && gulp",
+    ...
+  },
+}
+```
+
+执行`npm run build`，得到如下内容：
+
+**lib**
+
+```
+├── alert
+│   ├── index.js
+│   └── style
+│       └── index.js
+└── index.js
+```
+
+观察编译后的源码，可以发现：诸多`helper`方法已被抽离至`@babel/runtime`中，模块导入导出形式也是`commonjs`规范。
+
+## 4.4 导出ES模块
+
+生成`ES module`可以更好地进行[tree shaking](https://webpack.docschina.org/guides/tree-shaking/)，基于上一步的`babel`配置，更新以下内容：
+
+1. 配置`@babel/preset-env`的`modules`选项为`false`，关闭模块转换；
+2. 配置`@babel/plugin-transform-runtime`的`useESModules`选项为`true`，使用`ES module`形式引入`helper`函数。
+
+**.babelrc.js**
+
+```js
+module.exports = {
+  presets: [
+    [
+      '@babel/env',
+      {
+        modules: false, // 关闭模块转换
+      },
+    ],
+    '@babel/typescript',
+    '@babel/react',
+  ],
+  plugins: [
+    '@babel/proposal-class-properties',
+    [
+      '@babel/plugin-transform-runtime',
+      {
+        useESModules: true, // 使用esm形式的helper
+      },
+    ],
+  ],
+};
+```
+
+目标达成，我们再使用环境变量区分`esm`和`cjs`（关闭了模块转换，执行任务时设置对应的环境变量即可，即在gulp文件中进行设置），最终`babel`配置如下：
+
+```js
+module.exports = {
+  presets: ['@babel/env', '@babel/typescript', '@babel/react'],
+  plugins: ['@babel/plugin-transform-runtime', '@babel/proposal-class-properties'],
+  env: {
+    esm: {
+      presets: [
+        [
+          '@babel/env',
+          {
+            modules: false,
+          },
+        ],
+      ],
+      plugins: [
+        [
+          '@babel/plugin-transform-runtime',
+          {
+            useESModules: true,
+          },
+        ],
+      ],
+    },
+  },
+};
+```
+
+接下来修改`gulp`相关配置，抽离`compileScripts`任务，增加`compileESM`任务。
+
+**gulpfile.js**
+
+```js
+// ...
+
+/**
+ * 编译脚本文件
+ * @param {string} babelEnv babel环境变量
+ * @param {string} destDir 目标目录
+ */
+function compileScripts(babelEnv, destDir) {
+  const { scripts } = paths;
+  // 设置环境变量
+  process.env.BABEL_ENV = babelEnv;
+  return gulp
+    .src(scripts)
+    .pipe(babel()) // 使用gulp-babel处理
+    .pipe(gulp.dest(destDir));
+}
+
+/**
+ * 编译cjs
+ */
+function compileCJS() {
+  const { dest } = paths;
+  return compileScripts('cjs', dest.lib);
+}
+
+/**
+ * 编译esm
+ */
+function compileESM() {
+  const { dest } = paths;
+  return compileScripts('esm', dest.esm);
+}
+
+// 串行执行编译脚本任务（cjs,esm） 避免环境变量影响
+const buildScripts = gulp.series(compileCJS, compileESM);
+
+// 整体并行执行任务
+const build = gulp.parallel(buildScripts);
+
+// ...
+```
+
+在上述代码中，我们指定了不同编译目标时的`babel_env`，以及输出目录。
+
+执行`npm run build`，可以发现生成了`lib`/`esm`两个文件夹，观察`esm`目录，结构同`lib`一致，js 文件都是以`ES module`模块形式导入导出。
+
+别忘了给`package.json`增加相关入口。
+
+**package.json**
+
+```json
+{
++ "module": "esm/index.js"
+}
+```
+
+`commonjs`使用的是`main: lib/index.js`。
+
+## 4.5 处理样式文件
+
+### 拷贝 less 文件
+
+我们会将`less`文件包含在`npm`包中，用户可以通过`@fantasy955/fantasy-ui-react/lib/alert/style/index.js`的形式按需引入`less`文件，此处可以直接将 less 文件拷贝至目标文件夹。
+
+在`gulpfile.js`中新建`copyLess`任务。
+
+**gulpfile.js**
+
+```
+// ...
+
+/**
+ * 拷贝less文件
+ */
+function copyLess() {
+  return gulp.src(paths.styles).pipe(gulp.dest(paths.dest.lib)).pipe(gulp.dest(paths.dest.esm));
+}
+
+const build = gulp.parallel(buildScripts, copyLess);
+
+// ...
+```
+
+观察`lib`目录，可以发现 `less` 文件已被拷贝至`alert/style`目录下。
+
+**lib**
+
+```
+├── alert
+│   ├── alert.js
+│   ├── index.js
+│   ├── interface.js
+│   └── style
+│       ├── index.js
+│       └── index.less # less文件
+└── index.js
+```
+
+可能有些同学已经发现问题：若使用者没有使用`less`预处理器，使用的是`sass`方案甚至原生`css`方案，那现有方案就搞不定了。经分析，有以下 4 种预选方案：
+
+1. 告知业务方增加`less-loader`。会导致业务方使用成本增加；
+2. 打包出一份完整的 `css` 文件，进行**全量**引入。无法进行按需引入；
+3. `css in js`方案；
+4. 提供一份`style/css.js`文件，引入组件 `css`样式依赖，而非 `less` 依赖，组件库底层抹平差异。
+
+重点看一看方案 3 以及方案 4。
+
+`css in js`除了赋予样式编写更多的可能性之外，在编写第三方组件库时更是利器。
+
+如果我们写一个`react-use`这种`hooks`工具库，不涉及到样式，只需要在`package.json`中设置`sideEffects`为`false`，业务方使用 webpack 进行打包时，只会打包被使用到的 hooks（优先使用 ES module）。
+
+入口文件`index.js`中导出的但未被使用的其他 hooks 会被`tree shaking`，第一次使用这个库的时候我很好奇，为什么没有按需引入的使用方式，后来进行打包分析，发现人家天生支持按需引入。
+
+回到正题。如果将样式使用`javascript`来编写，在某种维度上讲，组件库和工具库一致了，配好`sideEffects`，自动按需引入。
+
+而且每个组件都与自己的样式绑定，不需要业务方或组件开发者去**维护样式依赖**，什么是样式依赖，后面会讲到。
+
+缺点：
+
+1. 样式无法单独缓存；
+2. styled-components 自身体积较大；
+3. 复写组件样式需要使用属性选择器或者使用`styled-components`自带方法。
+
+需要看取舍了，偷偷说一句`styled-components`做主题定制也极其方便。
+
+方案 4 是`antd`使用的这种方案。
+
+在搭建组件库的过程中，有一个问题困扰了我很久：为什么需要`alert/style/index.js`引入`less`文件或`alert/style/css.js`引入`css`文件？
+
+答案是**管理样式依赖**。
+
+因为我们的组件是没有引入样式文件的，需要使用者去手动引入。
+
+假设存在以下场景：使用者引入`<Button />`，`<Button />`依赖了`<Icon />`，则需要手动去引入调用组件的样式（`<Button />`）及其依赖的组件样式（`<Icon />`），遇到复杂组件极其麻烦，所以组件库开发者可以提供一份这样的`js`文件，使用者手动引入这个`js`文件，就能引入对应组件及其依赖组件的样式。
+
+那么问题又来了，为什么组件不能自己去`import './index.less'`呢？
+
+当然可以，但业务方需要配置`less-loader`。
+
+业务方不想配置 `less-loader`？那我们`import './index.css'`开发体验岂不是直线下降？
+
+所以需要一个两全其美的方案：
+
+1. 保障组件库开发者的开发体验 DX；
+2. 减轻业务方的使用成本。
+
+答案就是~~css in js~~单独提供一份`style/css.js`文件，引入的是组件 `css`样式文件依赖，而非 `less` 依赖，组件库底层抹平差异。
+
+之前了解到 [father](https://github.com/umijs/father) 可以在打包的时候将`index.less`转成`index.css`，这倒是个好法子，但是一些重复引入的样式模块（比如动画样式），会被重复打包，不知道有没有好的解决方案。
+
+### 生成 css 文件
+
+安装相关依赖。
+
+```
+yarn add gulp-less gulp-autoprefixer gulp-cssnano --dev
+```
+
+将`less`文件生成对应的`css`文件，在`gulpfile.js`中增加`less2css`任务。
+
+```
+// ...
+
+/**
+ * 生成css文件
+ */
+function less2css() {
+  return gulp
+    .src(paths.styles)
+    .pipe(less()) // 处理less文件
+    .pipe(autoprefixer()) // 根据browserslistrc增加前缀
+    .pipe(cssnano({ zindex: false, reduceIdents: false })) // 压缩
+    .pipe(gulp.dest(paths.dest.lib))
+    .pipe(gulp.dest(paths.dest.esm));
+}
+
+const build = gulp.parallel(buildScripts, copyLess, less2css);
+
+// ...
+```
+
+执行`yarn build`，组件`style`目录下已经存在`css`文件了。
+
+接下来我们需要一个`alert/style/css.js`来帮用户引入`css`文件。
+
+### 生成 css.js
+
+此处参考[antd-tools](https://github.com/ant-design/antd-tools/blob/master/lib/gulpfile.js#L248)的实现方式：在处理`scripts`任务中，截住`style/index.js`，生成`style/css.js`，并通过正则将引入的`less`文件后缀改成`css`。
+
+安装相关依赖。
+
+```
+yarn add through2 --dev
+```
+
+**gulpfile.js**
+
+```
+// ...
+
+/**
+ * 编译脚本文件
+ * @param {*} babelEnv babel环境变量
+ * @param {*} destDir 目标目录
+ */
+function compileScripts(babelEnv, destDir) {
+  const { scripts } = paths;
+  process.env.BABEL_ENV = babelEnv;
+  return gulp
+    .src(scripts)
+    .pipe(babel()) // 使用gulp-babel处理
+    .pipe(
+      through2.obj(function z(file, encoding, next) {
+        this.push(file.clone());
+        // 找到目标
+        if (file.path.match(/(\/|\\)style(\/|\\)index\.js/)) {
+          const content = file.contents.toString(encoding);
+          file.contents = Buffer.from(cssInjection(content)); // 文件内容处理
+          file.path = file.path.replace(/index\.js/, 'css.js'); // 文件重命名
+          this.push(file); // 新增该文件
+          next();
+        } else {
+          next();
+        }
+      }),
+    )
+    .pipe(gulp.dest(destDir));
+}
+
+// ...
+```
+
+`cssInjection`的实现：
+
+**gulpfile.js**
+
+```
+/**
+ * 当前组件样式 import './index.less' => import './index.css'
+ * 依赖的其他组件样式 import '../test-comp/style' => import '../test-comp/style/css.js'
+ * 依赖的其他组件样式 import '../test-comp/style/index.js' => import '../test-comp/style/css.js'
+ * @param {string} content
+ */
+function cssInjection(content) {
+  return content
+    .replace(/\/style\/?'/g, "/style/css'")
+    .replace(/\/style\/?"/g, '/style/css"')
+    .replace(/\.less/g, '.css');
+}
+```
+
+再进行打包，可以看见组件`style`目录下生成了`css.js`文件，引入的也是上一步`less`转换而来的`css`文件。
+
+**lib/alert**
+
+```
+├── alert.js
+├── index.js
+├── interface.js
+└── style
+    ├── css.js # 引入index.css
+    ├── index.css
+    ├── index.js
+    └── index.less
+```
+
+## 4.6 按需加载
+
+在 package.json 中增加`sideEffects`属性，配合`ES module`达到`tree shaking`效果（将样式依赖文件标注为`side effects`，避免被误删除）。
+
+```
+// ...
+"sideEffects": [
+  "dist/*",
+  "esm/**/style/*",
+  "lib/**/style/*",
+  "*.less"
+],
+// ...
+```
+
+> 配置了sideEffects会导致dumi无法自动导入样式（导入/style/index.ts无效，这段代码似乎会在构建过程被删除）
+
+使用以下方式引入，可以做到`js`部分的按需加载，但需要手动引入样式：
+
+```
+import { Alert } from '@fantasy955/fantasy-ui-react';
+import '@fantasy955/fantasy-ui-react/esm/alert/style';
+```
+
+也可以使用以下方式引入：
+
+```
+import Alert from '@fantasy955/fantasy-ui-react/esm/alert'; // or import Alert from '@fantasy955/fantasy-ui-react/lib/alert';
+import '@fantasy955/fantasy-ui-react/esm/alert/style'; // or import Alert from '@fantasy955/fantasy-ui-react/lib/alert';
+```
+
+以上引入样式文件的方式不太优雅，直接入口处引入**全量**样式文件又和按需加载的本意相去甚远。
+
+使用者可以借助 [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import) 来进行辅助，减少代码编写量（还是增加了使用成本）。
+
+```
+import { Alert } from '@fantasy955/fantasy-ui-react';
+```
+
+⬇️
+
+```
+import Alert from '@fantasy955/fantasy-ui-react/lib/alert';
+import '@fantasy955/fantasy-ui-react/lib/alert/style';
+```
+
+最重要的构建流程到此结束，可以发现 sideEffects 字段对于非 `CSS in JS` 组件库用处并不大，还是依赖 babel 插件达到完整的按需引入效果。
+
+## 4.7 参考资料
 
 - [发布声明文件](https://www.tslang.cn/docs/handbook/declaration-files/publishing.html)
 
-# 4. 标准发布流程
+# 5. 标准发布流程
 
 标准流程包括：
 
@@ -639,7 +1241,7 @@ main();
 我们只需要配置好模板以及问题，至于询问以及渲染就交给[plop.js](https://plopjs.com/)吧。
 
 ```
-yarn add plop --dev
+npm run add plop --dev
 ```
 
 新增脚本命令。
@@ -657,44 +1259,9 @@ yarn add plop --dev
 - 配置文件：[scripts/plopfile.ts](https://github.com/worldzhao/react-ui-library-tutorial/blob/master/scripts/plopfile.ts)
 - 模板文件：[templates/component](https://github.com/worldzhao/react-ui-library-tutorial/tree/master/templates/component)
 
-# 5. 配置Github pages
+------
 
-## 5.1 build
 
-添加Action:
-
-```
-name: github pages
-
-on:
-  push:
-    branches:
-      - master # default branch
-
-jobs:
-  deploy:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm install
-      - run: npm run build:site
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./doc-site
-
-```
-
-关键的命令：
-
-`peaceiris/actions-gh-pages@v3`: [GitHub Pages action · Actions · GitHub Marketplace](https://github.com/marketplace/actions/github-pages-action)
-
-这个命令将会把输出的目录发布到指定的分支：`gh-pages`
-
-## 5.2 部署
-
-![image-20230104172515904](assets/image-20230104172515904.png)
 
 # 参考资料
 
