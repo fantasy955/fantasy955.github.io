@@ -372,6 +372,7 @@ export default defineConfig({
 ## 3.4 遇到的问题
 
 - dumi构建过程报错
+  见3.3中提到的。
 
 - 无法引入`less`样式
 
@@ -456,6 +457,12 @@ jobs:
 ### 3.5.3设定 deploy branch
 
 ![image-20230104172515904](assets/image-20230104172515904.png)
+
+## 3.6 参考资料
+
+- dumi编写方， [dumi 文档 - 写组件 demo](https://d.umijs.org/zh-CN/guide/basic#写组件-demo)。
+- dumi 提供了一种偷懒的方式：[组件 API 自动生成](https://d.umijs.org/zh-CN/guide/advanced#组件-api-自动生成)。
+  该能力基于 [react-docgen-typescript](https://github.com/styleguidist/react-docgen-typescript)
 
 # 4. 组件库打包
 
@@ -1256,8 +1263,8 @@ npm run add plop --dev
 
 新增配置文件以及组件模板，详情可见：
 
-- 配置文件：[scripts/plopfile.ts](https://github.com/worldzhao/react-ui-library-tutorial/blob/master/scripts/plopfile.ts)
-- 模板文件：[templates/component](https://github.com/worldzhao/react-ui-library-tutorial/tree/master/templates/component)
+- 配置文件：[scripts/plopfile.ts](https://github.com/fantasy995/fantasy-ui-react/blob/master/scripts/plopfile.ts)
+- 模板文件：[templates/component](https://github.com/fantasy995/fantasy-ui-react/blob/master/scripts/release.ts)
 
 ------
 
@@ -1270,3 +1277,7 @@ npm run add plop --dev
 # 构建工具对比
 
 - [webpack、rollup、gulp对比 - 简书 (jianshu.com)](https://www.jianshu.com/p/cea946fa3c58)
+
+# 致谢
+
+> 本文大量参考https://github.com/worldzhao/blog的博客
