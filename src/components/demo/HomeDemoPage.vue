@@ -16,7 +16,7 @@
             <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
                 <li v-for="item in category.children" :key="item.path">
-                  <a style="cursor: pointer" @click="(event) => viewDemoDetail(event, category.path, item.path)
+                  <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
                   " class="d-inline-flex align-items-center rounded" aria-current="page">{{ item.name }}</a>
                 </li>
               </ul>
@@ -37,7 +37,7 @@
             <div class="collapse" :id="`${category.name}-collapse`" style="">
               <ul class="list-unstyled fw-normal pb-1 small">
                 <li v-for="item in category.children" :key="item.path">
-                  <a style="cursor: pointer" @click="(event) => viewDemoDetail(event, category.path, item.path)
+                  <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
                   " class="d-inline-flex align-items-center rounded" :class="{
   active: activeDemoPath === `./${category.path}/${item.path}`,
 }" aria-current="page">{{ item.name }}</a>
