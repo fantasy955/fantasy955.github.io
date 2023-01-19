@@ -93,3 +93,43 @@ takes those styles and creates a `<style>` tag in the page's `<head>` element co
 ## 样式兼容性
 
 `post-cssloader`，做到什么程度受`browerlist`配置的影响。
+
+## SourceMap
+
+[弄懂 SourceMap，前端开发提效 100% - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/467566753)
+
+[Devtool | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/configuration/devtool/#root)
+
+生成源代码和构建代码的映射关系，在出错时快速定位出错位置。
+
+生成模型需要关心行和列，因为只会生成一行代码。
+
+## 打包构建速度
+
+一般来说`loader`帮助我们指定了哪些模块可以进行模块热替换。
+
+![image-20230118212436721](assets/image-20230118212436721.png)
+
+`vue-loader`配置了`vue`文件的热替换。
+
+> HMR 是可选功能，只会影响包含 HMR 代码的模块。举个例子，通过 [`style-loader`](https://github.com/webpack-contrib/style-loader) 为 style 追加补丁。为了运行追加补丁，`style-loader` 实现了 HMR 接口；当它通过 HMR 接收到更新，它会使用新的样式替换旧的样式。
+
+## 文件只被一个loader处理
+
+`oneOf`属性。
+
+[Rule.oneOf](https://www.webpackjs.com/configuration/module#ruleoneof)
+
+## Babel和Eslint缓存
+
+`babel-loader`配置：
+
+![image-20230118213515098](assets/image-20230118213515098.png)
+
+`EslintPlugin`配置：
+
+![image-20230118213530931](assets/image-20230118213530931.png)
+
+## 多进程
+
+对`babel-loader`，`Eslint`代码压缩，开启多进程（这不是一键开启的）。
