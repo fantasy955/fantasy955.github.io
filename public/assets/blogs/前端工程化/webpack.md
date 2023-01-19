@@ -212,3 +212,60 @@ webpack的`optimazation`下的`splitChunks`属性。
   ![image-20230119210037517](assets/image-20230119210037517.png)
 - js，asset资源
   ![image-20230119210111033](assets/image-20230119210111033.png)
+
+## NetworkCache
+
+场景，A模块依赖B模块，B模块修改时，生成的bundle由于B模块内容修改导致hash值更改，B模块打包后的文件名发生变化，而A模块内使用了B模块打包后的名称，A模块内容也发生变化，A模块的打包后名称也发生变化。
+
+A-B
+
+A-runtime-B
+
+## Core.js处理ES6及以上兼容性
+
+过去我们使用 babel 对js 代码进行了兼容性处理，其中使用@babel/preset-env 智能预设来处理容性问题.它能将 ES6 的一些**语法**进行编译转换，比如头函数、点点运算符等。但是如果是 async 函数、promise 对象、数组的一些方法(includes)等，它没办法处理。
+所以此时我们 js 代码仍然存在兼客性问题，一旦遇到低版本浏览器会直接报错。所以我们想要将 js兼容性问题彻底解决
+
+- polyfill
+  [core.js 是个什么 - 掘金 (juejin.cn)](https://juejin.cn/post/6996485507039363103)
+  如果某个对象或函数不存在，则提供对应函数或对象的实现。
+
+- 引入core.js
+  完整引入：`import 'core.js'`
+  按需加载：`import 'core.js/es/promise'`
+  自动引入：配置babel预设`[@babel/preset-env]`
+  ![image-20230119213555141](assets/image-20230119213555141.png)
+
+## ServiceWorker
+
+[渐进式网络应用程序 | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/guides/progressive-web-application/#adding-workbox)
+
+# 总结
+
+我们从 4 个角度对 webpack 和代码进行了优化：
+
+1. 提升开发体验
+
+- 使用 `Source Map` 让开发或上线时代码报错能有更加准确的错误提示。
+
+2. 提升 webpack 提升打包构建速度
+
+- 使用 `HotModuleReplacement` 让开发时只重新编译打包更新变化了的代码，不变的代码使用缓存，从而使更新速度更快。
+- 使用 `OneOf` 让资源文件一旦被某个 loader 处理了，就不会继续遍历了，打包速度更快。
+- 使用 `Include/Exclude` 排除或只检测某些文件，处理的文件更少，速度更快。
+- 使用 `Cache` 对 eslint 和 babel 处理的结果进行缓存，让第二次打包速度更快。
+- 使用 `Thead` 多进程处理 eslint 和 babel 任务，速度更快。（需要注意的是，进程启动通信都有开销的，要在比较多代码处理时使用才有效果）
+
+3. 减少代码体积
+
+- 使用 `Tree Shaking` 剔除了没有使用的多余代码，让代码体积更小。
+- 使用 `@babel/plugin-transform-runtime` 插件对 babel 进行处理，让辅助代码从中引入，而不是每个文件都生成辅助代码，从而体积更小。
+- 使用 `Image Minimizer` 对项目中图片进行压缩，体积更小，请求速度更快。（需要注意的是，如果项目中图片都是在线链接，那么就不需要了。本地项目静态图片才需要进行压缩。）
+
+4. 优化代码运行性能
+
+- 使用 `Code Split` 对代码进行分割成多个 js 文件，从而使单个文件体积更小，并行加载 js 速度更快。并通过 import 动态导入语法进行按需加载，从而达到需要使用时才加载该资源，不用时不加载资源。
+- 使用 `Preload / Prefetch` 对代码进行提前加载，等未来需要使用时就能直接使用，从而用户体验更好。
+- 使用 `Network Cache` 能对输出资源文件进行更好的命名，将来好做缓存，从而用户体验更好。
+- 使用 `Core-js` 对 js 进行兼容性处理，让我们代码能运行在低版本浏览器。
+- 使用 `PWA` 能让代码离线也能访问，从而提升用户体验。
