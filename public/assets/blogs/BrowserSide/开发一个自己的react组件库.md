@@ -392,6 +392,12 @@ export default defineConfig({
       "*.less"
     ],
   ```
+  
+  可以通过动态导入使`style/index.ts`的导入生效。这是由于使用动态导入语法会将对应模块打包成单独模块，在需要时加载。
+  
+  `sideEffects`属性与`TreeShaking`相关，**webpack** 的 tree shaking 的作用是可以将未被使用的 exported member 标记为 unused 同时在将其 re-export 的模块中**不再 export**。
+  
+  如果一个npm包的`sideEffects`属性为false，则如果该包导入后没有被使用的化，在打包过程就会被清除（没有副作用，对全局作用域没有修改，增加，删除变量）。
 
 [Tree Shaking | webpack 中文文档 (docschina.org)](https://webpack.docschina.org/guides/tree-shaking/#:~:text=通过 package.json 的 "sideEffects" 属性，来实现这种方式。 { "name"%3A "your-project"%2C,false } 如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 false ，来告知 webpack 它可以安全地删除未用到的 export。)
 
