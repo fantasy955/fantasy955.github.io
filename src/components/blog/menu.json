@@ -26,6 +26,11 @@
             "dirName": "git",
             "path": "./assets/blogs/git"
         }, {
+            "sname": "前端工程化", 
+            "aname": "前端工程化",
+            "dirName": "前端工程化",
+            "path": "./assets/blogs/前端工程化"
+        }, {
             "sname": "数据库",
             "aname": "数据库",
             "dirName": "database",

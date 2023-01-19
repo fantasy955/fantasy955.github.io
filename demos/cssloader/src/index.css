@@ -1,0 +1,9 @@
+a {
+    color: red;
+}
+.test {
+    color: green;
+    background-image: url("./DeCode地图.png");
+    min-width: 300px;
+    min-height: 300px;
+}

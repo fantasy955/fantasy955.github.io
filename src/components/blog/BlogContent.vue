@@ -203,4 +203,10 @@ onBeforeUnmount(() => {
     max-height: 300px;
   }
 }
+
+@media (max-width: 1200px){
+  #div-article-toc {
+    width: 100% !important;
+  }
+}
 </style>
