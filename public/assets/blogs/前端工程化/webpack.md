@@ -168,7 +168,7 @@ takes those styles and creates a `<style>` tag in the page's `<head>` element co
 
 - `@babel/plugin-transform-runtime`
 
-- [babel-plugin-transform-runtime · Babel 中文文档 - 印记中文 (docschina.org)](https://babel.docschina.org/docs/en/6.26.3/babel-plugin-transform-runtime/)
+  [babel-plugin-transform-runtime · Babel 中文文档 - 印记中文 (docschina.org)](https://babel.docschina.org/docs/en/6.26.3/babel-plugin-transform-runtime/)
 
   > [babel-runtime使用与性能优化 - 掘金 (juejin.cn)](https://juejin.cn/post/6844903615212027917)
   >
@@ -186,6 +186,8 @@ takes those styles and creates a `<style>` tag in the page's `<head>` element co
   这就是babel-runtime存在的原因。**它将开发者依赖的全局内置对象等，抽取成单独的模块，并通过模块导入的方式引入**，避免了对全局作用域的修改（污染）。
 
   因此，如果是开发库、工具，可以考虑使用 babel-runtime。
+
+  babel 的 `polyfill` 机制是，对于例如 `Array.from` 等静态方法，直接在 `global.Array` 上添加；对于例如 `includes` 等实例方法，直接在 `global.Array.prototype` 上添加。这样直接修改了全局变量的原型，有可能会带来意想不到的问题。这个问题在开发第三方库的时候尤其重要，因为我们开发的第三方库修改了全局变量，有可能和另一个也修改了全局变量的第三方库发生冲突，或者和使用我们的第三方库的使用者发生冲突。公认的较好的编程范式中，也不鼓励直接修改全局变量、全局变量原型。
 
 - 图片压缩
   `imagemin`
