@@ -14,14 +14,11 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    { loader: 'style-loader' },
-                    { loader: 'css-loader' },
+                    { loader:  path.resolve(__dirname, 'loaders/my-style-loader1.js')},
+                    { loader:  path.resolve(__dirname, 'loaders/my-style-loader2.js')},
+                    "css-loader"
                 ]
             },
-            // {
-            //     test: /\.(png|jpg|jpeg|webp)$/,
-            //     type: "asset",
-            // }
         ],
     },
 };

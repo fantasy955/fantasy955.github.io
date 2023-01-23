@@ -14,7 +14,7 @@ class BlogListGenerationPlugin {
 
     // 在插件函数的 prototype 上定义一个 `apply` 方法，以 compiler 为参数。
     apply(compiler) {
-        // webpack 模块实例，可以通过 compiler 对象访问，
+        // 可以通过 compiler 对象访问webpack 模块实例，
         // 这样确保使用的是模块的正确版本
         // （不要直接 require/import webpack）
         const { webpack } = compiler;
