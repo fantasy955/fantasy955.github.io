@@ -66,8 +66,8 @@ import {
 } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
-import DefaultDemoContent from "./DefaultDemoContent.vue";
-import RightAsideNavBar from "../nav/RightAsideNavBar.vue";
+import DefaultDemoContent from "@/components/demo/DefaultDemoContent.vue";
+import RightAsideNavBar from "@/components/nav/RightAsideNavBar.vue";
 // import { useScreenType, smallScreen, largeScreen } from "@/stores/screenType";
 // fs是服务端模块，无法使用
 // import { readFile } from 'fs';
@@ -79,7 +79,7 @@ const showRightNavBar = ref(false);
 const tmpFlag = ref(true);
 
 categories.value.forEach((category) => {
-  const childrenJson = require(`./${category.path}/list.json`);
+  const childrenJson = require(`@/components/demo/${category.path}/list.json`);
   childrenJson.demos.map((demo) => {
     if (demo.name.trim() == "") {
       demo.name = demo.path.split(".")[0];
@@ -95,7 +95,7 @@ const componentsList = [];
 
 function viewDemoDetail(event, category, name) {
   event.preventDefault();
-  let path = `./${category}/${name}`;
+  let path = `@/components/demo/${category}/${name}`;
   if (activeDemoPath.value === path) {
     return;
   }
@@ -106,7 +106,7 @@ function viewDemoDetail(event, category, name) {
   if (component === undefined) {
     component = defineAsyncComponent(() =>
       // 这是如何实现的
-      import(`./${category}/${name}`)
+      import(`@/components/demo/${category}/${name}`)
       // import(path) // 这样写不行
     );
     componentsList.push({

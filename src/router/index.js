@@ -1,17 +1,17 @@
-import HomePage from '@/components/home/HomePage.vue';
-import HomeContent from '@/pages/HomePage.vue';
-import BlogPage from '../components/blog/BlogPage.vue';
-import HomeBlog from '../components/blog/HomeBlog';
-import NotFound from '../components/common/NotFound.vue';
+import Layout from '@/pages/Layout.vue';
+import HomeBlog from '@/pages/blog/HomeBlog.vue';
+import Home from '@/pages/home/HomePage.vue';
+import BlogContent from '../pages/blog/detail/BlogPage.vue';
+import NotFound from '../pages/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
-import HomeDemoPage from '../components/demo/HomeDemoPage.vue';
+import HomeDemo from '../pages/demo/HomeDemoPage.vue';
 import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
 const EnergyFlow = () => import('../components/demo/pages/_EnergyFlow.vue');
 
 const routes = [
     {
         path: '/',
-        component: HomePage,
+        component: Layout,
         children: [
             // {
             //     path: '',
@@ -19,14 +19,14 @@ const routes = [
             // },
             {
                 path: 'home',
-                component: HomeContent,
+                component: Home,
                 meta: {
                     keepAlive: true,
                 }
             },
             {
                 path: 'demo',
-                component: HomeDemoPage,
+                component: HomeDemo,
                 meta: {
                     keepAlive: true,
                 }
@@ -45,7 +45,7 @@ const routes = [
         path: '/blog/:categorySname/:blogName/:path',
         // meta: {title: '博客', withTitle: true},
         // 只有独享前置路由守卫
-        name: 'blog', component: BlogPage, props: true,
+        name: 'blog', component: BlogContent, props: true,
         meta: {
             keepAlive: false,
         }

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div>
     <PageHeader>
@@ -40,12 +41,12 @@
 <!-- 组件不需要使用模块化规范暴露 -->
 <script setup>
 // 在setup块中，导入的组件可以直接使用
-import WeatherHeader from "../common/WeatherHeader.vue";
+import WeatherHeader from "../components/common/WeatherHeader.vue";
 import { useRoute, useRouter } from "vue-router";
 import menu from "./menu";
 import { ref, defineProps, onUnmounted, onMounted, onActivated, onDeactivated, watch, computed } from "vue";
-import PageFooter from "../common/PageFooter.vue";
-import PageHeader from "../common/PageHeader.vue";
+import PageFooter from "../components/common/PageFooter.vue";
+import PageHeader from "../components/common/PageHeader.vue";
 
 const collapsedBtn = ref(null);
 const topCategory = ["blog", "demo"];

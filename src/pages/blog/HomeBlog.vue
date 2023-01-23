@@ -16,9 +16,9 @@
   
 <script setup>
 import axios from "axios";
-import HomeBlogCategory from "./HomeBlogCategory.vue";
-import HomeBlogLeftSide from "./HomeBlogLeftSide.vue";
-import HomeBlogNav from "./HomeBlogNav.vue";
+import HomeBlogCategory from "../../components/blog/HomeBlogCategory.vue";
+import HomeBlogLeftSide from "../../components/blog/HomeBlogLeftSide.vue";
+import HomeBlogNav from "../../components/blog/HomeBlogNav.vue";
 import { computed, defineProps, inject, ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { initAeronautics } from '@/utils/aeronautics';

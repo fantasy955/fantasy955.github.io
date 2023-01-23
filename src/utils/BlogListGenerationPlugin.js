@@ -1,4 +1,4 @@
-const menu = require('../components/blog/menu.json');
+const menu = require('../pages/blog/menu.json');
 const fs = require('fs');
 const npath = require('node:path');
 const { readdir, stat } = require('node:fs/promises');
