@@ -36,10 +36,9 @@ onMounted(() => {
   console.log(refDemoCount);
   console.log(refDemoObj);
   console.log(reactiveDemoObj);
-
-  console.log(textRefCount.value.value = JSON.stringify(refDemoCount))
-  console.log(textRefObj.value.value = JSON.stringify(refDemoObj))
-  console.log(textReactiveObj.value.value = JSON.stringify(reactiveDemoObj))
+  textRefCount.value.value = JSON.stringify(refDemoCount)
+  textRefObj.value.value = JSON.stringify(refDemoObj)
+  textReactiveObj.value.value = JSON.stringify(reactiveDemoObj)
 });
 </script>
 

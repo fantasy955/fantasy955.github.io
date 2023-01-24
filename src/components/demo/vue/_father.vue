@@ -11,7 +11,8 @@ import child from "./_child.vue";
 
 const h3 = ref();
 function showMsg(msg) {
-  console.log(h3.value.innerHTML=msg);
+  h3.value.innerHTML=msg
+  console.log(h3.value.innerHTML);
   console.log(msg);
 }
 </script>

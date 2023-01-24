@@ -5,6 +5,7 @@ const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = defineConfig({
   configureWebpack: {
@@ -16,6 +17,24 @@ module.exports = defineConfig({
         resolvers: [ElementPlusResolver()],
       }),
     ],
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            // 删除注释
+            output: {
+              comments: false
+            },
+            // 删除console debugger 删除警告
+            compress: {
+              drop_console: true, //console
+              drop_debugger: false,
+              pure_funcs: ['console.log'] //移除console
+            }
+          }
+        })
+      ]
+    }
   },
   chainWebpack: (config) => {
     // config.module
