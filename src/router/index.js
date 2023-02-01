@@ -6,6 +6,7 @@ import NotFound from '../pages/common/NotFound.vue';
 import { createRouter, createWebHashHistory, createWebHistory, beforeEnter } from 'vue-router';
 import HomeDemo from '../pages/demo/HomeDemoPage.vue';
 import DefaultDemoContent from '../components/demo/DefaultDemoContent.vue';
+const BookPage = () => import('@/pages/book/Index.vue');
 const EnergyFlow = () => import('../components/demo/pages/_EnergyFlow.vue');
 
 const routes = [
@@ -37,7 +38,10 @@ const routes = [
                 meta: {
                     keepAlive: true,
                 }
-            },
+            }, {
+                path: 'book',
+                component: BookPage,
+            }
         ],
         // 默认路由配置方法
         redirect: 'home',

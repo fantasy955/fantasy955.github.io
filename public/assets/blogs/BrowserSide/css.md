@@ -67,3 +67,19 @@ DOM结构：
 # 遮罩层+居中
 
 ![image-20220908161852702](assets/image-20220908161852702.png)
+
+# 布局设计
+
+- IMG标签自适应
+
+  ```css
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  ```
+
+- span行居中
+  `span`标签是`inline`元素，默认不能设置高度。
+  
+
+  

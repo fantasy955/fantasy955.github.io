@@ -26,7 +26,7 @@
 
     <router-view v-slot="{ Component, route }">
       <keep-alive>
-        <component :is="Component" :key="route.path" v-if="route.meta.keepAlive" />
+        <component :is="Component" :key="route.path" v-if="route.meta && route.meta.keepAlive" />
       </keep-alive>
       <component :is="Component" :key="route.path" v-if="!route.meta.keepAlive" />
     </router-view>

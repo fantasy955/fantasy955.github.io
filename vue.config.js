@@ -56,6 +56,10 @@ module.exports = defineConfig({
       .use('md-loader')
       .loader(path.resolve(__dirname, 'src/utils/md-loader.js'))
       .end()
+    config.module.rule('postcss').test(/\.(postcss)$/)
+      .use('vue-style-loader').loader('vue-style-loader').end()
+      .use('css-loader').loader('css-loader').options({ importLoaders: 1 }).end()
+      .use('postcss-loader').loader('postcss-loader').end()
   },
   transpileDependencies: true,
   devServer: {
