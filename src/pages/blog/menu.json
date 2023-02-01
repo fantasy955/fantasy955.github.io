@@ -1,0 +1,40 @@
+{
+    "categories": [
+        {
+            "sname": "前端",
+            "aname": "前端开发",
+            "dirName": "BrowserSide",
+            "path": "./assets/blogs/BrowserSide"
+        },{
+            "sname": "NestJS", 
+            "aname": "NestJS",
+            "dirName": "NestJS",
+            "path": "./assets/blogs/NestJS"
+        },{
+            "sname": "leetcode", 
+            "aname": "leetcode",
+            "dirName": "leetcode",
+            "path": "./assets/blogs/leetcode"
+        },{
+            "sname": "python", 
+            "aname": "python",
+            "dirName": "python",
+            "path": "./assets/blogs/python"
+        },{
+            "sname": "Git", 
+            "aname": "Git协作",
+            "dirName": "git",
+            "path": "./assets/blogs/git"
+        }, {
+            "sname": "前端工程化", 
+            "aname": "前端工程化",
+            "dirName": "前端工程化",
+            "path": "./assets/blogs/前端工程化"
+        }, {
+            "sname": "数据库",
+            "aname": "数据库",
+            "dirName": "database",
+            "path": "./assets/blogs/database"
+        }
+    ]
+}
