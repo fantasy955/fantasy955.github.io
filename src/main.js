@@ -8,6 +8,7 @@ import { renderToString } from 'vue/server-renderer';
 import VueMarkdown from 'vue-markdown'
 import router from './router/index';
 import uConifg from './config';
+import "./tailwindcss.css"
 
 const pinia = createPinia()
 const app = createSSRApp(App);

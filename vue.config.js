@@ -5,7 +5,7 @@ const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserWebpackPlugin = require("terser-webpack-plugin");
 
 module.exports = defineConfig({
   configureWebpack: {
@@ -19,9 +19,8 @@ module.exports = defineConfig({
     ],
     optimization: {
       minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            // 删除注释
+        new TerserWebpackPlugin({
+          terserOptions: {    //Terser 压缩配置
             output: {
               comments: false
             },
@@ -31,7 +30,7 @@ module.exports = defineConfig({
               drop_debugger: false,
               pure_funcs: ['console.log'] //移除console
             }
-          }
+          },
         })
       ]
     }
