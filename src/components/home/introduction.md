@@ -1,6 +1,8 @@
 ### 你好! 欢迎来到我的页面
 
-### This is Fantasy955 
+### This is Fantasy955
+
+![img](https://github.githubassets.com/favicons/favicon.png)**[View Github](https://github.com/fantasy995)**
 
 Fantasy来自于周杰伦专辑《范特西》, 955来自于本人名字的26键拼音输入
 
