@@ -15,6 +15,7 @@
         }
 
         .inner {
+            display: block;
             width: 80px;
             height: 80px;
             position: absolute;
@@ -28,7 +29,7 @@
 
 <body>
     <div class="outter" onclick="outterClickHandler(event)">
-        <div class="inner" onclick="innerClickHandler(event)"></div>
+        <a href="https://zhuanlan.zhihu.com/p/25883536" class="inner" onclick="innerClickHandler(event)"></a>
     </div>
     <script>
         function outterClickHandler(e){
@@ -39,6 +40,7 @@
             console.log('inner');
             // e.stopPropagation();  // 阻止冒泡  点击inner outter的事件不被触发
             // return false;  // outter事件可以被触发
+            e.preventDefault();
         }
     </script>
 </body>
