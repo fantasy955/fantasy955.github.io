@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .outter {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background-color: pink;
+        }
+
+        .inner {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outter" onclick="outterClickHandler(event)">
+        <div class="inner" onclick="innerClickHandler(event)"></div>
+    </div>
+    <script>
+        function outterClickHandler(e){
+            console.log('outter')
+            e.ca
+        }
+        function innerClickHandler(e){
+            console.log('inner');
+            // e.stopPropagation();  // 阻止冒泡  点击inner outter的事件不被触发
+            // return false;  // outter事件可以被触发
+        }
+    </script>
+</body>
+
+</html>
