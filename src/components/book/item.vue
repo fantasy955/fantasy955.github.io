@@ -46,7 +46,7 @@ const displayTitle = computed(() => {
 
 </script>
 
-
+<!-- tailwind css 与 bootstrap样式冲突 -->
 <!-- <style scoped lang="postcss">
 .btn {
     @apply bg-black;
