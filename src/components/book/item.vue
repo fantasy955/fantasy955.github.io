@@ -1,5 +1,4 @@
 <template>
-    <button class="btn">按钮</button>
     <div class="cantainer" ref="c" title="点击下载文件">
         <div class="post">
             <img :src="post ? post : '/assets/book/favo.jpg'" />
@@ -48,11 +47,11 @@ const displayTitle = computed(() => {
 </script>
 
 
-<style scoped lang="postcss">
+<!-- <style scoped lang="postcss">
 .btn {
     @apply bg-black;
 }
-</style>
+</style> -->
 
 <style scoped>
 .cantainer {
