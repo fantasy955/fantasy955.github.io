@@ -29,8 +29,8 @@
           </h2>
           <div class="card-text text-muted small">Fantasy955</div>
           <small class="text-muted">{{ file.updatetime.year }}年{{ file.updatetime.mon }}月{{
-    file.updatetime.day
-}}日 更新</small>
+            file.updatetime.day
+          }}日 更新</small>
         </div>
       </li>
     </ol>
@@ -56,18 +56,18 @@
       <!-- :style="{'pointer-events': pageIndex>1 ? 'auto':'none'}" -->
       <div style="display: flex; justify-content: center;">
         <button type="button" v-on:click="(event) => prePage(event)" class="btn btn-sm mr-1" :class="[
-  pageIndex <= 1
-    ? 'button-disabled btn-outline-danger'
-    : 'btn-outline-secondary',
-]">
+          pageIndex <= 1
+            ? 'button-disabled btn-outline-danger'
+            : 'btn-outline-secondary',
+        ]">
           上一页
         </button>
         <button type="button" style="margin-left: 8px;" v-on:click="(event) => nextPage(event)" class="btn btn-sm"
           :class="[
-  pageIndex >= totalPage
-    ? 'button-disabled btn-outline-danger'
-    : 'btn-outline-secondary',
-]">
+            pageIndex >= totalPage
+              ? 'button-disabled btn-outline-danger'
+              : 'btn-outline-secondary',
+          ]">
           下一页
         </button>
       </div>
@@ -83,10 +83,11 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, inject, computed, ref, watch } from "vue";
+import { defineProps, onMounted, inject, computed, ref, watch, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElSelect, ElOption } from 'element-plus';
 import 'element-plus/es/components/select/style/css';
+import { debounce } from '@/utils/common';
 
 const globalParams = inject("globalParams");
 const route = useRoute();
@@ -190,6 +191,12 @@ function nextPage(event) {
   }
 }
 
+
+const handleKeywordChnage = function () {
+  pageIndex.value = 1;
+}
+watch(keyword, debounce(handleKeywordChnage, 400));
+
 onMounted(() => {
   // console.log('mounted');
 });
@@ -251,7 +258,8 @@ ol.list-featured li:before {
   display: inline-block;
   margin-inline: auto;
 }
-.category-footer > p{
+
+.category-footer>p {
   text-align: center;
 }
 
