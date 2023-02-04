@@ -21,16 +21,12 @@ module.exports = defineConfig({
       minimizer: [
         new TerserWebpackPlugin({
           terserOptions: {    //Terser 压缩配置
-            output: {
-              comments: false
-            },
-            // 删除console debugger 删除警告
-            compress: {
-              drop_console: true, //console
-              drop_debugger: false,
-              pure_funcs: ['console.log'] //移除console
-            }
+            output: { comments: false }
           },
+          extractComments: true,    //将注释剥离到单独的文件中
+          compress: {//console删除
+            pure_funcs: ["console.log"]
+          }
         })
       ]
     }
