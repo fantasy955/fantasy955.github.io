@@ -20,13 +20,14 @@ module.exports = defineConfig({
     optimization: {
       minimizer: [
         new TerserWebpackPlugin({
+          test: /\.js(\?.*)?$/i,    //匹配参与压缩的文件
           terserOptions: {    //Terser 压缩配置
-            output: { comments: false }
+            output: { comments: false },
+            extractComments: true,    //将注释剥离到单独的文件中
+            compress: {//console删除
+              pure_funcs: ["console.log"]
+            }
           },
-          extractComments: true,    //将注释剥离到单独的文件中
-          compress: {//console删除
-            pure_funcs: ["console.log"]
-          }
         })
       ]
     }
