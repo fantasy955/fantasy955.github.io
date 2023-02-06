@@ -1,6 +1,10 @@
 export default {
     categories: [
         {
+            name: "文件处理",
+            path: "fileandblob",
+        },
+        {
             name: "CSS动画",
             path: 'cssanimation',
         }, {
