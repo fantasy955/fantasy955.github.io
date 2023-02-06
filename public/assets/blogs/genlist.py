@@ -67,4 +67,4 @@ if __name__ == '__main__':
 
         json_str = json.dumps(json_dict, ensure_ascii=False) 
         with open(target, 'w+', encoding='utf-8') as f:
-            json.dump(json_dict, f, ensure_ascii=False)
+            json.dump(json_dict, f, ensure_ascii=False, indent=1)

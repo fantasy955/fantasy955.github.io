@@ -1,0 +1,9 @@
+{
+ "demos": [
+  {
+   "name": "文件读取",
+   "description": "",
+   "path": "FileReader.vue"
+  }
+ ]
+}
