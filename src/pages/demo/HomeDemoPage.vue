@@ -279,6 +279,7 @@ main {
   /* background-color: blanchedalmond; */
   border: 1px;
   border-color: antiquewhite;
+  overflow-x: auto;
 }
 
 .right-aside-nav .btn {

@@ -4,6 +4,11 @@
    "name": "文件读取",
    "description": "",
    "path": "FileReader.vue"
+  },
+  {
+   "name": "Canvas处理图片",
+   "description": "",
+   "path": "ImageCanvas.vue"
   }
  ]
 }
