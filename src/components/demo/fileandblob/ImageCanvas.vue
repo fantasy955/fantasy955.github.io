@@ -26,6 +26,7 @@ const handleFileChange = (e) => {
     const file = e.target.files[0];
     const context = canvas.value.getContext('2d');
     context.clearRect(0, 0, canvas.value.width, canvas.value.height);
+    uninstallAllEvent();
     if (file) {
         const img = new Image();
         img.src = URL.createObjectURL(file);
@@ -146,6 +147,14 @@ const canvasMousemoveHandlerBox = debounce((e) => {
 
 }, 0);
 
+const uninstallBoxEvent = () => {
+    // console.log('卸载事件');
+    boxStartPoint = null;
+    boxEndPoint = null;
+    canvas.value.removeEventListener('click', canvasClickHandlerBox, true);
+    canvas.value.removeEventListener('mousemove', canvasMousemoveHandlerBox, true);
+}
+
 const addBoxEvent = () => {
     activateAddBox.value = !activateAddBox.value;
     if (activateAddBox.value) {
@@ -156,9 +165,13 @@ const addBoxEvent = () => {
         canvas.value.addEventListener('click', canvasClickHandlerBox, true);
         canvas.value.addEventListener('mousemove', canvasMousemoveHandlerBox, true);
     } else {
-        // console.log('卸载事件');
-        canvas.value.removeEventListener('click', canvasClickHandlerBox, true);
-        canvas.value.removeEventListener('mousemove', canvasMousemoveHandlerBox, true);
+        uninstallBoxEvent();
+    }
+}
+const uninstallAllEvent = () => {
+    if (activateAddBox.value) {
+        activateAddBox.value = false;
+        uninstallBoxEvent();
     }
 }
 </script>
