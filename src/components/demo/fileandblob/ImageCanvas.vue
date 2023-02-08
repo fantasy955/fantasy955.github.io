@@ -7,8 +7,9 @@
             <button class="btn m-1" :class="activateAddBox ? `btn-primary` : `btn-secondary`"
                 @click="addBoxEvent">绘制矩形框</button>
         </div>
-        <div class="d-block w-100 overflow-auto border">
+        <div class="d-block w-100 border" style="position: relative; overflow: hidden;">
             <canvas ref="canvas" class="mw-100"></canvas>
+            <canvas ref="modCanvas" class="mw-100" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
         </div>
     </div>
 </template>
@@ -16,11 +17,13 @@
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue';
 import { debounce } from '@/utils/common';
+import { Canvas } from '@antv/g-canvas';
 
 const canvas = ref(null);
 const btnDownload = ref(null);
 const btnInput = ref(null);
 const activateAddBox = ref(false);
+const modCanvas = ref(null);
 let ratio = 1;
 let preRation = 1;
 
@@ -33,8 +36,8 @@ const handleFileChange = (e) => {
         const img = new Image();
         img.src = URL.createObjectURL(file);
         img.onload = () => {
-            canvas.value.width = img.width;
-            canvas.value.height = img.height;
+            canvas.value.width = modCanvas.value.width = img.width;
+            canvas.value.height = modCanvas.value.height = img.height;
             // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
             context.drawImage(img, 0, 0);
             updateCanvasRatio();
@@ -44,7 +47,15 @@ const handleFileChange = (e) => {
 
 const downloadCanvas = () => {
     if (btnInput.value.files[0]) {
-        var imgURL = canvas.value.toDataURL({ format: "image/png" });
+        const targetCanvas =document.createElement("canvas");
+        const availableCanvasList = document.querySelectorAll('canvas');
+        targetCanvas.width = canvas.value.width;
+        targetCanvas.height = canvas.value.height;
+        const context = targetCanvas.getContext('2d');
+        for(const _canvas of availableCanvasList){
+            context.drawImage(_canvas, 0, 0);
+        }
+        var imgURL = targetCanvas.toDataURL({ format: "image/png" });
         btnDownload.value.download = `_${btnInput.value.files[0].name}`;
         btnDownload.value.href = imgURL;
     }
@@ -95,9 +106,14 @@ function getEventPosition(ev) {
     return { x: x, y: y };
 }
 
-function getEventPositionOffset(event, el) {
+function getEventPositionOffset(event, el, absolute) {
     const { x: ex, y: ey } = getEventPosition(event);
+    if (absolute) {
+        return { x: ex, y: ey };
+    }
+    console.log('指针坐标', ex, ey);
     const { left, top } = offset(el);
+    console.log('偏移', left, top);
     const [x, y] = [ex - left, ey - top];
     return { x, y };
 }
@@ -117,7 +133,7 @@ const updateCanvasRatio = () => {
 let boxStartPoint = null;
 const canvasClickHandlerBox = (e) => {
     // console.log(ratio);
-    const { x, y } = getEventPositionOffset(e, canvas.value);
+    const { x, y } = getEventPositionOffset(e, modCanvas.value, true);
     // console.log(x, y);
     if (boxStartPoint === null) {
         boxStartPoint = { x, y };
@@ -130,16 +146,17 @@ const canvasClickHandlerBox = (e) => {
 
 let boxEndPoint = null;
 const canvasMousemoveHandlerBox = debounce((e) => {
-    const context = canvas.value.getContext('2d');
+    const context = modCanvas.value.getContext('2d');
     if (boxStartPoint !== null) {
         if (boxEndPoint !== null) {
             // 清空之前的box
             context.clearRect(boxStartPoint.x * preRation, boxStartPoint.y * preRation,
                 (boxEndPoint.x - boxStartPoint.x) * preRation, (boxEndPoint.y - boxStartPoint.y) * preRation);
         }
-        const { x, y } = getEventPositionOffset(e, canvas.value);
+        const { x, y } = getEventPositionOffset(e, canvas.value, true);
         boxEndPoint = { x, y };
         // 绘制
+
         context.beginPath();
         context.fillStyle = "#34c24e";
         context.fillRect(boxStartPoint.x * ratio, boxStartPoint.y * ratio,
@@ -155,8 +172,8 @@ const uninstallBoxEvent = () => {
     // console.log('卸载事件');
     boxStartPoint = null;
     boxEndPoint = null;
-    canvas.value.removeEventListener('click', canvasClickHandlerBox, true);
-    canvas.value.removeEventListener('mousemove', canvasMousemoveHandlerBox, true);
+    modCanvas.value.removeEventListener('click', canvasClickHandlerBox, true);
+    modCanvas.value.removeEventListener('mousemove', canvasMousemoveHandlerBox, true);
 }
 
 const addBoxEvent = () => {
@@ -166,8 +183,8 @@ const addBoxEvent = () => {
         // the only option removeEventListener() checks is 
         // the capture/useCapture flag. Its value must match for removeEventListener() to match, 
         // but the other values don't.
-        canvas.value.addEventListener('click', canvasClickHandlerBox, true);
-        canvas.value.addEventListener('mousemove', canvasMousemoveHandlerBox, true);
+        modCanvas.value.addEventListener('click', canvasClickHandlerBox, true);
+        modCanvas.value.addEventListener('mousemove', canvasMousemoveHandlerBox, true);
     } else {
         uninstallBoxEvent();
     }
