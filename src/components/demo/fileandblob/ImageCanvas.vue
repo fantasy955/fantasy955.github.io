@@ -21,6 +21,8 @@ const canvas = ref(null);
 const btnDownload = ref(null);
 const btnInput = ref(null);
 const activateAddBox = ref(false);
+let ratio = 1;
+let preRation = 1;
 
 const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -35,6 +37,7 @@ const handleFileChange = (e) => {
             canvas.value.height = img.height;
             // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
             context.drawImage(img, 0, 0);
+            updateCanvasRatio();
         }
     }
 }
@@ -100,11 +103,12 @@ function getEventPositionOffset(event, el) {
 }
 
 // get the ration of true imageWidh / canvas width
-const getCanvasRatio = () => {
+const updateCanvasRatio = () => {
     // the border of canvas will effect canvas.value.clientWidth
     const clientWidth = canvas.value.clientWidth;
     const imageWidth = canvas.value.width;
-    const ratio = imageWidth / clientWidth;
+    ratio = imageWidth / clientWidth;
+    // console.log('更新ratio: ', ratio, clientWidth, imageWidth);
     return ratio;
 }
 
@@ -130,19 +134,19 @@ const canvasMousemoveHandlerBox = debounce((e) => {
     if (boxStartPoint !== null) {
         if (boxEndPoint !== null) {
             // 清空之前的box
-            context.clearRect(boxStartPoint.x, boxStartPoint.y,
-                boxEndPoint.x - boxStartPoint.x, boxEndPoint.y - boxStartPoint.y);
+            context.clearRect(boxStartPoint.x * preRation, boxStartPoint.y * preRation,
+                (boxEndPoint.x - boxStartPoint.x) * preRation, (boxEndPoint.y - boxStartPoint.y) * preRation);
         }
         const { x, y } = getEventPositionOffset(e, canvas.value);
         boxEndPoint = { x, y };
         // 绘制
-        const ratio = getCanvasRatio();
         context.beginPath();
         context.fillStyle = "#34c24e";
-        context.fillRect(boxStartPoint.x, boxStartPoint.y,
-            boxEndPoint.x - boxStartPoint.x, boxEndPoint.y - boxStartPoint.y);
+        context.fillRect(boxStartPoint.x * ratio, boxStartPoint.y * ratio,
+            (boxEndPoint.x - boxStartPoint.x) * ratio, (boxEndPoint.y - boxStartPoint.y) * ratio);
         context.closePath();
         // console.log(`(${boxStartPoint.x}, ${boxStartPoint.y}) -> (${x}, ${y})`);
+        preRation = ratio;
     }
 
 }, 0);
@@ -174,6 +178,13 @@ const uninstallAllEvent = () => {
         uninstallBoxEvent();
     }
 }
+onMounted(() => {
+    updateCanvasRatio();
+    window.addEventListener('resize', updateCanvasRatio);
+})
+onUnmounted(() => {
+    window.removeEventListener('resize', updateCanvasRatio);
+})
 </script>
 
 <style scoped>
