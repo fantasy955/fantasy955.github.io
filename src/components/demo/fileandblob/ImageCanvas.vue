@@ -105,7 +105,12 @@ function getEventPosition(ev) {
     }
     return { x: x, y: y };
 }
-
+/**
+ * 
+ * @param {*} event 事件
+ * @param {*} el 事件所在element
+ * @param {*} absolute 事件所在element是否是绝对定位
+ */
 function getEventPositionOffset(event, el, absolute) {
     const { x: ex, y: ey } = getEventPosition(event);
     if (absolute) {
