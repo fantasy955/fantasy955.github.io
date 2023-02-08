@@ -45,16 +45,21 @@ const handleFileChange = (e) => {
     }
 }
 
+const getMixedCanvas = () => {
+    const mixedCanvas = document.createElement("canvas");
+    const availableCanvasList = document.querySelectorAll('canvas');
+    mixedCanvas.width = canvas.value.width;
+    mixedCanvas.height = canvas.value.height;
+    const context = mixedCanvas.getContext('2d');
+    for (const _canvas of availableCanvasList) {
+        context.drawImage(_canvas, 0, 0);
+    }
+    return mixedCanvas;
+}
+
 const downloadCanvas = () => {
     if (btnInput.value.files[0]) {
-        const targetCanvas =document.createElement("canvas");
-        const availableCanvasList = document.querySelectorAll('canvas');
-        targetCanvas.width = canvas.value.width;
-        targetCanvas.height = canvas.value.height;
-        const context = targetCanvas.getContext('2d');
-        for(const _canvas of availableCanvasList){
-            context.drawImage(_canvas, 0, 0);
-        }
+        const targetCanvas = getMixedCanvas();
         var imgURL = targetCanvas.toDataURL({ format: "image/png" });
         btnDownload.value.download = `_${btnInput.value.files[0].name}`;
         btnDownload.value.href = imgURL;
@@ -64,18 +69,20 @@ const downloadCanvas = () => {
 const graying = (e) => {
     const option = window.confirm('此过程不可逆，是否继续');
     if (!option) { return }
-    const context = canvas.value.getContext('2d');
-    const imgData = context.getImageData(0, 0, canvas.value.width, canvas.value.height);   //获取图片数据对象
-    if (!imgData) {
-        return;
+    for (const _canvas of document.querySelectorAll('canvas')) {
+        const context = _canvas.getContext('2d');
+        const imgData = context.getImageData(0, 0, canvas.value.width, canvas.value.height);   //获取图片数据对象
+        if (!imgData) {
+            return;
+        }
+        const data = imgData.data;  //获取图片数据数组，该数组中每个像素用4个元素来保存，分别表示红、绿、蓝和透明度值
+        let average = 0;
+        for (var i = 0; i < data.length; i += 4) {
+            average = Math.floor((data[i] + data[i + 1] + data[i + 2]) / 3);  //将红、绿、蓝色值求平均值后得到灰度值
+            data[i] = data[i + 1] = data[i + 2] = average; //将每个像素点的色值重写
+        }
+        context.putImageData(new ImageData(data, canvas.value.width, canvas.value.height), 0, 0);  //将处理后的图像数据重写至Canvas画布，此时画布中图像变为黑白色
     }
-    const data = imgData.data;  //获取图片数据数组，该数组中每个像素用4个元素来保存，分别表示红、绿、蓝和透明度值
-    let average = 0;
-    for (var i = 0; i < data.length; i += 4) {
-        average = Math.floor((data[i] + data[i + 1] + data[i + 2]) / 3);  //将红、绿、蓝色值求平均值后得到灰度值
-        data[i] = data[i + 1] = data[i + 2] = average; //将每个像素点的色值重写
-    }
-    context.putImageData(new ImageData(data, canvas.value.width, canvas.value.height), 0, 0);  //将处理后的图像数据重写至Canvas画布，此时画布中图像变为黑白色
 }
 
 function offset(el) {
@@ -156,7 +163,10 @@ const canvasMousemoveHandlerBox = debounce((e) => {
         if (boxEndPoint !== null) {
             // 清空之前的box
             context.clearRect(boxStartPoint.x * preRation, boxStartPoint.y * preRation,
-                (boxEndPoint.x - boxStartPoint.x) * preRation, (boxEndPoint.y - boxStartPoint.y) * preRation);
+                (boxEndPoint.x - boxStartPoint.x) * preRation < 0 ? (boxEndPoint.x - boxStartPoint.x) * preRation - 1 :
+                    (boxEndPoint.x - boxStartPoint.x) * preRation + 1,
+                (boxEndPoint.y - boxStartPoint.y) * preRation < 0 ? (boxEndPoint.y - boxStartPoint.y) * preRation - 1 :
+                    (boxEndPoint.y - boxStartPoint.y) * preRation + 1);
         }
         const { x, y } = getEventPositionOffset(e, canvas.value, true);
         boxEndPoint = { x, y };
