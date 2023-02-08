@@ -24,9 +24,9 @@ const handleFileChange = (e) => {
         const url = URL.createObjectURL(file.value);
         download.value.setAttribute('href', url);
         download.value['download'] = file.value.name;
-        file.value.text().then((res) => {
-            console.log(res);
-        });
+        // file.value.text().then((res) => {
+            // console.log(res);
+        // });
     }
 }
 
