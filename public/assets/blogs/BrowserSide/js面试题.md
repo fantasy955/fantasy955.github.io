@@ -29,7 +29,20 @@ function create(fn, ...args){
 console.log( create(student, 'wjl', 22) )
 ```
 
-## apply函数
+# apply、call、bind
+
+apply、call和bind都用来改变函数的this指向，apply和call调用后会立即指向该函数，而bind不会执行，只是返回一个**永久**改变了this执行的函数。
+
+![img](assets/1535346409-8618-20170316165541854-1574871496.png)
+
+```js
+obj.myFun.call(db,'成都','上海')；　　　　 // 德玛 年龄 99  来自 成都去往上海
+obj.myFun.apply(db,['成都','上海']);      // 德玛 年龄 99  来自 成都去往上海  
+obj.myFun.bind(db,'成都','上海')();       // 德玛 年龄 99  来自 成都去往上海
+obj.myFun.bind(db,['成都','上海'])();　　 // 德玛 年龄 99  来自 成都, 上海去往 undefined
+```
+
+call和bind正常接收参数，而apply需要把所有参数合并到一个列表中，真实传递给函数的参数是数组展开后的结果。
 
 [Function.prototype.apply() - JavaScript | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
 
@@ -49,7 +62,7 @@ console.log(min);
 // expected output: 2
 ```
 
-### 参数
+## 参数
 
 - `thisArg`
 
@@ -59,11 +72,11 @@ console.log(min);
 
   一个数组或者类数组对象，其中的数组元素将作为单独的参数传给 `func` 函数。如果该参数的值为 [`null`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/null) 或 [`undefined`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/undefined)，则表示不需要传入任何参数。从 ECMAScript 5 开始可以使用类数组对象。[浏览器兼容性](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply#浏览器兼容性)请参阅本文底部内容。
 
-### 返回值
+## 返回值
 
 调用有指定 **`this`** 值和参数的函数的结果。
 
-### 分析
+## 分析
 
 `Math.max.apply(null, numbers);`相当于调用`Math.max`函数，参数是`numbers`，而这个函数返回数组的最大值。
 
