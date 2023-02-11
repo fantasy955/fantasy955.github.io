@@ -22,6 +22,21 @@
 
 ![大纲.jpg](assets/d99a12ad708647d4bfd075a59d518c8btplv-k3u1fbpfcp-zoom-in-crop-mark4536000.jpeg)
 
+![17AC0A26-745A-4FD8-B91B-7CADB717234C.jpg](assets/adcbd09984f84d0d97a15df124e83c09tplv-k3u1fbpfcp-zoom-in-crop-mark4536000.jpeg)
+
+# 使用useMemo和useCallback
+
+`useCallback`和`useMemo`是一样的东西，只是入参有所不同。
+
+`useCallback`缓存的是回调函数，如果依赖项没有更新，就会使用缓存的回调函数；
+
+`useMemo`缓存的是回调函数的`return`，如果依赖项没有更新，就会使用缓存的`return`；
+
+官网有这样一段描述`useCallback(fn, deps)` 相当于 `useMemo(() => fn, deps)`。
+
+
+
 # 参考资料
 
 - [「react进阶」一文吃透react-hooks原理 - 掘金 (juejin.cn)](https://juejin.cn/post/6944863057000529933)
+- [从React源码角度看useCallback，useMemo，useContext - 掘金 (juejin.cn)](https://juejin.cn/post/7197189371371323450)
