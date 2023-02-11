@@ -22,5 +22,10 @@ export default [
         title: '前端面试宝典完整版最最最新',
         desc: '',
         file: '/assets/book/前端面试宝典完整版最最最新.pdf',
+    },{
+        post: 'CSS世界-张鑫旭.png',
+        title: 'CSS世界-张鑫旭',
+        desc: '',
+        file: '/assets/book/CSS世界-张鑫旭.pdf',
     }
 ]
