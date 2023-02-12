@@ -6,6 +6,7 @@ const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 const path = require('path');
 const TerserWebpackPlugin = require("terser-webpack-plugin");
+const { MyTestPlugin } = require("./src/utils/MyTestPlugin.cjs");
 
 module.exports = defineConfig({
   configureWebpack: {
@@ -16,6 +17,7 @@ module.exports = defineConfig({
       Components({
         resolvers: [ElementPlusResolver()],
       }),
+      new MyTestPlugin(),
     ],
     optimization: {
       minimizer: [
