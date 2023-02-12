@@ -18,7 +18,7 @@
     </PageHeader>
 
     <div class="container-xxl my-md-4 bd-layout" id="main-article">
-      <BlogContentVue :blogPath="path" :blogTitle="" />
+      <BlogContentVue :blogPath="path" :blogTitle="blogTitle" />
     </div>
     <PageFooter></PageFooter>
   </div>
