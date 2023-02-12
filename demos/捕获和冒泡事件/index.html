@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .A {
+            background-color: pink;
+            width: 800px;
+            height: 800px;
+        }
+
+        .B {
+            background-color: royalblue;
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="A">
+        <div class="B">
+        </div>
+    </div>
+    <script>
+        const A = document.querySelector('.A');
+        const B = document.querySelector('.B');
+
+        function case1() {
+            // case 1
+            // 先输出B 再输出A 冒泡，从底部往上
+            console.log('case1');
+            A.addEventListener('click', () => {
+                console.log(A)
+            }, false) // false 冒泡事件
+            B.addEventListener('click', () => {
+                console.log(B)
+            }, false);
+        }
+
+        function case2() {
+            // case 2
+            // 先输出A 再输出B 捕获，从上往下
+            console.log('case1');
+            A.addEventListener('click', () => {
+                console.log(A)
+            }, true)
+            B.addEventListener('click', () => {
+                console.log(B)
+            }, true);
+        }
+        case2();
+
+
+    </script>
+</body>
+
+</html>
