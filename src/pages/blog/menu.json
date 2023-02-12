@@ -13,6 +13,12 @@
             "path": "./assets/blogs/React"
         },
         {
+            "sname": "CSS",
+            "aname": "CSS",
+            "dirName": "CSS",
+            "path": "./assets/blogs/CSS"
+        },
+        {
             "sname": "NestJS",
             "aname": "NestJS",
             "dirName": "NestJS",
