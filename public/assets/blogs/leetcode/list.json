@@ -2,6 +2,7 @@
  "files": [
   {
    "name": "C++匿名函数.md",
+   "title": "C++匿名函数",
    "relapath": "./assets/blogs/leetcode/C++匿名函数.md",
    "updatetime": {
     "year": 2023,
@@ -14,6 +15,7 @@
   },
   {
    "name": "滑动窗口解决从数组两侧向中间求指定和的问题.md",
+   "title": "滑动窗口解决从数组两侧向中间求指定和的问题",
    "relapath": "./assets/blogs/leetcode/滑动窗口解决从数组两侧向中间求指定和的问题.md",
    "updatetime": {
     "year": 2023,
@@ -26,6 +28,7 @@
   },
   {
    "name": "求最大公约数.md",
+   "title": "求最大公约数",
    "relapath": "./assets/blogs/leetcode/求最大公约数.md",
    "updatetime": {
     "year": 2022,
@@ -38,6 +41,7 @@
   },
   {
    "name": "回溯：最接近目标价格的甜品成本.md",
+   "title": "回溯：最接近目标价格的甜品成本",
    "relapath": "./assets/blogs/leetcode/回溯：最接近目标价格的甜品成本.md",
    "updatetime": {
     "year": 2022,
@@ -50,6 +54,7 @@
   },
   {
    "name": "自定义字符串排序.md",
+   "title": "自定义字符串排序",
    "relapath": "./assets/blogs/leetcode/自定义字符串排序.md",
    "updatetime": {
     "year": 2022,
@@ -62,6 +67,7 @@
   },
   {
    "name": "862-和至少为K的最短子数组-前缀和-双端队列.md",
+   "title": "862-和至少为K的最短子数组-前缀和-双端队列",
    "relapath": "./assets/blogs/leetcode/862-和至少为K的最短子数组-前缀和-双端队列.md",
    "updatetime": {
     "year": 2022,
@@ -74,6 +80,7 @@
   },
   {
    "name": "886可能的二分法.md",
+   "title": "886可能的二分法",
    "relapath": "./assets/blogs/leetcode/886可能的二分法.md",
    "updatetime": {
     "year": 2022,
@@ -86,6 +93,7 @@
   },
   {
    "name": "递归：括号的分数.md",
+   "title": "递归：括号的分数",
    "relapath": "./assets/blogs/leetcode/递归：括号的分数.md",
    "updatetime": {
     "year": 2022,
@@ -98,6 +106,7 @@
   },
   {
    "name": "c++字符串操作.md",
+   "title": "c++字符串操作",
    "relapath": "./assets/blogs/leetcode/c++字符串操作.md",
    "updatetime": {
     "year": 2022,
@@ -110,6 +119,7 @@
   },
   {
    "name": "鸡蛋掉落.md",
+   "title": "鸡蛋掉落",
    "relapath": "./assets/blogs/leetcode/鸡蛋掉落.md",
    "updatetime": {
     "year": 2022,
@@ -122,6 +132,7 @@
   },
   {
    "name": "位运算.md",
+   "title": "位运算",
    "relapath": "./assets/blogs/leetcode/位运算.md",
    "updatetime": {
     "year": 2022,
@@ -134,6 +145,7 @@
   },
   {
    "name": "面试题.md",
+   "title": "面试题",
    "relapath": "./assets/blogs/leetcode/面试题.md",
    "updatetime": {
     "year": 2022,
@@ -146,6 +158,7 @@
   },
   {
    "name": "枚举法.md",
+   "title": "枚举法",
    "relapath": "./assets/blogs/leetcode/枚举法.md",
    "updatetime": {
     "year": 2022,
@@ -158,6 +171,7 @@
   },
   {
    "name": "剪枝：相似度为K的字符串.md",
+   "title": "剪枝：相似度为K的字符串",
    "relapath": "./assets/blogs/leetcode/剪枝：相似度为K的字符串.md",
    "updatetime": {
     "year": 2022,
@@ -170,6 +184,7 @@
   },
   {
    "name": "README.md",
+   "title": "README",
    "relapath": "./assets/blogs/leetcode/README.md",
    "updatetime": {
     "year": 2022,
@@ -182,6 +197,7 @@
   },
   {
    "name": "回溯：划分为k个相等的子集.md",
+   "title": "回溯：划分为k个相等的子集",
    "relapath": "./assets/blogs/leetcode/回溯：划分为k个相等的子集.md",
    "updatetime": {
     "year": 2022,
@@ -194,6 +210,7 @@
   },
   {
    "name": "求连续子序列问题.md",
+   "title": "求连续子序列问题",
    "relapath": "./assets/blogs/leetcode/求连续子序列问题.md",
    "updatetime": {
     "year": 2022,
@@ -206,6 +223,7 @@
   },
   {
    "name": "小团的默契游戏.md",
+   "title": "小团的默契游戏",
    "relapath": "./assets/blogs/leetcode/小团的默契游戏.md",
    "updatetime": {
     "year": 2022,
@@ -218,6 +236,7 @@
   },
   {
    "name": "递归：修剪二叉搜索树.md",
+   "title": "递归：修剪二叉搜索树",
    "relapath": "./assets/blogs/leetcode/递归：修剪二叉搜索树.md",
    "updatetime": {
     "year": 2022,
@@ -230,6 +249,7 @@
   },
   {
    "name": "图：最短路径和最长路径.md",
+   "title": "图：最短路径和最长路径",
    "relapath": "./assets/blogs/leetcode/图：最短路径和最长路径.md",
    "updatetime": {
     "year": 2022,
@@ -242,6 +262,7 @@
   },
   {
    "name": "动态规划：小团的装饰物.md",
+   "title": "动态规划：小团的装饰物",
    "relapath": "./assets/blogs/leetcode/动态规划：小团的装饰物.md",
    "updatetime": {
     "year": 2022,
@@ -254,6 +275,7 @@
   },
   {
    "name": "C++vector操作.md",
+   "title": "C++vector操作",
    "relapath": "./assets/blogs/leetcode/C++vector操作.md",
    "updatetime": {
     "year": 2022,
@@ -266,6 +288,7 @@
   },
   {
    "name": "828.统计字串的唯一字串.md",
+   "title": "828.统计字串的唯一字串",
    "relapath": "./assets/blogs/leetcode/828.统计字串的唯一字串.md",
    "updatetime": {
     "year": 2022,
@@ -278,6 +301,7 @@
   },
   {
    "name": "652.寻找重复的子树.md",
+   "title": "652.寻找重复的子树",
    "relapath": "./assets/blogs/leetcode/652.寻找重复的子树.md",
    "updatetime": {
     "year": 2022,
@@ -290,6 +314,7 @@
   },
   {
    "name": "美团：连通图的划分.md",
+   "title": "美团：连通图的划分",
    "relapath": "./assets/blogs/leetcode/美团：连通图的划分.md",
    "updatetime": {
     "year": 2022,
@@ -302,6 +327,7 @@
   },
   {
    "name": "贪心：最长数对链.md",
+   "title": "贪心：最长数对链",
    "relapath": "./assets/blogs/leetcode/贪心：最长数对链.md",
    "updatetime": {
     "year": 2022,
@@ -314,6 +340,7 @@
   },
   {
    "name": "并查集.md",
+   "title": "并查集",
    "relapath": "./assets/blogs/leetcode/并查集.md",
    "updatetime": {
     "year": 2022,
@@ -326,6 +353,7 @@
   },
   {
    "name": "单调栈.md",
+   "title": "单调栈",
    "relapath": "./assets/blogs/leetcode/单调栈.md",
    "updatetime": {
     "year": 2022,
@@ -338,6 +366,7 @@
   },
   {
    "name": "946.验证栈序列.md",
+   "title": "946.验证栈序列",
    "relapath": "./assets/blogs/leetcode/946.验证栈序列.md",
    "updatetime": {
     "year": 2022,
@@ -350,6 +379,7 @@
   },
   {
    "name": "998.最大二叉树.md",
+   "title": "998.最大二叉树",
    "relapath": "./assets/blogs/leetcode/998.最大二叉树.md",
    "updatetime": {
     "year": 2022,
@@ -362,6 +392,7 @@
   },
   {
    "name": "快速幂和快速乘.md",
+   "title": "快速幂和快速乘",
    "relapath": "./assets/blogs/leetcode/快速幂和快速乘.md",
    "updatetime": {
     "year": 2022,
@@ -374,6 +405,7 @@
   },
   {
    "name": "四数之和为target.md",
+   "title": "四数之和为target",
    "relapath": "./assets/blogs/leetcode/四数之和为target.md",
    "updatetime": {
     "year": 2022,
@@ -386,6 +418,7 @@
   },
   {
    "name": "unresolve-排序-最大数.md",
+   "title": "unresolve-排序-最大数",
    "relapath": "./assets/blogs/leetcode/unresolve-排序-最大数.md",
    "updatetime": {
     "year": 2022,
@@ -398,6 +431,7 @@
   },
   {
    "name": "C++Map操作.md",
+   "title": "C++Map操作",
    "relapath": "./assets/blogs/leetcode/C++Map操作.md",
    "updatetime": {
     "year": 2022,
@@ -410,6 +444,7 @@
   },
   {
    "name": "树的遍历.md",
+   "title": "树的遍历",
    "relapath": "./assets/blogs/leetcode/树的遍历.md",
    "updatetime": {
     "year": 2022,
@@ -422,6 +457,7 @@
   },
   {
    "name": "数据翻转：只使用32位数判断是否溢出.md",
+   "title": "数据翻转：只使用32位数判断是否溢出",
    "relapath": "./assets/blogs/leetcode/数据翻转：只使用32位数判断是否溢出.md",
    "updatetime": {
     "year": 2022,
@@ -434,6 +470,7 @@
   },
   {
    "name": "动态规划：跳跃游戏.md",
+   "title": "动态规划：跳跃游戏",
    "relapath": "./assets/blogs/leetcode/动态规划：跳跃游戏.md",
    "updatetime": {
     "year": 2022,
@@ -446,6 +483,7 @@
   },
   {
    "name": "数据结构：双端队列.md",
+   "title": "数据结构：双端队列",
    "relapath": "./assets/blogs/leetcode/数据结构：双端队列.md",
    "updatetime": {
     "year": 2022,
@@ -458,6 +496,7 @@
   },
   {
    "name": "动态规划：最长连续子数组和.md",
+   "title": "动态规划：最长连续子数组和",
    "relapath": "./assets/blogs/leetcode/动态规划：最长连续子数组和.md",
    "updatetime": {
     "year": 2022,
@@ -470,6 +509,7 @@
   },
   {
    "name": "寻找字母异位词.md",
+   "title": "寻找字母异位词",
    "relapath": "./assets/blogs/leetcode/寻找字母异位词.md",
    "updatetime": {
     "year": 2022,
@@ -482,6 +522,7 @@
   },
   {
    "name": "最小高度树.md",
+   "title": "最小高度树",
    "relapath": "./assets/blogs/leetcode/最小高度树.md",
    "updatetime": {
     "year": 2022,
@@ -494,6 +535,7 @@
   },
   {
    "name": "动态规划：最佳买卖股票时机.md",
+   "title": "动态规划：最佳买卖股票时机",
    "relapath": "./assets/blogs/leetcode/动态规划：最佳买卖股票时机.md",
    "updatetime": {
     "year": 2022,
@@ -506,6 +548,7 @@
   },
   {
    "name": "动态规划最大正方形.md",
+   "title": "动态规划最大正方形",
    "relapath": "./assets/blogs/leetcode/动态规划最大正方形.md",
    "updatetime": {
     "year": 2022,
@@ -518,6 +561,7 @@
   },
   {
    "name": "两数求和.md",
+   "title": "两数求和",
    "relapath": "./assets/blogs/leetcode/两数求和.md",
    "updatetime": {
     "year": 2022,
@@ -530,6 +574,7 @@
   },
   {
    "name": "c++中的map和unordered_map.md",
+   "title": "c++中的map和unordered_map",
    "relapath": "./assets/blogs/leetcode/c++中的map和unordered_map.md",
    "updatetime": {
     "year": 2022,
@@ -542,6 +587,7 @@
   },
   {
    "name": "清单.md",
+   "title": "清单",
    "relapath": "./assets/blogs/leetcode/清单.md",
    "updatetime": {
     "year": 2022,
@@ -559,6 +605,7 @@
    "files": [
     {
      "name": "C++匿名函数.md",
+     "title": "C++匿名函数",
      "relapath": "./assets/blogs/leetcode/C++匿名函数.md",
      "updatetime": {
       "year": 2023,
@@ -571,6 +618,7 @@
     },
     {
      "name": "滑动窗口解决从数组两侧向中间求指定和的问题.md",
+     "title": "滑动窗口解决从数组两侧向中间求指定和的问题",
      "relapath": "./assets/blogs/leetcode/滑动窗口解决从数组两侧向中间求指定和的问题.md",
      "updatetime": {
       "year": 2023,
@@ -583,6 +631,7 @@
     },
     {
      "name": "求最大公约数.md",
+     "title": "求最大公约数",
      "relapath": "./assets/blogs/leetcode/求最大公约数.md",
      "updatetime": {
       "year": 2022,
@@ -595,6 +644,7 @@
     },
     {
      "name": "回溯：最接近目标价格的甜品成本.md",
+     "title": "回溯：最接近目标价格的甜品成本",
      "relapath": "./assets/blogs/leetcode/回溯：最接近目标价格的甜品成本.md",
      "updatetime": {
       "year": 2022,
@@ -607,6 +657,7 @@
     },
     {
      "name": "自定义字符串排序.md",
+     "title": "自定义字符串排序",
      "relapath": "./assets/blogs/leetcode/自定义字符串排序.md",
      "updatetime": {
       "year": 2022,
@@ -624,6 +675,7 @@
    "files": [
     {
      "name": "862-和至少为K的最短子数组-前缀和-双端队列.md",
+     "title": "862-和至少为K的最短子数组-前缀和-双端队列",
      "relapath": "./assets/blogs/leetcode/862-和至少为K的最短子数组-前缀和-双端队列.md",
      "updatetime": {
       "year": 2022,
@@ -636,6 +688,7 @@
     },
     {
      "name": "886可能的二分法.md",
+     "title": "886可能的二分法",
      "relapath": "./assets/blogs/leetcode/886可能的二分法.md",
      "updatetime": {
       "year": 2022,
@@ -648,6 +701,7 @@
     },
     {
      "name": "递归：括号的分数.md",
+     "title": "递归：括号的分数",
      "relapath": "./assets/blogs/leetcode/递归：括号的分数.md",
      "updatetime": {
       "year": 2022,
@@ -660,6 +714,7 @@
     },
     {
      "name": "c++字符串操作.md",
+     "title": "c++字符串操作",
      "relapath": "./assets/blogs/leetcode/c++字符串操作.md",
      "updatetime": {
       "year": 2022,
@@ -672,6 +727,7 @@
     },
     {
      "name": "鸡蛋掉落.md",
+     "title": "鸡蛋掉落",
      "relapath": "./assets/blogs/leetcode/鸡蛋掉落.md",
      "updatetime": {
       "year": 2022,
@@ -689,6 +745,7 @@
    "files": [
     {
      "name": "位运算.md",
+     "title": "位运算",
      "relapath": "./assets/blogs/leetcode/位运算.md",
      "updatetime": {
       "year": 2022,
@@ -701,6 +758,7 @@
     },
     {
      "name": "面试题.md",
+     "title": "面试题",
      "relapath": "./assets/blogs/leetcode/面试题.md",
      "updatetime": {
       "year": 2022,
@@ -713,6 +771,7 @@
     },
     {
      "name": "枚举法.md",
+     "title": "枚举法",
      "relapath": "./assets/blogs/leetcode/枚举法.md",
      "updatetime": {
       "year": 2022,
@@ -725,6 +784,7 @@
     },
     {
      "name": "剪枝：相似度为K的字符串.md",
+     "title": "剪枝：相似度为K的字符串",
      "relapath": "./assets/blogs/leetcode/剪枝：相似度为K的字符串.md",
      "updatetime": {
       "year": 2022,
@@ -737,6 +797,7 @@
     },
     {
      "name": "README.md",
+     "title": "README",
      "relapath": "./assets/blogs/leetcode/README.md",
      "updatetime": {
       "year": 2022,
@@ -754,6 +815,7 @@
    "files": [
     {
      "name": "回溯：划分为k个相等的子集.md",
+     "title": "回溯：划分为k个相等的子集",
      "relapath": "./assets/blogs/leetcode/回溯：划分为k个相等的子集.md",
      "updatetime": {
       "year": 2022,
@@ -766,6 +828,7 @@
     },
     {
      "name": "求连续子序列问题.md",
+     "title": "求连续子序列问题",
      "relapath": "./assets/blogs/leetcode/求连续子序列问题.md",
      "updatetime": {
       "year": 2022,
@@ -778,6 +841,7 @@
     },
     {
      "name": "小团的默契游戏.md",
+     "title": "小团的默契游戏",
      "relapath": "./assets/blogs/leetcode/小团的默契游戏.md",
      "updatetime": {
       "year": 2022,
@@ -790,6 +854,7 @@
     },
     {
      "name": "递归：修剪二叉搜索树.md",
+     "title": "递归：修剪二叉搜索树",
      "relapath": "./assets/blogs/leetcode/递归：修剪二叉搜索树.md",
      "updatetime": {
       "year": 2022,
@@ -802,6 +867,7 @@
     },
     {
      "name": "图：最短路径和最长路径.md",
+     "title": "图：最短路径和最长路径",
      "relapath": "./assets/blogs/leetcode/图：最短路径和最长路径.md",
      "updatetime": {
       "year": 2022,
@@ -819,6 +885,7 @@
    "files": [
     {
      "name": "动态规划：小团的装饰物.md",
+     "title": "动态规划：小团的装饰物",
      "relapath": "./assets/blogs/leetcode/动态规划：小团的装饰物.md",
      "updatetime": {
       "year": 2022,
@@ -831,6 +898,7 @@
     },
     {
      "name": "C++vector操作.md",
+     "title": "C++vector操作",
      "relapath": "./assets/blogs/leetcode/C++vector操作.md",
      "updatetime": {
       "year": 2022,
@@ -843,6 +911,7 @@
     },
     {
      "name": "828.统计字串的唯一字串.md",
+     "title": "828.统计字串的唯一字串",
      "relapath": "./assets/blogs/leetcode/828.统计字串的唯一字串.md",
      "updatetime": {
       "year": 2022,
@@ -855,6 +924,7 @@
     },
     {
      "name": "652.寻找重复的子树.md",
+     "title": "652.寻找重复的子树",
      "relapath": "./assets/blogs/leetcode/652.寻找重复的子树.md",
      "updatetime": {
       "year": 2022,
@@ -867,6 +937,7 @@
     },
     {
      "name": "美团：连通图的划分.md",
+     "title": "美团：连通图的划分",
      "relapath": "./assets/blogs/leetcode/美团：连通图的划分.md",
      "updatetime": {
       "year": 2022,
@@ -884,6 +955,7 @@
    "files": [
     {
      "name": "贪心：最长数对链.md",
+     "title": "贪心：最长数对链",
      "relapath": "./assets/blogs/leetcode/贪心：最长数对链.md",
      "updatetime": {
       "year": 2022,
@@ -896,6 +968,7 @@
     },
     {
      "name": "并查集.md",
+     "title": "并查集",
      "relapath": "./assets/blogs/leetcode/并查集.md",
      "updatetime": {
       "year": 2022,
@@ -908,6 +981,7 @@
     },
     {
      "name": "单调栈.md",
+     "title": "单调栈",
      "relapath": "./assets/blogs/leetcode/单调栈.md",
      "updatetime": {
       "year": 2022,
@@ -920,6 +994,7 @@
     },
     {
      "name": "946.验证栈序列.md",
+     "title": "946.验证栈序列",
      "relapath": "./assets/blogs/leetcode/946.验证栈序列.md",
      "updatetime": {
       "year": 2022,
@@ -932,6 +1007,7 @@
     },
     {
      "name": "998.最大二叉树.md",
+     "title": "998.最大二叉树",
      "relapath": "./assets/blogs/leetcode/998.最大二叉树.md",
      "updatetime": {
       "year": 2022,
@@ -949,6 +1025,7 @@
    "files": [
     {
      "name": "快速幂和快速乘.md",
+     "title": "快速幂和快速乘",
      "relapath": "./assets/blogs/leetcode/快速幂和快速乘.md",
      "updatetime": {
       "year": 2022,
@@ -961,6 +1038,7 @@
     },
     {
      "name": "四数之和为target.md",
+     "title": "四数之和为target",
      "relapath": "./assets/blogs/leetcode/四数之和为target.md",
      "updatetime": {
       "year": 2022,
@@ -973,6 +1051,7 @@
     },
     {
      "name": "unresolve-排序-最大数.md",
+     "title": "unresolve-排序-最大数",
      "relapath": "./assets/blogs/leetcode/unresolve-排序-最大数.md",
      "updatetime": {
       "year": 2022,
@@ -985,6 +1064,7 @@
     },
     {
      "name": "C++Map操作.md",
+     "title": "C++Map操作",
      "relapath": "./assets/blogs/leetcode/C++Map操作.md",
      "updatetime": {
       "year": 2022,
@@ -997,6 +1077,7 @@
     },
     {
      "name": "树的遍历.md",
+     "title": "树的遍历",
      "relapath": "./assets/blogs/leetcode/树的遍历.md",
      "updatetime": {
       "year": 2022,
@@ -1014,6 +1095,7 @@
    "files": [
     {
      "name": "数据翻转：只使用32位数判断是否溢出.md",
+     "title": "数据翻转：只使用32位数判断是否溢出",
      "relapath": "./assets/blogs/leetcode/数据翻转：只使用32位数判断是否溢出.md",
      "updatetime": {
       "year": 2022,
@@ -1026,6 +1108,7 @@
     },
     {
      "name": "动态规划：跳跃游戏.md",
+     "title": "动态规划：跳跃游戏",
      "relapath": "./assets/blogs/leetcode/动态规划：跳跃游戏.md",
      "updatetime": {
       "year": 2022,
@@ -1038,6 +1121,7 @@
     },
     {
      "name": "数据结构：双端队列.md",
+     "title": "数据结构：双端队列",
      "relapath": "./assets/blogs/leetcode/数据结构：双端队列.md",
      "updatetime": {
       "year": 2022,
@@ -1050,6 +1134,7 @@
     },
     {
      "name": "动态规划：最长连续子数组和.md",
+     "title": "动态规划：最长连续子数组和",
      "relapath": "./assets/blogs/leetcode/动态规划：最长连续子数组和.md",
      "updatetime": {
       "year": 2022,
@@ -1062,6 +1147,7 @@
     },
     {
      "name": "寻找字母异位词.md",
+     "title": "寻找字母异位词",
      "relapath": "./assets/blogs/leetcode/寻找字母异位词.md",
      "updatetime": {
       "year": 2022,
@@ -1079,6 +1165,7 @@
    "files": [
     {
      "name": "最小高度树.md",
+     "title": "最小高度树",
      "relapath": "./assets/blogs/leetcode/最小高度树.md",
      "updatetime": {
       "year": 2022,
@@ -1091,6 +1178,7 @@
     },
     {
      "name": "动态规划：最佳买卖股票时机.md",
+     "title": "动态规划：最佳买卖股票时机",
      "relapath": "./assets/blogs/leetcode/动态规划：最佳买卖股票时机.md",
      "updatetime": {
       "year": 2022,
@@ -1103,6 +1191,7 @@
     },
     {
      "name": "动态规划最大正方形.md",
+     "title": "动态规划最大正方形",
      "relapath": "./assets/blogs/leetcode/动态规划最大正方形.md",
      "updatetime": {
       "year": 2022,
@@ -1115,6 +1204,7 @@
     },
     {
      "name": "两数求和.md",
+     "title": "两数求和",
      "relapath": "./assets/blogs/leetcode/两数求和.md",
      "updatetime": {
       "year": 2022,
@@ -1127,6 +1217,7 @@
     },
     {
      "name": "c++中的map和unordered_map.md",
+     "title": "c++中的map和unordered_map",
      "relapath": "./assets/blogs/leetcode/c++中的map和unordered_map.md",
      "updatetime": {
       "year": 2022,
@@ -1144,6 +1235,7 @@
    "files": [
     {
      "name": "清单.md",
+     "title": "清单",
      "relapath": "./assets/blogs/leetcode/清单.md",
      "updatetime": {
       "year": 2022,

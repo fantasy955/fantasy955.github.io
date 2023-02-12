@@ -2,6 +2,7 @@
  "files": [
   {
    "name": "重写commit.md",
+   "title": "重写commit",
    "relapath": "./assets/blogs/git/重写commit.md",
    "updatetime": {
     "year": 2022,
@@ -14,6 +15,7 @@
   },
   {
    "name": "生产.md",
+   "title": "生产",
    "relapath": "./assets/blogs/git/生产.md",
    "updatetime": {
     "year": 2022,
@@ -26,6 +28,7 @@
   },
   {
    "name": "git提交规范.md",
+   "title": "git提交规范",
    "relapath": "./assets/blogs/git/git提交规范.md",
    "updatetime": {
     "year": 2022,
@@ -43,6 +46,7 @@
    "files": [
     {
      "name": "重写commit.md",
+     "title": "重写commit",
      "relapath": "./assets/blogs/git/重写commit.md",
      "updatetime": {
       "year": 2022,
@@ -55,6 +59,7 @@
     },
     {
      "name": "生产.md",
+     "title": "生产",
      "relapath": "./assets/blogs/git/生产.md",
      "updatetime": {
       "year": 2022,
@@ -67,6 +72,7 @@
     },
     {
      "name": "git提交规范.md",
+     "title": "git提交规范",
      "relapath": "./assets/blogs/git/git提交规范.md",
      "updatetime": {
       "year": 2022,

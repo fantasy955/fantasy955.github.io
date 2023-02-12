@@ -2,6 +2,7 @@
  "files": [
   {
    "name": "MongoDB.md",
+   "title": "MongoDB",
    "relapath": "./assets/blogs/database/MongoDB.md",
    "updatetime": {
     "year": 2022,
@@ -14,6 +15,7 @@
   },
   {
    "name": "非关系数据库.md",
+   "title": "非关系数据库",
    "relapath": "./assets/blogs/database/非关系数据库.md",
    "updatetime": {
     "year": 2022,
@@ -31,6 +33,7 @@
    "files": [
     {
      "name": "MongoDB.md",
+     "title": "MongoDB",
      "relapath": "./assets/blogs/database/MongoDB.md",
      "updatetime": {
       "year": 2022,
@@ -43,6 +46,7 @@
     },
     {
      "name": "非关系数据库.md",
+     "title": "非关系数据库",
      "relapath": "./assets/blogs/database/非关系数据库.md",
      "updatetime": {
       "year": 2022,

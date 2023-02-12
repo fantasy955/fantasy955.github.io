@@ -2,6 +2,7 @@
  "files": [
   {
    "name": "依赖注入和控制反转.md",
+   "title": "依赖注入和控制反转",
    "relapath": "./assets/blogs/NestJS/依赖注入和控制反转.md",
    "updatetime": {
     "year": 2022,
@@ -19,6 +20,7 @@
    "files": [
     {
      "name": "依赖注入和控制反转.md",
+     "title": "依赖注入和控制反转",
      "relapath": "./assets/blogs/NestJS/依赖注入和控制反转.md",
      "updatetime": {
       "year": 2022,
