@@ -53,6 +53,7 @@ if __name__ == '__main__':
                 struct_time = time.localtime(lastModifiedTimeStamp)
                 fileInfo = {}
                 fileInfo['name'] = fileName
+                fileInfo['title'] = fileName.replace('.md', '')
                 fileInfo['relapath'] =  blog_dir + '/' + fileName
                 fileInfo['updatetime'] = {}
                 fileInfo['updatetime']['year'] = struct_time.tm_year
