@@ -10,11 +10,7 @@
             <a class="a2a_button_facebook"></a>
             <a class="a2a_button_twitter"></a>
           </div>
-          <component
-            src="https://static.addtoany.com/menu/page.js"
-            :is="'script'"
-            async
-          >
+          <component src="https://static.addtoany.com/menu/page.js" :is="'script'" async>
           </component>
           <!-- AddToAny END -->
         </div>
@@ -24,16 +20,8 @@
     <div class="col-xl-8 border order-1" role="main">
       <div id="article-body">加载中</div>
     </div>
-    <div
-      class="col-md-2 pl-3"
-      :class="screenWidth <= 1200 ? first : second"
-      id="div-article-toc"
-    >
-      <div
-        class="sticky-top mr-1 toc-scroll"
-        style="top: 90px"
-        id="article-toc"
-      ></div>
+    <div class="col-md-2 pl-3" :class="screenWidth <= 1200 ? first : second" id="div-article-toc">
+      <div class="sticky-top mr-1 toc-scroll" style="top: 90px" id="article-toc"></div>
     </div>
     <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
   </div>
@@ -68,15 +56,25 @@ const probs = defineProps({
     type: String,
     required: true,
   },
+  blogTitle: {
+    type: String,
+    required: true,
+  }
 });
 
 const smallSceenSize = globalParams.smallScreenSize;
 const first = ref("order-0");
 const second = ref("order-2");
-
 var getBlogContent = axios.get(probs.blogPath);
 
 const screenWidth = useScreenWidth();
+let preTitle = document.title;
+onMounted(() => {
+  document.title = probs.blogTitle;
+})
+onUnmounted(()=>{
+  document.title = preTitle;
+})
 
 onMounted(() => {
   getBlogContent.then((res) => {
@@ -204,7 +202,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 1200px){
+@media (max-width: 1200px) {
   #div-article-toc {
     width: 100% !important;
   }

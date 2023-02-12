@@ -18,7 +18,7 @@
     </PageHeader>
 
     <div class="container-xxl my-md-4 bd-layout" id="main-article">
-      <BlogContentVue :blogPath="path" />
+      <BlogContentVue :blogPath="path" :blogTitle="" />
     </div>
     <PageFooter></PageFooter>
   </div>
@@ -46,6 +46,10 @@ onBeforeRouteUpdate ((to, from, next) => {
   document.title = to.params.blogName.split('.md')[0];
   console.log(to, from)
   next();
+})
+
+const blogTitle = computed(()=>{
+  return probs.blogName?.replace(/\.md$/, '');
 })
 </script>
 
