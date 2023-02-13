@@ -1,6 +1,19 @@
 {
  "files": [
   {
+   "name": "打包工具对比.md",
+   "title": "打包工具对比",
+   "relapath": "./assets/blogs/前端工程化/打包工具对比.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 2,
+    "day": 12,
+    "hour": 15,
+    "min": 18,
+    "sec": 31
+   }
+  },
+  {
    "name": "各打包工具生命周期.md",
    "title": "各打包工具生命周期",
    "relapath": "./assets/blogs/前端工程化/各打包工具生命周期.md",
@@ -8,22 +21,9 @@
     "year": 2023,
     "mon": 2,
     "day": 12,
-    "hour": 14,
-    "min": 39,
-    "sec": 57
-   }
-  },
-  {
-   "name": "Vite与Webpack的对比.md",
-   "title": "Vite与Webpack的对比",
-   "relapath": "./assets/blogs/前端工程化/Vite与Webpack的对比.md",
-   "updatetime": {
-    "year": 2023,
-    "mon": 2,
-    "day": 12,
-    "hour": 13,
-    "min": 30,
-    "sec": 7
+    "hour": 15,
+    "min": 11,
+    "sec": 21
    }
   },
   {
@@ -110,6 +110,19 @@
    "page": 1,
    "files": [
     {
+     "name": "打包工具对比.md",
+     "title": "打包工具对比",
+     "relapath": "./assets/blogs/前端工程化/打包工具对比.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 2,
+      "day": 12,
+      "hour": 15,
+      "min": 18,
+      "sec": 31
+     }
+    },
+    {
      "name": "各打包工具生命周期.md",
      "title": "各打包工具生命周期",
      "relapath": "./assets/blogs/前端工程化/各打包工具生命周期.md",
@@ -117,22 +130,9 @@
       "year": 2023,
       "mon": 2,
       "day": 12,
-      "hour": 14,
-      "min": 39,
-      "sec": 57
-     }
-    },
-    {
-     "name": "Vite与Webpack的对比.md",
-     "title": "Vite与Webpack的对比",
-     "relapath": "./assets/blogs/前端工程化/Vite与Webpack的对比.md",
-     "updatetime": {
-      "year": 2023,
-      "mon": 2,
-      "day": 12,
-      "hour": 13,
-      "min": 30,
-      "sec": 7
+      "hour": 15,
+      "min": 11,
+      "sec": 21
      }
     },
     {

@@ -1,0 +1,36 @@
+## 可继承属性
+
+所有元素可继承：visibility和cursor。
+
+ 内联元素可继承：letter-spacing、word-spacing、white-space、line-height、color、font、font-family、font-size、font-style、font-variant、font-weight、text-decoration、text-transform、direction。 
+
+终端块状元素可继承：text-indent和text-align。 
+
+列表元素可继承：list-style、list-style-type、list-style-position、list-style-image。
+
+（大部分是跟文字相关的）
+
+## a标签伪类设置
+
+a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，也会直接导致链接显示的效果不同。为了保证每个效果都能正确的触发，定义时的顺序应该为：link、visited、hover、active.
+
+> 对于有冲突的CSS，浏览器是按照：**位置，优先级，顺序 (后>前)** 来处理的
+>
+> 因此，考虑到`hover鼠标悬停`状态时也会有`link`或`visited`状态，所以`hover`得写在这两个后面，使得在鼠标悬停状态优先选择hover的样式。
+>
+> 同理，又考虑到`active点下去`时，同时也有`hover`状态，故`active`得写在`hover`后 
+>
+> 因此就是 **lvha** 或 **vlha** 的顺序
+
+## table属性
+
+### cellpadding和cellspacing
+
+![img](assets/6150436_1469437565689_9AB217826D523CFA52B15130EFC68A40.png)![img](assets/6150436_1469437584131_4CF2CABF79BAAD901F68C39E7397B719.png)
+
+> cellpadding 属性规定**单元边沿**与**其内容之间**的空白。 
+> **注释：**请勿将该属性与 [cellspacing   属性](http://www.w3school.com.cn/tags/att_table_cellspacing.asp)相混淆，cellspacing 属性规定的是单元之间的空间。 
+
+>  从实用角度出发，最好不要规定 cellpadding，而是使用 CSS 来添加[内边距](https://hd.nowcoder.com/link.html?target=http://www.w3school.com.cn/css/css_padding.asp)。
+
+> cellpadding--内容和单元格的距离， cellspacing--单元格之间的距离。最好设置为零！

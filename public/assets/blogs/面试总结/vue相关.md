@@ -59,3 +59,45 @@ Call Stack清空
 ![img](assets/16ab1b0523456e8atplv-t2oaga2asx-zoom-in-crop-mark4536000.webp)
 
 并不用等待GUI更新，而是DOM元素内容更新后，就可以拿到更改的数据。
+
+---
+
+## vue3对比vue2生命周期
+
+1、去掉了`beforeCreate`、`created`，直接使用setup
+
+2、`beforeDestroy`、`destroyed` 被替换为了`onBeforeUnmount`、`onUnmounted`
+
+另：新增了开发模式下： `onRenderTracked`（组件渲染过程中追踪到响应式依赖时调用）、 `onRenderTriggered`（响应式依赖的变更触发了组件渲染时调用）
+
+---
+
+## 父子组件生成和更新顺序
+
+### 生成
+
+父组件beforeCreate --> 父组件created --> 父组件beforeMount  --> 子组件beforeCreate --> 子组件created --> 子组件beforeMount  -->  子组件 mounted  --> 父组件mounted
+
+父组件挂载前，进行子组件的创建；组件挂载后，进行父组件挂载。
+
+创建（created）从外到内；
+
+挂载（mounted）从内到外；
+
+触发更新（before update）从外到内；
+
+完成更新（update）从内到外；
+
+before销毁（before destory）从外到内；
+
+完成销毁（destory）从内到外；
+
+更新与销毁的顺序一致。
+
+**原因：**
+
+---
+
+## vue和react更新粒度
+
+- [为什么说 Vue 的响应式更新精确到组件级别？（原理深度解析） - 掘金 (juejin.cn)](https://juejin.cn/post/6844904113432444942)
