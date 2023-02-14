@@ -2,13 +2,15 @@
 
 所有元素可继承：visibility和cursor。
 
- 内联元素可继承：letter-spacing、word-spacing、white-space、line-height、color、font、font-family、font-size、font-style、font-variant、font-weight、text-decoration、text-transform、direction。 
+内联元素可继承：letter-spacing、word-spacing、white-space、line-height、color、font、font-family、font-size、font-style、font-variant、font-weight、text-decoration、text-transform、direction。 
 
-终端块状元素可继承：text-indent和text-align。 
+块状元素可继承：text-indent和text-align。 
 
 列表元素可继承：list-style、list-style-type、list-style-position、list-style-image。
 
 （大部分是跟文字相关的）
+
+![image-20230214111217763](assets/image-20230214111217763.png)
 
 ## a标签伪类设置
 
