@@ -186,7 +186,7 @@ function nextTick(callback?: () => void): Promise<void>
 
 ## 在线演示
 
-https://codesandbox.io/s/strange-chaum-vsfqh3?file=/src/components/HelloWorld.vue
+https://codesandbox.io/s/nexttickanalysis-vsfqh3?file=/src/App.vue
 
 ## 实例
 
