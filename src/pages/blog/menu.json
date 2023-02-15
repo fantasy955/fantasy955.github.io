@@ -19,6 +19,12 @@
             "path": "./assets/blogs/CSS"
         },
         {
+            "sname": "面试题汇总",
+            "aname": "面试题汇总",
+            "dirName": "面试总结",
+            "path": "./assets/blogs/面试总结"
+        },
+        {
             "sname": "NestJS",
             "aname": "NestJS",
             "dirName": "NestJS",
