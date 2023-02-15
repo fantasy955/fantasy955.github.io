@@ -184,6 +184,10 @@ nextTick也是微任务；
 function nextTick(callback?: () => void): Promise<void>
 ```
 
+## 在线演示
+
+https://codesandbox.io/s/strange-chaum-vsfqh3?file=/src/components/HelloWorld.vue
+
 ## 实例
 
 由于返回的是Promise，因此可以在使用`await`等待DOM更新完成(vue3)。

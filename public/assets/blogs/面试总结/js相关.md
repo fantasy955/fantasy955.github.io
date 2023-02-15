@@ -1,0 +1,18 @@
+## 0.1+0.2 !== 0.3
+
+[IEEE754是一个浮点数标准，它规定了浮点数的格式和运算方法](https://segmentfault.com/a/1190000024578628)[1](https://segmentfault.com/a/1190000024578628)[2](https://baike.baidu.com/item/IEEE 754/3869922)[3](https://en.wikipedia.org/wiki/IEEE_754)[。浮点数是用来表示实数的一种近似值，它由符号位，阶码和尾数三部分组成](https://segmentfault.com/a/1190000024578628)[1](https://segmentfault.com/a/1190000024578628)[4](https://blog.csdn.net/weixin_47713503/article/details/108699001)。浮点数的误差主要有两个原因：
+
+- [进制问题。由于计算机使用二进制来存储和运算浮点数，而有些十进制的小数在二进制中不能精确表示，比如0.1，0.2等，所以在转换的过程中会产生截断误差](https://blog.csdn.net/cluster1893/article/details/80757724)[5](https://blog.csdn.net/cluster1893/article/details/80757724)[6](https://www.zhihu.com/question/380574329)。这种误差是不可避免的，只能通过增加浮点数的位数来减小误差的影响。
+- [精度问题。由于浮点数的尾数部分有限，所以它不能表示所有的实数，只能表示一部分有限的实数。这就意味着浮点数的精度是有限的，不能无限接近真实值。浮点数的精度由尾数的位数决定，比如float型浮点数的尾数部分有23位，换算成十进制就是223=8388608，所以十进制精度只有6~7位；double型浮点数的尾数部分有52位，换算成十进制就是252=4503599627370496，所以十进制精度只有15~16位](https://www.zhihu.com/question/380574329)[6](https://www.zhihu.com/question/380574329)。这种误差在浮点数的运算中会累积，可能导致最终结果的偏差。
+
+C++中0.1+0.2的运算结果并不一定是正确的，这取决于你使用的是什么类型的变量来存储和计算这两个数¹⁴⁶。如果你使用的是整型变量（int），那么0.1和0.2会被截断为0，0+0的结果当然是0；如果你使用的是浮点型变量（float或double），那么0.1和0.2会被转换为二进制的近似值，然后进行加法运算，最后再转换为十进制的近似值，这个过程中可能会产生误差¹²³。例如，如果你使用float型变量，那么0.1+0.2的结果可能是0.30000001或者0.29999999，而不是0.3；如果你使用double型变量，那么0.1+0.2的结果可能是0.30000000000000004或者0.29999999999999998，而不是0.3。这是因为float和double的精度是有限的，不能无限接近真实值¹⁴⁶。如果你想得到精确的结果，你可以使用其他的数据类型，比如分数或者高精度数，或者使用一些数学库或者工具来处理浮点数的误差³。
+
+源: 与必应的对话， 2023/2/15
+
+(1) C++ 运算符 | 菜鸟教程. https://www.runoob.com/cplusplus/cpp-operators.html 访问时间 2023/2/15.
+(2) 【C++】如何使程序的除法运算结果变为小数？_小鹿Madoka的博客-CSDN博客_c++中除法怎么带小数点. https://blog.csdn.net/weixin_37706349/article/details/118017767 访问时间 2023/2/15.
+(3) C++ 变量类型 | 菜鸟教程. https://www.runoob.com/cplusplus/cpp-variable-types.html 访问时间 2023/2/15.
+(4) C++中0与1互转的四种方法_SHI和远方的博客-CSDN博客_c++怎么把1变成0 0 变成1. https://blog.csdn.net/Flysa_1/article/details/109339433 访问时间 2023/2/15.
+(5) C++位运算符（&、 | 、^）_Wonder-King的博客-CSDN博客_c++. https://blog.csdn.net/qq_42391248/article/details/84790152 访问时间 2023/2/15.
+(6) C++ 数组 | 菜鸟教程. https://www.runoob.com/cplusplus/cpp-arrays.html 访问时间 2023/2/15.
+
