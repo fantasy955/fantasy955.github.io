@@ -215,6 +215,13 @@ CONNECT www.example.com:443 HTTP/1.1
 
 有 4 种类型的首部字段：**通用**首部字段、**请求**首部字段、**响应**首部字段和**实体**首部字段。		
 
+> HTTP响应的首部可以包括以下几类字段：
+>
+> - [通用首部：这些字段可以用在请求和响应报文中，包括Date, Connection, Cache-Control, Transfer-Encoding等](https://blog.csdn.net/Zhang17_617/article/details/108811539)[1](https://blog.csdn.net/Zhang17_617/article/details/108811539)[2](https://www.cnblogs.com/stringarray/p/12989549.html)。
+> - [响应首部：这些字段只用在响应报文中，包括Status-Line, Server, Location, Accept-Ranges, ETag等](https://blog.csdn.net/Zhang17_617/article/details/108811539)[1](https://blog.csdn.net/Zhang17_617/article/details/108811539)[2](https://www.cnblogs.com/stringarray/p/12989549.html)[3](https://blog.csdn.net/vikeyyyy/article/details/80747238)。
+> - [实体首部：这些字段描述了报文的主体内容，包括Content-Type, Content-Length, Content-Encoding, Content-Language等](https://blog.csdn.net/Zhang17_617/article/details/108811539)[1](https://blog.csdn.net/Zhang17_617/article/details/108811539)[2](https://www.cnblogs.com/stringarray/p/12989549.html)[4](https://www.jianshu.com/p/b6284d971ae8)。
+> - [非标准首部：这些字段是一些非官方的扩展字段，包括Set-Cookie, Content-Disposition, X-Forwarded-For等](https://blog.csdn.net/Zhang17_617/article/details/108811539)[1](https://blog.csdn.net/Zhang17_617/article/details/108811539)[2](https://www.cnblogs.com/stringarray/p/12989549.html)[5](https://blog.csdn.net/lucky52529/article/details/97805576)。
+
 ## 1.通用首部字段
 
 | **首部字段名**    | **说明**                                   |

@@ -1,5 +1,7 @@
 ## 0.1+0.2 !== 0.3
 
+关键在于使用二进制表示浮点数。0.1和0.2在二进制中是无限循环的。
+
 [IEEE754是一个浮点数标准，它规定了浮点数的格式和运算方法](https://segmentfault.com/a/1190000024578628)[1](https://segmentfault.com/a/1190000024578628)[2](https://baike.baidu.com/item/IEEE 754/3869922)[3](https://en.wikipedia.org/wiki/IEEE_754)[。浮点数是用来表示实数的一种近似值，它由符号位，阶码和尾数三部分组成](https://segmentfault.com/a/1190000024578628)[1](https://segmentfault.com/a/1190000024578628)[4](https://blog.csdn.net/weixin_47713503/article/details/108699001)。浮点数的误差主要有两个原因：
 
 - [进制问题。由于计算机使用二进制来存储和运算浮点数，而有些十进制的小数在二进制中不能精确表示，比如0.1，0.2等，所以在转换的过程中会产生截断误差](https://blog.csdn.net/cluster1893/article/details/80757724)[5](https://blog.csdn.net/cluster1893/article/details/80757724)[6](https://www.zhihu.com/question/380574329)。这种误差是不可避免的，只能通过增加浮点数的位数来减小误差的影响。
