@@ -15,6 +15,10 @@ React的事件机制是基于Virtual DOM实现了一个SyntheticEvent（合成�
 
 原生事件上定义的捕获事件和响应事件都会先于React添加的事件执行，因为React添加的事件被代理到了document上，之后才能冒泡到document。因此React合成事件的`stopPropagation`无法阻止原生事件到达document的冒泡，注意这里说的是**无法阻止到达document之前**的冒泡，原生事件无法继续冒泡到window上。
 
+React在执行事件队列时，会使用合成事件。合成事件保留了对原生事件的引用。在队列执行完毕后，合成事件对象的属性会全部设为null。
+
+![image-20230217232046075](assets/image-20230217232046075.png)
+
 **考察点：**
 
 这道面试题考察的关键是React的事件机制，包括以下几个方面：
@@ -153,3 +157,14 @@ function useMemo(create, deps) {
 - [useLayoutEffect是同步执行的，它会在组件渲染后，但在浏览器进行任何绘制之前执行，会阻塞DOM的更新](https://blog.csdn.net/AHcola233/article/details/116716316)[1](https://blog.csdn.net/AHcola233/article/details/116716316)[2](https://blog.logrocket.com/useeffect-vs-uselayouteffect-examples/)[4](https://blog.csdn.net/yunfeihe233/article/details/106616674)[。这样可以避免一些闪烁的问题，比如在操作DOM时改变页面的样式](https://www.jianshu.com/p/412c874c5add)[3](https://www.jianshu.com/p/412c874c5add)[，但也可能导致一些性能损耗，比如阻塞了浏览器的绘制](https://blog.logrocket.com/useeffect-vs-uselayouteffect-examples/)[2](https://blog.logrocket.com/useeffect-vs-uselayouteffect-examples/)。
 
 [一般来说，useEffect可以满足大部分的场景，只有在需要同步操作DOM或者避免闪烁的情况下，才需要使用useLayoutEffect](https://blog.csdn.net/AHcola233/article/details/116716316)[1](https://blog.csdn.net/AHcola233/article/details/116716316)[2](https://blog.logrocket.com/useeffect-vs-uselayouteffect-examples/)。
+
+---
+
+## 如何理解redux的单向数据流
+
+[Redux的单向数据流是指应用中所有的数据都遵循相同的生命周期，这样可以让应用变得更加可预测且容易理解](https://www.redux.org.cn/docs/basics/DataFlow.html)[1](https://www.redux.org.cn/docs/basics/DataFlow.html)[。Redux数据的生命周期遵循下面4个步骤](https://blog.csdn.net/YYece/article/details/102802903)[2](https://blog.csdn.net/YYece/article/details/102802903)：
+
+1. 调用 store.dispatch (action) 发出一个 action，描述“发生了什么”。
+2. Redux store 调用传入的 reducer 函数，根据当前的 state 树和 action 返回一个新的 state。
+3. 根 reducer 把多个子 reducer 输出合并成一个单一的 state 树。
+4. Redux store 保存了根 reducer 返回的完整 state 树，触发视图更新。
