@@ -19,6 +19,12 @@
             "path": "./assets/blogs/CSS"
         },
         {
+            "sname": "NodeJS",
+            "aname": "NodeJS",
+            "dirName": "NodeJS",
+            "path": "./assets/blogs/NodeJS"
+        },
+        {
             "sname": "面试题汇总",
             "aname": "面试题汇总",
             "dirName": "面试总结",
