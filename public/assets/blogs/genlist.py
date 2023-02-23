@@ -7,9 +7,9 @@ import time
 import math
 import argparse
 
-os.chdir(r"E:\Users\lenovo\fantasy995.github.io\public")
+os.chdir(r"E:\Users\lenovo\fantasy955.github.io\public")
 parser = argparse.ArgumentParser(description='generate list.json for each category')
-parser.add_argument('--menu', default=r"E:\Users\lenovo\fantasy995.github.io\src\pages\blog\menu.json")
+parser.add_argument('--menu', default=r"E:\Users\lenovo\fantasy955.github.io\src\pages\blog\menu.json")
 
 args = parser.parse_args()
 

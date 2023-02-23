@@ -168,3 +168,23 @@ function useMemo(create, deps) {
 2. Redux store 调用传入的 reducer 函数，根据当前的 state 树和 action 返回一个新的 state。
 3. 根 reducer 把多个子 reducer 输出合并成一个单一的 state 树。
 4. Redux store 保存了根 reducer 返回的完整 state 树，触发视图更新。
+
+---
+
+## 为什么使用JSX
+
+JSX的全程是JavaScript XML，是对js基本语法的扩展，支持在js中使用类似xml的语法，主要用于创建react元素。
+
+在不使用jsx的情况下，我们需要使用`React.createElment`函数创建`ReactElement`，但是如果组件结构比较复杂，创建过程将非常繁琐，例如我们一个简单的`div`包裹无序列表的组件，需要重复使用createElement创建`li`元素。基于jsx不需要引入额外的语法，引入模板语法会分离开发者的关注度，引入更多新的概念，而jsx基本上还是仅使用了JavaScript语法。
+
+```js
+"use strict";
+
+function HelloWord() {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, "1"), /*#__PURE__*/React.createElement("li", null, "1"), /*#__PURE__*/React.createElement("li", null, "1"), /*#__PURE__*/React.createElement("li", null, "1"), /*#__PURE__*/React.createElement("li", null, "1")));
+}
+```
+
+使用 [JSX](https://zh-hans.reactjs.org/docs/introducing-jsx.html) 编写的代码将会被转换成使用 `React.createElement()` 的形式。如果使用了 JSX 方式，那么一般来说就不需要直接调用 `React.createElement()`。
+
+---
