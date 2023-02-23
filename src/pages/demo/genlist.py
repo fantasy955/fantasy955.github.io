@@ -8,7 +8,7 @@ import time
 import math
 import argparse
 
-os.chdir(r"E:\Users\lenovo\fantasy995.github.io\src\components\demo")
+os.chdir(r"E:\Users\lenovo\fantasy955.github.io\src\components\demo")
 parser = argparse.ArgumentParser(
     description='generate list.json for each category')
 if __name__ == '__main__':
