@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@antv/g6": "^4.8.0",
+    "@vue/server-renderer": "^3.2.47",
     "animate.css": "^4.1.1",
     "axios": "^0.27.2",
     "babel-runtime": "^6.26.0",
