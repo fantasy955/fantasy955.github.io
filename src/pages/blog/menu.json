@@ -7,6 +7,12 @@
             "path": "./assets/blogs/BrowserSide"
         },
         {
+            "sname": "Vue",
+            "aname": "Vue",
+            "dirName": "Vue",
+            "path": "./assets/blogs/Vue"
+        },
+        {
             "sname": "React",
             "aname": "React",
             "dirName": "React",
