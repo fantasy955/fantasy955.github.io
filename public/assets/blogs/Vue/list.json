@@ -1,6 +1,19 @@
 {
  "files": [
   {
+   "name": "vue3源码分析.md",
+   "title": "vue3源码分析",
+   "relapath": "./assets/blogs/Vue/vue3源码分析.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 2,
+    "day": 26,
+    "hour": 13,
+    "min": 37,
+    "sec": 32
+   }
+  },
+  {
    "name": "diff算法源码分析.md",
    "title": "diff算法源码分析",
    "relapath": "./assets/blogs/Vue/diff算法源码分析.md",
@@ -18,6 +31,19 @@
   {
    "page": 1,
    "files": [
+    {
+     "name": "vue3源码分析.md",
+     "title": "vue3源码分析",
+     "relapath": "./assets/blogs/Vue/vue3源码分析.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 2,
+      "day": 26,
+      "hour": 13,
+      "min": 37,
+      "sec": 32
+     }
+    },
     {
      "name": "diff算法源码分析.md",
      "title": "diff算法源码分析",

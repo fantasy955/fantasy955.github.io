@@ -42,3 +42,31 @@ a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，�
 >  从实用角度出发，最好不要规定 cellpadding，而是使用 CSS 来添加[内边距](https://hd.nowcoder.com/link.html?target=http://www.w3school.com.cn/css/css_padding.asp)。
 
 > cellpadding--内容和单元格的距离， cellspacing--单元格之间的距离。最好设置为零！
+
+---
+
+## opacity和visibility的区别
+
+`visibility`和`opacity`都是用于控制元素的可见性，但它们有一些重要的区别。
+
+`visibility`属性用于控制元素是否可见，可以设置为`visible`（可见）或`hidden`（隐藏）。如果将元素的`visibility`属性设置为`hidden`，该元素将不可见，但它仍然占用页面布局空间，即它的尺寸和位置不会改变。此外，**被隐藏的元素仍然可以被JavaScript访问和操作**。
+
+示例代码：
+
+```html
+<div style="visibility: hidden">我被隐藏了</div>
+```
+
+在上面的代码中，将`<div>`元素的`visibility`属性设置为`hidden`，该元素将不可见，但**仍然占用**布局空间。
+
+`opacity`属性用于控制元素的不透明度，可以设置为0到1之间的数值。如果将元素的`opacity`属性设置为0，则该元素将完全透明，即不可见；如果将其设置为1，则该元素将完全不透明，即完全可见。不同于`visibility`属性，如果将元素的`opacity`属性设置为0，该元素将不仅不可见，同时不再占用布局空间，即它的尺寸和位置都将被视为0。
+
+示例代码：
+
+```html
+<div style="opacity: 0">我被隐藏了</div>
+```
+
+在上面的代码中，将`<div>`元素的`opacity`属性设置为0，该元素将不可见，并且**不再占用**布局空间。
+
+总之，`visibility`和`opacity`都可以控制元素的可见性，但它们的具体效果和行为略有不同，开发者需要根据具体情况选择适当的属性。
