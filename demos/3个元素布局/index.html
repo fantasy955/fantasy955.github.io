@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .A,
+        .C {
+            width: 200px;
+            height: 200px;
+            background-color: pink;
+        }
+
+        .A .B .C {
+            display: inline-block;
+        }
+
+        .B {
+            background-color: yellow;
+            height: 20px;
+        }
+
+        .main-1 {
+            display: flex;
+        }
+
+        .main-1 .B {
+            flex: 1;
+        }
+
+        .main-2 {
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* .main-2::after{
+  display: block;
+  clear: both;
+} */
+        .main-2 .A {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .main-2 .C {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: black;
+        }
+
+        .main-2 .B {
+            position: absolute;
+            left: 200px;
+            right: 200px;
+        }
+
+        .main-3 {
+            margin-top: 16px;
+            overflow: hidden;
+            height: auto;
+        }
+
+        .main-3 .A {
+            float: left;
+        }
+
+        .main-3 .C {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-1">
+        <!--  flex  -->
+        <div class="A"></div>
+        <div class="B">flex: 1</div>
+        <div class="C"></div>
+    </div>
+
+    <div class="main-2">
+        <!--  绝对定位  -->
+        <div class="A"></div>
+        <div class="B">三个绝对定位元素</div>
+        <div class="C"></div>
+    </div>
+</body>
+
+</html>

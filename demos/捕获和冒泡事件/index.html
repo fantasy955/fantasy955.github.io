@@ -33,6 +33,7 @@
         function case1() {
             // case 1
             // 先输出B 再输出A 冒泡，从底部往上
+            // 结果：先B后A
             console.log('case1');
             A.addEventListener('click', () => {
                 console.log(A)
@@ -41,11 +42,13 @@
                 console.log(B)
             }, false);
         }
+        // case1();
 
         function case2() {
             // case 2
             // 先输出A 再输出B 捕获，从上往下
-            console.log('case1');
+            // 结果：先A后B
+            console.log('case2');
             A.addEventListener('click', () => {
                 console.log(A)
             }, true)
@@ -53,9 +56,65 @@
                 console.log(B)
             }, true);
         }
-        case2();
+        // case2();
 
+        function case3() {
+            // case 3
+            // 在B上触发，B是冒泡，A是捕获
+            // 结果：先A后B
+            console.log('case3');
+            A.addEventListener('click', () => {
+                console.log(A)
+            }, true)
+            B.addEventListener('click', () => {
+                console.log(B)
+            }, false);
+        }
+        // case3();
 
+        function case4() {
+            // case 4
+            // 在B上触发，B是捕获事件，A是冒泡事件
+            // A 停止事件传播
+            // 结果：只输出A
+            console.log('case4');
+            A.addEventListener('click', (e) => {
+                console.log(A)
+                e.stopPropagation();
+            }, true)
+            B.addEventListener('click', () => {
+                console.log(B)
+            }, false);
+        }
+        // case4()
+
+        function case5() {
+            // case 5
+            B.addEventListener('click', () => {
+                console.log('冒泡')
+            }, false);  // 冒泡
+            B.addEventListener('click', () => {
+                console.log('捕获')
+            }, true);  // 冒泡
+        }
+        // case5();
+        /**
+         * 结论：
+         * 事件捕获 先于 事件冒泡
+         **/
+
+         function case6(){
+            console.log('case6')
+            document.body.addEventListener("click", (e)=>{
+                console.log(e.target);
+            });
+            window.addEventListener('click', ()=>{
+                console.log('到达window')
+            })
+            // 所有事件都可以冒泡到body，target为触发事件的元素。
+         }
+         case6();
+         
     </script>
 </body>
 
