@@ -34,6 +34,10 @@ flex属性依次是`flex-grow`，`flex-shrink`，`flex-basis`三个属性的缩�
 
 公式：溢出宽度 * 收缩系数 * 宽度 / （收缩系数 * 宽度 所有可收缩元素的和）
 
+> flex-grow的权重就是属性值，权重和是所有元素属性值的和
+>
+> flex-shrink的权重是属性值\*宽度，权重和是所有元素属性值\*宽度的和
+
 ## flex-basis
 
 在Flex布局中， flex-basis优先级是**比width高的** （可以理解为覆盖）。 所以， flex-basis 和 width 同时设置了具体的数值，则 width 属性值直接被打入冷宫，在样式表现上完全被忽略。

@@ -70,3 +70,18 @@ a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，�
 在上面的代码中，将`<div>`元素的`opacity`属性设置为0，该元素将不可见，并且**不再占用**布局空间。
 
 总之，`visibility`和`opacity`都可以控制元素的可见性，但它们的具体效果和行为略有不同，开发者需要根据具体情况选择适当的属性。
+
+---
+
+## flex布局
+
+- align-content属性
+
+  将content视为flex布局中每一行的内容，`justify-content`指导每一行元素在行中沿主轴方向如何排列，items视为行中的每一个元素，`align-items`指导元素在该行如何排列，`align-content`的目标是content，它指导`content`在交叉轴如何排列。
+
+  justify: 对齐
+
+  主轴上的东西叫content。
+
+  ![image-20230227211123876](assets/image-20230227211123876.png)
+
