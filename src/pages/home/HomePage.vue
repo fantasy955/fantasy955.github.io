@@ -32,6 +32,7 @@ import IntroductionPanel from '@/components/home/IntroductionPanel.vue';
     min-height: 300px;
     padding: 12px;
     text-align: center;
+    overflow: hidden;
 }
 
 .particle {

@@ -2,7 +2,7 @@
 
 ### This is Fantasy955
 
-![img](https://github.githubassets.com/favicons/favicon.png)**[View Github](https://github.com/fantasy955)**
+**[![img](https://github.githubassets.com/favicons/favicon.png)View Github](https://github.com/fantasy955)**
 
 Fantasy来自于周杰伦专辑《范特西》, 955来自于本人名字的26键拼音输入
 
@@ -11,15 +11,3 @@ Fantasy来自于周杰伦专辑《范特西》, 955来自于本人名字的26键
 能够熟练使用Vue, React框架, 关注Svelte, Qwick等新兴框架
 
 Keep Studying, Keep Writing
-
-
-
-我的其他内容：
-
-[CSDN](https://blog.csdn.net/qq_41077776?type=blog)
-
-[掘金](https://juejin.cn/user/2283029049117837)
-
-联系我：
-
-[weijianglin@hnu.edu.cn](mailto:weijianglin@hnu.edu.cn)

@@ -1,28 +1,39 @@
 <template>
     <div class="main">
         <introduction />
-        <!-- <vue-markdown :source="introduction"></vue-markdown> -->
-        <!-- <h3>你好! 欢迎来到我的页面</h3>
-        <h3 class="text-effect" data-text-content="This is Fantasy955">This is Fantasy955</h3>
-        <p>Fantasy来自于周杰伦专辑<span><a src="">《范特西》</a></span>, 955来自于本人名字的26键拼音输入</p>
-        <p>目前在学习前端, 掌握了HTML5, CSS3, ES6, TypeScript相关知识</p>
-        <p>能够熟练使用Vue, React框架, 关注Svelte, Qwick等新兴框架</p>
-        <p>Keep Studying kepp Writing</p> -->
+        <div></div>
+        <introduction1 />
     </div>
 </template>
 
 <script setup>
 import introduction from './introduction.md';
+import introduction1 from './introduction1.md'
 </script>
 
 <style scoped>
 .main {
+    display: grid;
+    grid-template: 
+    "a" auto
+    "x" 0
+    "b" auto;
     border-radius: 12px;
     padding: 12px;
 }
 
 .main * {
     background: none;
+}
+
+@media(min-width: 768px){
+    .main {
+        display: grid;
+        grid-template: 
+        /* a b 后指定的是行高 */
+        "a x b" auto  / max-content 3rem max-content;
+        /* / 后指定列宽，因为列只需要定义一次，行高每行可以不一样 */
+    }
 }
 
 .main p,
