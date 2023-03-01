@@ -156,15 +156,22 @@ export default ___CSS_LOADER_EXPORT___;
 
 `style-loader`的思路就是，得到`css-loader`的模块内容，然后再将模块内容插入到`style`标签中，再将`style`标签插入文档中。
 
-为了得到`css-loader`处理后的内容（需要能被执行），`style-loader`构造了一个新的`require`语句：
+为了得到`css-loader`处理后的内容（需要能被执行），`style-loader`构造了一个新的`require`语句，即：
 
 ```js
 require(`${loaderUtils.stringifyRequest(this, '!!' + remainingRequest)}`)
+// !!./node_modules/.pnpm/registry.npmmirror.com+css-loader@6.7.3_webpack@5.75.0/node_modules/css-loader/dist/cjs.js!./index.css
 ```
+
+`webpack`发现返回的内容中有模块导入，然后使用路径中的`loader`去加载这个模块，并将其保存在内存中（多个文件引用同一个模块，目标模块只会被处理一次）。
 
 ## 总结
 
+`loader`和`picher`本质上都是改变目标文件的内容，让它变成符合js语法的代码，如果返回的内容有不存在的导入，则会再次执行导入。
 
+`webpack`每个`loader`处理的结果都会生成单独的模块，但是在`loader`函数中，它无法之前使用了哪些loader，也无法知道已生成模块的名字，因此`style-loader`无法在`loader`函数中导入已经生成的模块。
+
+而`pitch`阶段可以获取到之后的`loader`顺序，实现起来也更加方便。
 
 ---
 
