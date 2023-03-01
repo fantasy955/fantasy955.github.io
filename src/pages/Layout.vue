@@ -81,6 +81,7 @@ onUnmounted(() => {
 
 <style scoped>
 .nav-category>a {
+  display: inline-block;
   text-decoration-line: none;
   color: aliceblue;
   padding-left: 12px;
