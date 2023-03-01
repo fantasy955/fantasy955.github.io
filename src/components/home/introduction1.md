@@ -6,4 +6,4 @@
 
 ## 联系我
 
-[![电子邮件 图标](http://mail.hnu.edu.cn/favicon.ico) weijianglin@hnu.edu.cn](mailto:weijianglin@hnu.edu.cn)
+[![电子邮件 图标](https://exmail.qq.com/exmail_logo.ico) weijianglin@hnu.edu.cn](mailto:weijianglin@hnu.edu.cn)
