@@ -26,6 +26,148 @@ Webpack 支持使用 [loader](https://www.webpackjs.com/concepts/loaders) 对文
 
 -----
 
+# Loader和pitch方法
+
+## loader
+
+loader是一个函数，loader模块要默认导出该函数，同时这个函数上可以有pitch方法，webpack会执行这个pitch方法，pitch方法会影响webpack后续行为。
+
+loader的作用是将源文件转化为可以执行的js模块，**webpack会检查loader返回的这个模块是否是正确的，符合js模块化规范**，如果有错误会终止打包。例如我定义了一个`test.js`模块，其默认导出一个函数：
+
+`test.js`
+
+```js
+module.exports = function (a, b) {
+    return a+b;
+}
+```
+
+然后定义一个`test-loader`，让其只会匹配`test.js`：
+
+![image-20230301095146710](assets/image-20230301095146710.png)
+
+```js
+module.exports = function (content) {
+    return `var a = {name: 'wjl'}; module.exports = a;`
+}
+```
+
+`test-loader`返回了一段新的代码，默认导出一个对象，在`index.js`中我们导入`test.js`模块，尝试输出对象上的`name`属性，然后通过`webpack`打包：
+
+```js
+const a = require('./test.js')
+console.log(a.name)
+```
+
+打包结果为`main.js`，运行`main.js`可以正确得到输出。这说明`webpack`执行了`var a = {name: 'wjl'}; module.exports = a;`，`test.js`模块最终导出的内容为`a`。
+
+当把`test-loader`的导出语句删除，改为以下内容时，能够正确通过`webpack`检查，但是`index.js`中不能访问导出对象了：
+
+`test-loader.js`
+
+```js
+module.exports = function (content) {
+    // return `var a = {name: 'wjl'}; console.log(123); module.exports = a;`
+    return `var a = {name: 'wjl'}; console.log(123);`
+}
+```
+
+`index.js`
+
+```js
+const a = require('./test.js')
+console.log(a, a.name)
+```
+
+运行导出文件`main.js`得到
+
+![image-20230301100723809](assets/image-20230301100723809.png)
+
+这是由于这个模块没有导出内容（对象上没有属性），`test.js`的模块代码会在运行时执行（输出123，cjs的模块需要执行完模块内容才能得到导出对象）。
+
+> （如果`loader`导出的内容中含有`import`或`require`等语句，`webpack`会再次进行相关内容的导入，这方面的知识目前暂时不分析）
+
+**loader总结**：`loader`的作用是将准备导入的**模块里面的内容**转换成可以正常执行的`js`模块代码，转换后的内容会在运行时执行，以得到模块的导出内容或执行其他副作用代码。
+
+## pitch
+
+为什么需要使用pitch？我们以`css-loader`和`style-loader`作为分析。
+
+**在只使用`css-loader`的情况下**，假设我们有两个文件：`index.css`和`index.js`，`index.css`定义了一些样式，`index.js`导入了`index.css`：
+
+`index.css`：
+
+```css
+body  {
+    font-size: 16px;
+    color: red;
+}
+```
+
+`index.js`：
+
+```js
+const style = require('./index.css')
+console.log(style);
+```
+
+运行结果为：
+
+![image-20230301103912469](assets/image-20230301103912469.png)
+
+`css-loader`将目标样式文件转换成一个js对象并导出了该对象，默认属性上有`index.css`文件的信息。
+
+需要注意的是，这个对象是执行完`css-loader`转换的模块内容后得到的！我们先定义一个普通的`my-style-loader`根据调用顺序拿到`css-loader`的返回值: 
+
+`my-style-loader`:
+
+```js
+module.exports = function (source) {
+  console.log('*******************');
+  console.log(source);
+  console.log('*******************');
+  return source;
+}
+```
+
+`css-loader`将`index.css`模块转换为以下内容：
+
+```js
+// Imports
+import ___CSS_LOADER_API_NO_SOURCEMAP_IMPORT___ from "./node_modules/.pnpm/registry.npmmirror.com+css-loader@6.7.3_webpack@5.75.0/node_modules/css-loader/dist/runtime/noSourceMaps.js";
+import ___CSS_LOADER_API_IMPORT___ from "./node_modules/.pnpm/registry.npmmirror.com+css-loader@6.7.3_webpack@5.75.0/node_modules/css-loader/dist/runtime/api.js";
+var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(___CSS_LOADER_API_NO_SOURCEMAP_IMPORT___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "body  {\r\n    font-size: 16px;\r\n    color: red;\r\n}", ""]);
+// Exports
+export default ___CSS_LOADER_EXPORT___;
+
+```
+
+**也就是说，`index.css`里面的内容，还是要执行完`index.css`模块才能得到**
+
+使用`style-loader`的目的是往`document`中插入`style`标签，如果`style-loader`是一个普通`loader`的话，它需要执行`css-loader`返回的模块才能得到`css`样式，当然可以解析`css-loader`返回的模块内容，然后得到样式，然后返回创建`style`标签的相关语句，但是这样工作量太大了。而返回的模块中有`import`相关的语句时，`webpack`还会加载那些import的内容，但是例如`./node_modules/.pnpm/registry.npmmirror.com+css-loader@6.7.3_webpack@5.75.0/node_modules/css-loader/dist/runtime/api.js`是会被`webpack`最终打包生成的模块，在nodejs环境中是无法得到的。
+
+打包产物：
+
+![image-20230301110410280](assets/image-20230301110410280.png)
+
+> 一个模块加载（import '!!xxxx-loader!./index.css'）被`webpack`打包之后会添加到`module map`里面，键就是请求路径。
+
+`style-loader`的思路就是，得到`css-loader`的模块内容，然后再将模块内容插入到`style`标签中，再将`style`标签插入文档中。
+
+为了得到`css-loader`处理后的内容（需要能被执行），`style-loader`构造了一个新的`require`语句：
+
+```js
+require(`${loaderUtils.stringifyRequest(this, '!!' + remainingRequest)}`)
+```
+
+## 总结
+
+
+
+---
+
 # 自定义Loader
 
 [编写 loader | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/contribute/writing-a-loader/)
@@ -170,8 +312,13 @@ module: {
 - [Loaders | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/loaders/)
 
 - [揭秘webpack loader - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/104205895#:~:text=`pitch` 是 loader 上的一个方法，它的作用是阻断 loader 链。 %2F%2F loaders%2Fsimple-loader-with-pitch.js,%3D function() { console.log('pitching graph')%3B %2F%2F todo })
+
 - loader简介：[loader | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/concepts/loaders/#loader-features)
+
 - 编写loader：[编写 loader | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/contribute/writing-a-loader/)
+
 - loader 接口、API：[Loader Interface | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/api/loaders/)
 
 - [Webpack中Loader的pitch方法 - 简书 (jianshu.com)](https://www.jianshu.com/p/9dfb8e18e76d)
+
+  
