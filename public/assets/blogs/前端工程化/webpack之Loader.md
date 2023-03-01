@@ -109,7 +109,9 @@ module: {
   },
 ```
 
-`css-loader`可以将`css`代码转换为`js`模块，`js`模块内容不会交给它的下一个`loader`: `style-loader`。
+`css-loader`可以将`css`代码转换为`js`模块，`js`模块内容**不会交给它**的下一个`loader`: `style-loader`。
+
+> loader拿到的是上一个loader处理后的文件，而不是上一个loader的返回值
 
 我们可以在`style-loader`的`pitch`方法内使用require方式得到`css-loader`解析的内容。然后返回一段`js`语句将创建`style`标签插入到`head`处。
 
@@ -172,3 +174,4 @@ module: {
 - 编写loader：[编写 loader | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/contribute/writing-a-loader/)
 - loader 接口、API：[Loader Interface | webpack 中文文档 | webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/api/loaders/)
 
+- [Webpack中Loader的pitch方法 - 简书 (jianshu.com)](https://www.jianshu.com/p/9dfb8e18e76d)
