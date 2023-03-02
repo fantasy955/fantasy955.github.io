@@ -5,7 +5,7 @@ import fileHandler from './fileHandler';
 import SparkMD5 from 'spark-md5';
 
 
-let createTimer = (ms=200) => new Promise((resolve) => {
+let createTimer = (ms = 200) => new Promise((resolve) => {
     setTimeout(() => {
         resolve();
     }, ms);
@@ -19,46 +19,70 @@ let createTimer = (ms=200) => new Promise((resolve) => {
  * @param {Promise} doChunkUpload
  * @returns 
  */
-function createFlow(file, chunkSize, maxReqest = 6, event = new emitter(), doChunkUpload) {
+function createFlow(file, chunkSize, maxReqest = 6, event = new emitter(), uploadPath) {
     const { getChunk, chunkNums } = fileHandler(file, chunkSize, false)
-    let sendIndex = 0;
     let cancel = false;
     let pause = false;
     // eslint-disable-next-line no-extra-boolean-cast
     maxReqest = !!maxReqest ? maxReqest : 1;
     return {
         async start(md5) {
-            let sendIndex = 0;
+            console.log(`总块数 ${chunkNums}`)
+            let remaining = new Array(chunkNums).fill(0).map((_, i) => i);
             let taskPoll = [];
-            while (sendIndex < chunkNums) {
+            while (remaining.length || taskPoll.length) {
                 if (cancel) {
                     return;
                 }
                 while (pause) {
                     await createTimer();
                 }
-                const chunk = getChunk(sendIndex)
-                const task = doChunkUpload({
-                    chunk: chunk,
-                    index: sendIndex,
-                    all: chunkNums,
-                    md5,
-                });
+                while (!remaining.length && taskPoll.length) {
+                    // 等待所有剩余任务做完
+                    await createTimer();
+                }
+                if (!remaining.length && !taskPoll.length) {
+                    break;
+                }
+                let sendIndex = remaining.shift();
+                // console.log(`发送 ${sendIndex}`, remaining);
+                const chunk = getChunk(sendIndex);
+                const formData = new FormData()
+                formData.append('chunkFile', chunk)
+                formData.append('hash', md5)
+                formData.append('all', `${chunkNums}`)
+                const task =
+                    // axios.post(uploadPath, formData, {
+                    //     timeout: 2000,
+                    // })
+                    new Promise((resolve, reject) => {
+                        if (Math.random() < 0.5) {
+                            reject(sendIndex);
+                        } else {
+                            setTimeout(() => {
+                                resolve(sendIndex);
+                            }, 200);
+                        }
+                    })
+                        .then(() => {
+                            event.emit('chunk-uploaded', { chunk, file, index: sendIndex, md5 });
+                            event.emit('progress', { file, done: sendIndex, all: chunkNums, type: 'upload' });
+                            taskPoll.splice(taskPoll.findIndex(i => i === task), 1);
+                        }).catch((e) => {
+                            // 由于Promise内的代码是同步执行的，因此为了确保能够捕获到错误，需要在定义promise时进行链式调用。
+                            // console.log(`${sendIndex} 出错`);
+                            remaining.push(sendIndex);
+                            console.log(`重传${sendIndex}`);
+                            event.emit('error', { chunk, file, index: sendIndex });
+                            taskPoll.splice(taskPoll.findIndex(i => i === task), 1);
+                        });
                 taskPoll.push(task);
-                task.then(() => {
-                    event.emit('chunk-uploaded', { chunk, file, index: sendIndex, md5 });
-                    event.emit('progress', { file, done: sendIndex, all: chunkNums, type: 'upload' })
-                    taskPoll.splice(taskPoll.findIndex(i => i === task));
-                });
-                task.catch(() => {
-                    event.emit('cancel', { chunk, file, index: sendIndex });
-                })
                 if (maxReqest === taskPoll.length) {
                     await Promise.race(taskPoll);
                 }
-                sendIndex++;
+                // sendIndex++;
             }
-            await Promise.all(taskPoll);
+            // await Promise.all(taskPoll);
             event.emit('finish', { file, md5, all: chunkNums, chunkSize })
         },
         async cancel() {
@@ -171,8 +195,8 @@ class FileSliceUploader {
         return this;
     }
 
-    setUpload(fn) {
-        this.doChunkUpload = fn;
+    setUploadPath(path) {
+        this.uploadPath = path;
         return this;
     }
 
@@ -190,11 +214,11 @@ class FileSliceUploader {
             file,
             chunkSize,
             emitter,
-            doChunkUpload,
+            uploadPath,
             maxReqest,
         } = this;
         const { startCompute, cancelCompute, pauseCompute, continueCompute } = md5(file, chunkSize, emitter)
-        const { start, cancel, pause, continueFlow } = createFlow(file, chunkSize, maxReqest, emitter, doChunkUpload)
+        const { start, cancel, pause, continueFlow } = createFlow(file, chunkSize, maxReqest, emitter, uploadPath)
         this.cancelUpload = () => {
             cancelCompute()
             cancel()
@@ -219,7 +243,7 @@ class FileSliceUploader {
     }
 
     cancel() {
-        if(!this.busy) return;
+        if (!this.busy) return;
         const {
             cancelUpload,
             emitter,

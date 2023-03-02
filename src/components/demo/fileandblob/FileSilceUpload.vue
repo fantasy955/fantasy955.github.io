@@ -94,18 +94,7 @@ const handleHttpRequest = (options) => {
     percent.value = 0;
     status.value = 'busy';
     const chunkUploadTask = new Promise((resolve, reject) => {
-        uploader.setFile(file).setUpload(async ({ chunk, md5, all }) => {
-            const formData = new FormData()
-            formData.append('chunkFile', chunk)
-            formData.append('hash', md5)
-            formData.append('all', `${all}`)
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve()
-                }, 200);
-            })
-            // return axios.post(`${server.value}`, formData)
-        }).on('progress', (e) => {
+        uploader.setFile(file).setUploadPath(chunkPath.value).on('progress', (e) => {
             // 得到分片回调
             if (e.type === 'md5') {
                 percent.value = Math.ceil(30 * e.done / e.all);
@@ -120,8 +109,8 @@ const handleHttpRequest = (options) => {
             formData.append('fileName', file.name)
             formData.append('all', `${all}`)
             resolve();
-        }).on('error', () => {
-            reject();
+        }).on('error', ({ chunk, file, index }) => {
+            
         });
         uploader.start();
     }).then(() => {
