@@ -108,7 +108,7 @@ onMounted(() => {
         const observer = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              console.log(entry.target);
+              // console.log(entry.target);
             }
           });
         });
