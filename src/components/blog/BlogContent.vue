@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { useScreenWidth, useScreenWidthStore } from "@/stores/screenWidth";
+import { useScreenWidth } from "@/stores/screenWidth";
 import axios from "axios";
 import editormd from "editor.md/src/editormd";
 import {
