@@ -9,11 +9,22 @@
             </span>
         </template>
     </el-dialog>
-    <el-row>
-        <span class="label-input">分片上传地址</span>
-        <el-input v-model="server" class="w-50 m-2 input" placeholder="set api port" />
-    </el-row>
-    <el-upload ref="upload" class="upload-demo" :action="server" :onchange="handleChange" :limit="1"
+    <el-descriptions title="服务器参数" :column="1" border>
+        <el-descriptions-item label="目标服务器" label-align="right" align="center" label-class-name="my-label"
+            class-name="my-content" width="min-content">
+            <el-input v-model="server" class="w-50 m-2 input" placeholder="set server" />
+        </el-descriptions-item>
+        <el-descriptions-item label="分片请求路径" label-align="right" align="center" label-class-name="my-label"
+            class-name="my-content" width="min-content">
+            <el-input v-model="chunkPath" class="w-50 m-2 input" placeholder="set api port" />
+        </el-descriptions-item>
+        <el-descriptions-item label="分片合并路径" label-align="right" align="center" label-class-name="my-label"
+            class-name="my-content" width="min-content">
+            <el-input v-model="mergePath" class="w-50 m-2 input" placeholder="set api port" />
+        </el-descriptions-item>
+    </el-descriptions>
+
+    <el-upload ref="upload" class="upload-demo" :action="void (0)" :onchange="handleChange" :limit="1"
         :on-exceed="handleExceed" :auto-upload="false" :http-request="handleHttpRequest" :disabled="status === 'busy'"
         :on-success="handleSuccess">
         <template #trigger>
@@ -28,26 +39,30 @@
             </div>
         </template>
     </el-upload>
+    <mydesc />
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted } from 'vue';
 import FileSliceUploader from '@/utils/file-slice-uploader';
 import { genFileId } from 'element-plus';
 import axios from 'axios';
 import { throttle } from '@/utils/common';
+import mydesc from './desc/_DescFileSliceUploader.md';
 
-const server = ref('http://43.139.126.249:5000/api/upload')
+const server = ref('http://43.139.126.249:5000')
+const chunkPath = ref('/api/upload/chunk')
+const mergePath = ref('/api/upload/merge')
 const uploader = new FileSliceUploader();
 const percent = ref(0);
 const upload = ref(null);
 const status = ref('idle');
 const paused = ref(false);
 const showProgress = ref(false);
-watch(status, ()=>{
-    if (status.value !== 'idle'){
+watch(status, () => {
+    if (status.value !== 'idle') {
         showProgress.value = true;
-    }else{
+    } else {
         showProgress.value = false;
     }
 })
