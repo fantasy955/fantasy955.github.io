@@ -10,7 +10,7 @@ class MyTestPlugin {
             console.log(`\n${this.i++}`);
             compilation.hooks.buildModule.tap('MyTestPlugin', (module) => {
                 // 一个compilation有多个module
-                console.log(`\n${this.a++}`);
+                // console.log(`\n${this.a++}`);
             })
         })
     }

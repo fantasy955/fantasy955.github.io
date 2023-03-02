@@ -31,6 +31,7 @@ module.exports = function (source) {
     md.use(mdContainer, 'warning')
 
     const html = md.render(source)
+    // console.log(html);
 
     const $ = cheerio.load(html, {
         decodeEntities: false,
