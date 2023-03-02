@@ -9,6 +9,11 @@
    "name": "Canvas处理图片",
    "description": "",
    "path": "ImageCanvas.vue"
+  },
+  {
+   "name": "文件分片上传",
+   "description": "",
+   "path": "FileSilceUpload.vue"
   }
  ]
 }
