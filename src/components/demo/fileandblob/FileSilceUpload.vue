@@ -43,12 +43,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, watch, onMounted, h } from 'vue';
 import FileSliceUploader from '@/utils/file-slice-uploader';
 import { genFileId } from 'element-plus';
 import axios from 'axios';
 import { throttle } from '@/utils/common';
 import mydesc from './desc/_DescFileSliceUploader.md';
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css';
 
 const server = ref('http://43.139.126.249:5000')
 const chunkPath = ref('/api/upload/chunk')
@@ -84,6 +86,16 @@ const handlePause = throttle(() => {
     }
 }, 200)
 
+const showMsg = throttle(({ showClose, message, type, grouping }) => {
+    ElMessage({
+        showClose,
+        message,
+        grouping,
+        type,
+        duration: 1000,
+    })
+}, 1)
+
 /**
  * 
  * @param {*} options 
@@ -110,7 +122,15 @@ const handleHttpRequest = (options) => {
             formData.append('all', `${all}`)
             resolve();
         }).on('error', ({ chunk, file, index }) => {
-            
+
+        }).on('resend', ({ chunk, file, index }) => {
+            showMsg({
+                showClose: true,
+                showMsg: true,
+                message: `重传 ${index}`,
+                type: 'warning',
+                grouping: true,
+            })
         });
         uploader.start();
     }).then(() => {

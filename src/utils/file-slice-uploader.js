@@ -72,8 +72,8 @@ function createFlow(file, chunkSize, maxReqest = 6, event = new emitter(), uploa
                             // 由于Promise内的代码是同步执行的，因此为了确保能够捕获到错误，需要在定义promise时进行链式调用。
                             // console.log(`${sendIndex} 出错`);
                             remaining.push(sendIndex);
-                            console.log(`重传${sendIndex}`);
-                            event.emit('error', { chunk, file, index: sendIndex });
+                            // console.log(`重传${sendIndex}`);
+                            event.emit('resend', { chunk, file, index: sendIndex });
                             taskPoll.splice(taskPoll.findIndex(i => i === task), 1);
                         });
                 taskPoll.push(task);
