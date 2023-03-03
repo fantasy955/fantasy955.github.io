@@ -54,6 +54,8 @@ function toTop() {
 <style scoped>
 .category-item {
   /* border-radius: 8px; */
+  display: inline-block;
+  width: max-content;
 }
 
 .category-item:hover {
@@ -66,6 +68,7 @@ function toTop() {
 }
 
 .navbar-nav {
+  flex-wrap: wrap;
   flex-direction: column;
 }
 
