@@ -22,8 +22,8 @@ export const throttle = function (fn, delay) {
         }
         // 工作时间，执行函数并且在间隔期内把状态位设为无效
         flag = false;
+        fn(...args);
         setTimeout(() => {
-            fn(...args);
             flag = true;
         }, delay)
     }
