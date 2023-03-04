@@ -35,6 +35,8 @@ function createFlow(file, chunkSize, maxReqest = 6, event = new emitter(), uploa
                     return;
                 }
                 while (pause) {
+                    // JavaScript引擎会将当前执行线程返回到事件循环中，
+                    // 然后继续执行其他的代码，直到Promise状态发生改变，再返回到async函数中执行后续代码。
                     await createTimer();
                 }
                 while (!remaining.length && taskPoll.length) {

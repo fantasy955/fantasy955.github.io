@@ -86,7 +86,7 @@ const handlePause = throttle(() => {
     }
 }, 200)
 
-const showMsg = throttle(({ showClose, message, type, grouping }) => {
+const showMsg = throttle(({ showClose = true, message = '', type = 'info', grouping = true }) => {
     ElMessage({
         showClose,
         message,
@@ -162,6 +162,10 @@ const submitUpload = () => {
 
 const handleSuccess = (response, uploadFile) => {
     // console.log(response);
+    showMsg(({
+        message: '上传成功',
+        type: 'success',
+    }));
 }
 
 const onModalClosed = () => {
