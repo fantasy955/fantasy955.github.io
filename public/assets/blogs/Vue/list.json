@@ -1,6 +1,19 @@
 {
  "files": [
   {
+   "name": "VUE3响应式依赖收集过程.md",
+   "title": "VUE3响应式依赖收集过程",
+   "relapath": "./assets/blogs/Vue/VUE3响应式依赖收集过程.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 3,
+    "day": 4,
+    "hour": 12,
+    "min": 33,
+    "sec": 6
+   }
+  },
+  {
    "name": "vue3源码分析.md",
    "title": "vue3源码分析",
    "relapath": "./assets/blogs/Vue/vue3源码分析.md",
@@ -31,6 +44,19 @@
   {
    "page": 1,
    "files": [
+    {
+     "name": "VUE3响应式依赖收集过程.md",
+     "title": "VUE3响应式依赖收集过程",
+     "relapath": "./assets/blogs/Vue/VUE3响应式依赖收集过程.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 3,
+      "day": 4,
+      "hour": 12,
+      "min": 33,
+      "sec": 6
+     }
+    },
     {
      "name": "vue3源码分析.md",
      "title": "vue3源码分析",
