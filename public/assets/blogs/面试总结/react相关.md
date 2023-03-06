@@ -43,7 +43,7 @@ React在执行事件队列时，会使用合成事件。合成事件保留了对
 
 ## React Hooks
 
-React Hooks是React 16.8新增的特性，它可以让你在不编写class的情况下使用state和其他的React特性[1](https://reactjs.org/docs/hooks-intro.html)[。React Hooks的目的是让你更方便地使用函数组件，而不需要转换为类组件](https://blog.csdn.net/qq_50384924/article/details/119302468)[2](https://blog.csdn.net/qq_50384924/article/details/119302468)[。React Hooks还提供了一种新的强大的方式来组合props, state, context, refs, 和生命周期](https://reactjs.org/docs/hooks-intro.html)[1](https://reactjs.org/docs/hooks-intro.html)。
+**React Hooks是React 16.8新增的特性，它可以让你在不编写class的情况下使用state和其他的React特性**[1](https://reactjs.org/docs/hooks-intro.html)[。React Hooks的目的是让你更方便地使用函数组件，而不需要转换为类组件](https://blog.csdn.net/qq_50384924/article/details/119302468)[2](https://blog.csdn.net/qq_50384924/article/details/119302468)[。React Hooks还提供了一种新的强大的方式来组合props, state, context, refs, 和生命周期](https://reactjs.org/docs/hooks-intro.html)[1](https://reactjs.org/docs/hooks-intro.html)。
 
 [React Hooks的基本用法是在函数组件中使用以use开头的React API，例如useState, useEffect, useContext等。这些API可以让你在函数组件中管理状态，执行副作用，访问上下文，创建引用等。React Hooks还可以自定义，以实现更复杂的逻辑和功能](https://juejin.cn/post/6844903957957967885)[3](https://juejin.cn/post/6844903957957967885)[4](https://zhuanlan.zhihu.com/p/85491343)。
 
@@ -188,3 +188,29 @@ function HelloWord() {
 使用 [JSX](https://zh-hans.reactjs.org/docs/introducing-jsx.html) 编写的代码将会被转换成使用 `React.createElement()` 的形式。如果使用了 JSX 方式，那么一般来说就不需要直接调用 `React.createElement()`。
 
 ---
+
+## react更新优化
+
+> react中父子组件都订阅了一个store中的值，且子组件又从父组件获取了一个依赖的变量，store中值改了会导致子组件先渲染，父组件后渲染，因为依赖子组件会再渲染一次的情况，这种情况其实react帮我们处理了
+
+正常情况：子组件渲染 ---> 父组件渲染 ---> 子组件渲染
+
+当父组件的状态发生变化时，React 会执行一次更新过程，计算出新的虚拟 DOM 树。在更新过程中，如果某个组件的 state 或 props 发生了变化，React 会根据新的数据重新渲染该组件。
+
+在 React 中，渲染是一个昂贵的操作，因此 React 会尽可能地延迟更新过程，以减少不必要的计算。为了达到这个目的，React 采用了异步渲染机制。
+
+在 React 中，当某个组件的 state 或 props 发生变化时，React 不会立即进行更新操作，而是将更新放入一个队列中，等到所有的更新都放入队列之后，再统一进行更新操作。这样做的好处是可以避免不必要的计算，提高性能。
+
+在上述情况中，子组件从父组件获取了一个依赖的变量，当这个变量发生变化时，子组件会重新渲染。但是，在父组件的更新操作还没有被执行之前，子组件已经进行了一次更新操作，导致父组件在更新时可能没有使用最新的数据进行计算。
+
+为了解决这个问题，React 引入了“异步更新”的概念。在异步更新模式下，React 会将多次更新操作合并为一次更新操作，从而减少渲染次数，提高性能。
+
+具体来说，在异步更新模式下，当组件进行更新操作时，React 会将更新放入一个队列中，等到所有的更新都放入队列之后，再统一进行更新操作。在更新操作被执行之前，React 会先进行“批量更新”的处理，将多次更新操作合并为一次更新操作。这样就能够保证所有的更新操作都使用了最新的数据进行计算，避免了上述问题的发生。
+
+总的来说，React 的异步渲染机制和“批量更新”机制可以提高渲染性能，避免不必要的计算和渲染，同时还可以保证更新操作的正确性。
+
+---
+
+## redux
+
+reudx的 初始状态是第一次调用合并后的reducer，并传入undefined参数得到的！（不会命中任何action，返回初始状态。我们在使用createStore时只需要传入combine后的reducer也是这个原因）；

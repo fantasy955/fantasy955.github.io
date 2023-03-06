@@ -90,7 +90,7 @@ a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，�
 | 方式                             | 条件                                                         |
 | -------------------------------- | ------------------------------------------------------------ |
 | absolute + 负margin              | 知道父元素宽高                                               |
-| absolute + inset 0 + margin auto | 无                                                           |
+| absolute + inset 0 + margin auto | 指定子元素宽高                                               |
 | absolute + calc                  | 知道自身宽高                                                 |
 | absolute + transform             | 无                                                           |
 | lineheight + text-align          | 子元素display  为inline-block<br />父元素高度确定            |

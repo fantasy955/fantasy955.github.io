@@ -78,3 +78,23 @@ JavaScript中的对象都存储在堆上，垃圾回收主要是回收堆上那�
 标记过程首先找到内存中所有被引用的对象，并做标记，之后遍历整个堆，将没有被标记的对象的内存进行回收，回收方式一般是将内存标记为可用。
 
 ---
+
+## setTimeout和requestAnimationFrame实现动画效果的区别
+
+`setTimeout`和`requestAnimationFrame`都可以用来实现动画效果，但它们之间有一些区别。
+
+1. 刷新率
+
+浏览器每秒钟会进行多次屏幕刷新，即重绘，来显示页面的变化和动画效果。这个刷新率通常被称为“屏幕刷新率”、“帧率”或“FPS”（Frames Per Second）。
+
+`setTimeout`的刷新率是固定的，通常为每秒60次。这意味着，无论机器的性能如何，动画都会以相同的速度运行。而`requestAnimationFrame`的**刷新率是浏览器的刷新率，通常为每秒60次，但在某些高刷新率屏幕上可能会更高。**这使得`requestAnimationFrame`更加流畅和自然。
+
+1. 可靠性
+
+`requestAnimationFrame`是浏览器提供的原生API，可以保证每一帧的渲染时机都是最优的，同时可以避免多个动画同时运行时出现的问题。而`setTimeout`是JavaScript自带的函数，其执行时间不一定是最优的，可能会出现闪烁或卡顿等问题。
+
+1. 性能
+
+`requestAnimationFrame`的性能通常比`setTimeout`更好，因为`requestAnimationFrame`会在下一次浏览器渲染之前调用回调函数，这样可以最大程度地减少了浏览器的重绘次数，从而减少了CPU和GPU的占用。
+
+因此，一般来说，建议使用`requestAnimationFrame`来实现动画效果，因为它提供了更高的性能和更流畅的动画效果。当然，如果要实现的动画效果非常简单，或者需要在某些情况下控制动画的速度，`setTimeout`也是一个不错的选择。
