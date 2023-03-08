@@ -150,6 +150,13 @@ Vue中的mixins属性接收一个包含组件选项对象的数组，这些选�
 
 diff算法是将虚拟DOM与真实DOM进行比较的技术，由于真实DOM的操作回耗费更多的时间，所以使用diff算法找出需要更新的DOM节点，对其进行更新。
 
+- vue响应式是通过数据劫持实现的。vue的diff算法是组件级的，通过依赖收集，vue能够准确地知道哪个组件发生上的响应式数据发生了变化。而不像react，需要重新生成整个虚拟dom树。Vue的视图template会编译成render函数（`() => h(xxxx)`），每次调用各个组件的render函数时，通过getter，就能知道哪些数据被哪些组件的视图所依赖，下一次对这些数据赋值时，也就是调用setter，相应的视图就能触发重渲染，而无关的组件则不需要再次调用render函数，节省了开销。在`setup`函数内部，`watch`函数和`computed`函数也是相似的道理。
+  在`react`中，只要调用了`useState`就会触发`shouldComponentUpdate`方法，这个方法默认返回`true`，然后会重新触发组件的`render`方法，更新组件和子组件。
+  vue中的优化，**1）子数组打平**，区块的；**2）静态提升**，把静态节点（没有用到响应式变量的节点）提取出来，将他们提取到模板的渲染函数外面（闭包），每次渲染时使用相同的vnode；**3）更新标记**，基于二进制的更新类型标记，一个元素可以有多个标记类型，例如[class，text，PROPS]([core/patchFlags.ts at main · vuejs/core (github.com)](https://github.com/vuejs/core/blob/main/packages/shared/src/patchFlags.ts)) ；
+- vue的组件更新是组件级别的，但是在处理当前组件的过程中，会判断是否有子组件需要被更新，判断方法是检测子组件的VNode上影响组件渲染的属性是否发生变化。
+  ![image-20230308201306636](assets/image-20230308201306636.png)
+  
+
 ---
 
 ## vue2和vue3依赖收集过程的对比

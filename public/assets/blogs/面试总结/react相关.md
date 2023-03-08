@@ -197,9 +197,9 @@ function HelloWord() {
 
 当父组件的状态发生变化时，React 会执行一次更新过程，计算出新的虚拟 DOM 树。在更新过程中，如果某个组件的 state 或 props 发生了变化，React 会根据新的数据重新渲染该组件。
 
-在 React 中，渲染是一个昂贵的操作，因此 React 会尽可能地延迟更新过程，以减少不必要的计算。为了达到这个目的，React 采用了异步渲染机制。
+**渲染是一个昂贵的操作**，因此 React 会尽可能地延迟更新过程，以减少不必要的计算。为了达到这个目的，React 采用了异步渲染机制。
 
-在 React 中，当某个组件的 state 或 props 发生变化时，React 不会立即进行更新操作，而是将更新放入一个队列中，等到所有的更新都放入队列之后，再统一进行更新操作。这样做的好处是可以避免不必要的计算，提高性能。
+在 React 中，当某个组件的 state 或 props 发生变化时，React 不会立即进行更新操作，**而是将更新放入一个队列中**（Fiber，调和阶段），等到所有的更新都放入队列之后，再统一进行更新操作。这样做的好处是可以避免不必要的计算，提高性能。
 
 在上述情况中，子组件从父组件获取了一个依赖的变量，当这个变量发生变化时，子组件会重新渲染。但是，在父组件的更新操作还没有被执行之前，子组件已经进行了一次更新操作，导致父组件在更新时可能没有使用最新的数据进行计算。
 
@@ -214,3 +214,83 @@ function HelloWord() {
 ## redux
 
 reudx的 初始状态是第一次调用合并后的reducer，并传入undefined参数得到的！（不会命中任何action，返回初始状态。我们在使用createStore时只需要传入combine后的reducer也是这个原因）；
+
+---
+
+## react的fiber架构
+
+**React 16 之前的不足：**
+
+首先我们了解一下 React 的工作过程，当我们通过`render()`和 `setState()` 进行组件渲染和更新的时候，React 主要有两个阶段：
+
+![img](assets/v2-69ad15a23f9e2bf78bb443fe04ec3964_720w.webp)
+
+**调和阶段(Reconciler)：**官方解释。React 会自顶向下通过递归，遍历新数据生成新的 Virtual DOM**，然后通过 Diff 算法，找到需要变更的元素(Patch)**（如果树结构很多，将非常耗时），放到更新队列里面去。
+
+**渲染阶段(Renderer)**：遍历更新队列，通过调用宿主环境的API，实际更新渲染对应元素。宿主环境，比如 DOM、Native、WebGL 等。
+
+在调和阶段阶段，**由于是采用的递归的遍历方式**（同步代码），这种也被成为 **Stack Reconciler**，主要是为了区别 **Fiber Reconciler** 取的一个名字。这种方式有一个特点：一旦任务开始进行，就**无法中断**，那么 js 将一直占用主线程， 一直要等到整棵 Virtual DOM 树计算完成之后，才能把执行权交给渲染引擎，那么这就会导致一些用户交互、动画等任务无法立即得到处理，就会有卡顿，非常的影响用户体验。
+
+整个组件树虚拟dom的生成以及查找需要变动的地方(diff)，当组件很复杂时这些操作需要耗费很多时间，由于js是单线程的，可能会导致页面卡顿，无法响应用户事件。因此出现了fiber架构，fiber架构需要能够中断执行，那么它必须能够记录当前遍历的上下文，因此fiber节点有三个指针，指向父节点，**下一个**兄弟节点，子节点。遍历顺序：1）如果存在子节点，先遍历子节点；2）不存在子节点，存在兄弟节点，生**成当前节点的虚拟DOM，遍历下一个兄弟节点**；3）不存在子节点，不存在下一个兄弟节点，**生成当前节点的虚拟DOM，遍历父节点**；4）当前节点的所有子节点生成完毕，**生成当前节点虚拟DOM，判断有无下一个兄弟节点**。重复执行上述操作，树的后序遍历，保证所有叶子节点的虚拟DOM最先被生成，通过setState已经更新了，此时只是生成新虚拟DOM，找出DOM的更新策略。
+
+react fiber是通过`requestIdleCallback`这个api去控制的组件渲染的“进度条”。
+
+`requesetIdleCallback`是一个属于宏任务的回调，就像setTimeout一样。不同的是，setTimeout的执行时机由我们传入的回调时间去控制，`requesetIdleCallback`会在**事件循环空闲时**调用回调函数。当在`callback`中递归调用`requesetIdleCallback`时，又会等到事件循环队列为空时才执行回调。让用户的事件得到响应。
+
+它的回调函数可以获取本次可以执行的时间，每一个16ms除了`requesetIdleCallback`的回调之外，**还有其他工作，所以能使用的时间是不确定的**，但只要时间到了，就会停下节点的遍历。
+
+`requestIdleCallback`的回调函数可以通过传入的参数`deadLine.timeRemaining()`检查当下还有多少时间供自己使用。（但由于兼容性不好，加上该回调函数被调用的频率太低，react实际使用的是一个polyfill(自己实现的api)，而不是requestIdleCallback。）
+
+**总结：**
+
+react因为先天的不足——无法精确更新，所以需要react fiber把**组件渲染**工作切片；而vue基于数据劫持，更新粒度很小，没有这个压力；
+
+React Fiber是React 16提出的一种更新机制，**使用链表取代了树**，**将虚拟dom连接**，**使得组件更新的流程可以被中断恢复**；它把组件渲染的工作分片，到时会主动让出渲染主线程。
+
+react fiber这种数据结构使得节点可以回溯到其父节点，**只要保留下中断的节点索引**，就可以恢复之前的工作进度；
+
+```js
+const workLoop = (deadLine) => {
+    let shouldYield = false;// 是否该让出线程
+    while(!shouldYield){
+        console.log('working')
+        //遍历节点等工作
+      	// *****
+      	// 遍历结束，判断是否应该
+        shouldYield = deadLine.timeRemaining()<1;
+    }
+    requestIdleCallback(workLoop)
+}
+requestIdleCallback(workLoop);
+```
+
+Fiber 的主要工作流程：
+
+- `ReactDOM.render()` 引导 React 启动或调用 `setState()` 的时候开始创建或更新 Fiber 树。
+- 从根节点开始遍历 Fiber Node Tree， 并且构建 WokeInProgress Tree（reconciliation 阶段）。 
+  - 本阶段可以暂停、终止、和重启，会导致 react 相关生命周期重复执行。
+  - React 会生成两棵树，一棵是代表当前状态的 current tree，一棵是待更新的 workInProgress tree。
+  - 遍历 current tree，重用或更新 Fiber Node 到 workInProgress tree，workInProgress tree 完成后会替换 current tree。
+  - 每更新一个节点，同时生成该节点对应的 Effect List。
+  - 为每个节点创建更新任务。
+- 将创建的更新任务加入任务队列，等待调度。 
+  - 调度由 scheduler 模块完成，其核心职责是执行回调。
+  - scheduler 模块实现了跨平台兼容的 requestIdleCallback。
+  - 每处理完一个 Fiber Node 的更新，可以中断、挂起，或恢复。
+- 根据 Effect List 更新 DOM （commit 阶段）。 
+  - React 会遍历 Effect List 将所有变更一次性更新到 DOM 上。
+  - 这一阶段的工作会导致用户可见的变化。因此该过程不可中断，必须一直执行直到更新完成。
+
+React 调度流程图：
+
+![img](assets/7000.png)
+
+**为什么vue不需要fiber架构？**
+
+react知道哪个组件触发了更新，但是不知道哪些子组件会受到影响。因此react需要生成改组件下的所有虚拟DOM结构，与原本的虚拟DOM结构进行对比，找出变动的部分。
+
+在vue中，一切影响页面内容的数据都应该是响应式的，vue通过拦截响应式数据的修改，知道哪些组件应该被修改。不需要遍历所有子树。vue的diff算法是对组件内部的diff，如果存在子组件，会判断子组件上与渲染相关的属性是否发生变化，无需变化的化则复用原本的DOM，不会处理子组件。
+
+- [前端大佬谈 React Fiber 架构 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/137234573#:~:text=React 在 render 第一次渲染时，会通过 React.createElement 创建一颗 Element 树，可以称之为,会对应一个 Fiber Node，将 Fiber Node 链接起来的结构成为 Fiber Tree。)
+- [(104条消息) React的调和过程(Reconciliation)_react 调和_起晚的蜗牛的博客-CSDN博客](https://blog.csdn.net/hupian1989/article/details/102617165)
+- [React Fiber 的作用和原理](https://cloud.tencent.com/developer/article/1882296)
