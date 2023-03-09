@@ -51,6 +51,14 @@ const router = useRouter();
 const globalParams = inject("globalParams");
 const editor = editormd();
 
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      // console.log(entry.target);
+    }
+  });
+});
+
 const probs = defineProps({
   blogPath: {
     type: String,
@@ -72,7 +80,7 @@ let preTitle = document.title;
 onMounted(() => {
   document.title = probs.blogTitle;
 })
-onUnmounted(()=>{
+onUnmounted(() => {
   document.title = preTitle;
 })
 
@@ -105,13 +113,6 @@ onMounted(() => {
         const titleElments = document.querySelectorAll(".reference-link");
         // https://www.qy.cn/jszx/detail/6411.html
         // 监听元素是否可见
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              // console.log(entry.target);
-            }
-          });
-        });
         let tocContainer = document.querySelector(".markdown-toc-list");
         let liElements = tocContainer.getElementsByTagName("li");
         for (let i = 0; i < liElements.length; i++) {
@@ -154,14 +155,17 @@ onMounted(() => {
   });
 });
 
-onMounted(() => {
-
-});
-
 onBeforeUnmount(() => {
   document.querySelector('#article-body').innerHTML = "加载中";
   document.querySelector('#article-toc').innerHTML = '';
   console.log("博客详细页面将要卸载");
+
+  let tocContainer = document.querySelector(".markdown-toc-list");
+  const titleElments = document.querySelectorAll(".reference-link");
+  let liElements = tocContainer.getElementsByTagName("li");
+  for (let i = 0; i < liElements.length; i++) {
+    observer.disconnect(titleElments[i]);
+  }
 });
 </script>
 
