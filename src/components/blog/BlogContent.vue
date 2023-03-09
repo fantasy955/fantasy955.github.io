@@ -160,12 +160,7 @@ onBeforeUnmount(() => {
   document.querySelector('#article-toc').innerHTML = '';
   console.log("博客详细页面将要卸载");
 
-  let tocContainer = document.querySelector(".markdown-toc-list");
-  const titleElments = document.querySelectorAll(".reference-link");
-  let liElements = tocContainer.getElementsByTagName("li");
-  for (let i = 0; i < liElements.length; i++) {
-    observer.disconnect(titleElments[i]);
-  }
+  observer.disconnect();
 });
 </script>
 
