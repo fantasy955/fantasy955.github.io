@@ -1,29 +1,29 @@
 {
  "files": [
   {
-   "name": "react相关.md",
-   "title": "react相关",
-   "relapath": "./assets/blogs/面试总结/react相关.md",
-   "updatetime": {
-    "year": 2023,
-    "mon": 3,
-    "day": 8,
-    "hour": 22,
-    "min": 23,
-    "sec": 30
-   }
-  },
-  {
    "name": "vue相关.md",
    "title": "vue相关",
    "relapath": "./assets/blogs/面试总结/vue相关.md",
    "updatetime": {
     "year": 2023,
     "mon": 3,
-    "day": 8,
+    "day": 11,
     "hour": 20,
-    "min": 13,
-    "sec": 12
+    "min": 38,
+    "sec": 51
+   }
+  },
+  {
+   "name": "笔试错题总结.md",
+   "title": "笔试错题总结",
+   "relapath": "./assets/blogs/面试总结/笔试错题总结.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 3,
+    "day": 11,
+    "hour": 16,
+    "min": 55,
+    "sec": 9
    }
   },
   {
@@ -33,10 +33,10 @@
    "updatetime": {
     "year": 2023,
     "mon": 3,
-    "day": 8,
-    "hour": 18,
-    "min": 7,
-    "sec": 20
+    "day": 10,
+    "hour": 23,
+    "min": 6,
+    "sec": 11
    }
   },
   {
@@ -46,10 +46,10 @@
    "updatetime": {
     "year": 2023,
     "mon": 3,
-    "day": 7,
-    "hour": 16,
-    "min": 23,
-    "sec": 29
+    "day": 10,
+    "hour": 22,
+    "min": 55,
+    "sec": 47
    }
   },
   {
@@ -59,10 +59,49 @@
    "updatetime": {
     "year": 2023,
     "mon": 3,
-    "day": 6,
-    "hour": 20,
-    "min": 35,
-    "sec": 42
+    "day": 10,
+    "hour": 15,
+    "min": 29,
+    "sec": 27
+   }
+  },
+  {
+   "name": "前端工程化相关.md",
+   "title": "前端工程化相关",
+   "relapath": "./assets/blogs/面试总结/前端工程化相关.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 3,
+    "day": 10,
+    "hour": 9,
+    "min": 29,
+    "sec": 38
+   }
+  },
+  {
+   "name": "react相关.md",
+   "title": "react相关",
+   "relapath": "./assets/blogs/面试总结/react相关.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 3,
+    "day": 10,
+    "hour": 9,
+    "min": 24,
+    "sec": 54
+   }
+  },
+  {
+   "name": "node相关.md",
+   "title": "node相关",
+   "relapath": "./assets/blogs/面试总结/node相关.md",
+   "updatetime": {
+    "year": 2023,
+    "mon": 3,
+    "day": 9,
+    "hour": 18,
+    "min": 50,
+    "sec": 1
    }
   },
   {
@@ -76,19 +115,6 @@
     "hour": 19,
     "min": 34,
     "sec": 54
-   }
-  },
-  {
-   "name": "前端工程化相关.md",
-   "title": "前端工程化相关",
-   "relapath": "./assets/blogs/面试总结/前端工程化相关.md",
-   "updatetime": {
-    "year": 2023,
-    "mon": 3,
-    "day": 4,
-    "hour": 19,
-    "min": 8,
-    "sec": 49
    }
   },
   {
@@ -157,19 +183,6 @@
    }
   },
   {
-   "name": "node相关.md",
-   "title": "node相关",
-   "relapath": "./assets/blogs/面试总结/node相关.md",
-   "updatetime": {
-    "year": 2023,
-    "mon": 2,
-    "day": 20,
-    "hour": 20,
-    "min": 39,
-    "sec": 36
-   }
-  },
-  {
    "name": "函数式编程相关.md",
    "title": "函数式编程相关",
    "relapath": "./assets/blogs/面试总结/函数式编程相关.md",
@@ -188,29 +201,29 @@
    "page": 1,
    "files": [
     {
-     "name": "react相关.md",
-     "title": "react相关",
-     "relapath": "./assets/blogs/面试总结/react相关.md",
-     "updatetime": {
-      "year": 2023,
-      "mon": 3,
-      "day": 8,
-      "hour": 22,
-      "min": 23,
-      "sec": 30
-     }
-    },
-    {
      "name": "vue相关.md",
      "title": "vue相关",
      "relapath": "./assets/blogs/面试总结/vue相关.md",
      "updatetime": {
       "year": 2023,
       "mon": 3,
-      "day": 8,
+      "day": 11,
       "hour": 20,
-      "min": 13,
-      "sec": 12
+      "min": 38,
+      "sec": 51
+     }
+    },
+    {
+     "name": "笔试错题总结.md",
+     "title": "笔试错题总结",
+     "relapath": "./assets/blogs/面试总结/笔试错题总结.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 3,
+      "day": 11,
+      "hour": 16,
+      "min": 55,
+      "sec": 9
      }
     },
     {
@@ -220,10 +233,10 @@
      "updatetime": {
       "year": 2023,
       "mon": 3,
-      "day": 8,
-      "hour": 18,
-      "min": 7,
-      "sec": 20
+      "day": 10,
+      "hour": 23,
+      "min": 6,
+      "sec": 11
      }
     },
     {
@@ -233,10 +246,10 @@
      "updatetime": {
       "year": 2023,
       "mon": 3,
-      "day": 7,
-      "hour": 16,
-      "min": 23,
-      "sec": 29
+      "day": 10,
+      "hour": 22,
+      "min": 55,
+      "sec": 47
      }
     },
     {
@@ -246,10 +259,10 @@
      "updatetime": {
       "year": 2023,
       "mon": 3,
-      "day": 6,
-      "hour": 20,
-      "min": 35,
-      "sec": 42
+      "day": 10,
+      "hour": 15,
+      "min": 29,
+      "sec": 27
      }
     }
    ]
@@ -257,6 +270,45 @@
   {
    "page": 2,
    "files": [
+    {
+     "name": "前端工程化相关.md",
+     "title": "前端工程化相关",
+     "relapath": "./assets/blogs/面试总结/前端工程化相关.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 3,
+      "day": 10,
+      "hour": 9,
+      "min": 29,
+      "sec": 38
+     }
+    },
+    {
+     "name": "react相关.md",
+     "title": "react相关",
+     "relapath": "./assets/blogs/面试总结/react相关.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 3,
+      "day": 10,
+      "hour": 9,
+      "min": 24,
+      "sec": 54
+     }
+    },
+    {
+     "name": "node相关.md",
+     "title": "node相关",
+     "relapath": "./assets/blogs/面试总结/node相关.md",
+     "updatetime": {
+      "year": 2023,
+      "mon": 3,
+      "day": 9,
+      "hour": 18,
+      "min": 50,
+      "sec": 1
+     }
+    },
     {
      "name": "网络相关.md",
      "title": "网络相关",
@@ -271,19 +323,6 @@
      }
     },
     {
-     "name": "前端工程化相关.md",
-     "title": "前端工程化相关",
-     "relapath": "./assets/blogs/面试总结/前端工程化相关.md",
-     "updatetime": {
-      "year": 2023,
-      "mon": 3,
-      "day": 4,
-      "hour": 19,
-      "min": 8,
-      "sec": 49
-     }
-    },
-    {
      "name": "安全相关.md",
      "title": "安全相关",
      "relapath": "./assets/blogs/面试总结/安全相关.md",
@@ -295,7 +334,12 @@
       "min": 56,
       "sec": 54
      }
-    },
+    }
+   ]
+  },
+  {
+   "page": 3,
+   "files": [
     {
      "name": "HTML5.md",
      "title": "HTML5",
@@ -321,12 +365,7 @@
       "min": 27,
       "sec": 32
      }
-    }
-   ]
-  },
-  {
-   "page": 3,
-   "files": [
+    },
     {
      "name": "ts相关.md",
      "title": "ts相关",
@@ -351,19 +390,6 @@
       "hour": 20,
       "min": 44,
       "sec": 56
-     }
-    },
-    {
-     "name": "node相关.md",
-     "title": "node相关",
-     "relapath": "./assets/blogs/面试总结/node相关.md",
-     "updatetime": {
-      "year": 2023,
-      "mon": 2,
-      "day": 20,
-      "hour": 20,
-      "min": 39,
-      "sec": 36
      }
     },
     {

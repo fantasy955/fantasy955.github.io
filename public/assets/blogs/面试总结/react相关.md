@@ -158,6 +158,16 @@ function useMemo(create, deps) {
 
 [一般来说，useEffect可以满足大部分的场景，只有在需要同步操作DOM或者避免闪烁的情况下，才需要使用useLayoutEffect](https://blog.csdn.net/AHcola233/article/details/116716316)[1](https://blog.csdn.net/AHcola233/article/details/116716316)[2](https://blog.logrocket.com/useeffect-vs-uselayouteffect-examples/)。
 
+### useRef的用法
+
+[`useRef` 是一个 React Hook，它返回一个可变的 ref 对象，该对象只有一个 `current` 属性，初始值为传入的参数。](https://blog.csdn.net/u011705725/article/details/115634265)[1](https://blog.csdn.net/u011705725/article/details/115634265)
+
+```javascript
+const refContainer = useRef(initialValue);
+```
+
+[`useRef` 可以用来获取 DOM 元素或者保存某些数据。](https://blog.csdn.net/qq_45677671/article/details/116707927)[2](https://blog.csdn.net/qq_45677671/article/details/116707927)[1](https://blog.csdn.net/u011705725/article/details/115634265)[ 它在渲染周期内永远不会变，因此可以用来引用某些数据。](https://blog.csdn.net/qq_45677671/article/details/116707927)[2](https://blog.csdn.net/qq_45677671/article/details/116707927)
+
 ---
 
 ## 如何理解redux的单向数据流
@@ -291,6 +301,16 @@ react知道哪个组件触发了更新，但是不知道哪些子组件会受到
 
 在vue中，一切影响页面内容的数据都应该是响应式的，vue通过拦截响应式数据的修改，知道哪些组件应该被修改。不需要遍历所有子树。vue的diff算法是对组件内部的diff，如果存在子组件，会判断子组件上与渲染相关的属性是否发生变化，无需变化的化则复用原本的DOM，不会处理子组件。
 
+**模板语法**让vue能够进行更好的编译时优化，提高diff过程的效率，react缺少这部分。
+
 - [前端大佬谈 React Fiber 架构 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/137234573#:~:text=React 在 render 第一次渲染时，会通过 React.createElement 创建一颗 Element 树，可以称之为,会对应一个 Fiber Node，将 Fiber Node 链接起来的结构成为 Fiber Tree。)
 - [(104条消息) React的调和过程(Reconciliation)_react 调和_起晚的蜗牛的博客-CSDN博客](https://blog.csdn.net/hupian1989/article/details/102617165)
 - [React Fiber 的作用和原理](https://cloud.tencent.com/developer/article/1882296)
+
+---
+
+## 调用`setState`发生了什么
+
+在 React 组件中调用 `setState()` 方法会触发组件重新渲染，React 会**创建一个新的 Fiber 节点**来代表该组件的新状态，并**将该节点加入到更新队列**中。**更新队列是一个链表结构**，其中每个节点代表一个待更新的组件，**按照优先级**从高到低排序。
+
+---

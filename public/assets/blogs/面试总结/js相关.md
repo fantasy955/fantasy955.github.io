@@ -22,7 +22,9 @@ C++中0.1+0.2的运算结果并不一定是正确的，这取决于你使用的�
 
 ## 对事件循环的理解
 
-js是单线程的，一个时间只能做一件事，但js的执行并不是阻塞的，让js不是阻塞执行的方法就是事件循环。js中的任务分为宏任务和微任务，
+js是单线程的，一个时间只能做一件事，但js的执行并不是阻塞的，让js不是阻塞执行的方法就是事件循环。js中的任务分为宏任务和微任。
+
+当宏任务队列中有多个任务时，每次只会将一个宏任务放入执行栈中执行，当它执行完后，会先执行所有微任务队列中的任务，再进行下一个宏任务。
 
 ### 参考资料
 
@@ -98,3 +100,107 @@ JavaScript中的对象都存储在堆上，垃圾回收主要是回收堆上那�
 `requestAnimationFrame`的性能通常比`setTimeout`更好，因为`requestAnimationFrame`会在下一次浏览器渲染之前调用回调函数，这样可以最大程度地减少了浏览器的重绘次数，从而减少了CPU和GPU的占用。
 
 因此，一般来说，建议使用`requestAnimationFrame`来实现动画效果，因为它提供了更高的性能和更流畅的动画效果。当然，如果要实现的动画效果非常简单，或者需要在某些情况下控制动画的速度，`setTimeout`也是一个不错的选择。
+
+---
+
+## 上下文、作用域、函数执行栈
+
+- 上下文（Context）：JavaScript 代码执行时所处的环境。每当代码执行到一个新的可执行块（如函数、模块等）时，都会进入一个新的上下文。一个上下文可以包含多个作用域。每个上下文都有自己的变量对象，用来存储在该上下文中定义的变量和函数。
+- 作用域（Scope）：**指在当前上下文中可访问的变量和函数的集合**。JavaScript 使用**词法作用域**，**即函数的作用域是在函数定义时确定的，而不是在函数调用时**。一个变量的作用域取决于它在代码中定义的位置。当在一个上下文中使用一个变量时，JavaScript 引擎会首先在该上下文的变量对象中查找该变量，如果找不到，则会到父级作用域中查找，直到找到该变量为止。
+- 执行栈（Execution Context Stack）：JavaScript 引擎会维护一个执行栈，**用来存储当前正在执行的上下文**。当代码执行到一个新的可执行块时，会创建一个新的上下文并将其推入执行栈中，当该块执行完毕后**，该上下文会被弹出执行栈，控制权会回到上一个上下文中继续执行**。
+
+JavaScript 中的事件循环机制是指在单线程的 JavaScript 运行时中，为了处理异步任务，而采用的一种事件循环的机制。它通过监听任务队列中的任务，来实现异步任务的执行。
+
+**事件循环机制与上下文、作用域和执行栈有以下关系**：
+
+1. 上下文：JavaScript 中的上下文是指当前代码执行的环境，包括全局上下文和函数上下文。事件循环机制中的任务执行，都是在某个上下文中执行的。
+2. 作用域：JavaScript 中的作用域是指当前执行代码的变量可访问的范围。事件循环机制中的任务执行，也是在其所在的作用域中执行的。
+3. 执行栈：JavaScript 中的执行栈是指代码执行的顺序。事件循环机制中，任务首先进入任务队列，然后再由事件循环机制从任务队列中取出任务，放到执行栈中执行。
+
+**JavaScript 的事件循环机制主要分为以下几个阶段：**
+
+1. 宏任务：在事件循环的每一次循环中，只会执行一个宏任务。宏任务包括 **script 脚本执行**、`setTimeout`、`setInterval`、`setImmediate`、`I/O `操作等。
+2. 微任务：在宏任务执行完成后，会依次执行当前所有微任务。微任务包括` Promise.then`、`Promise.catch`、`Promise.finally`、`MutationObserver`、`process.nextTick` 等。
+3. 渲染：当所有微任务执行完成后，如果当前需要更新页面，则进行页面的渲染。
+
+总的来说，事件循环机制通过监听任务队列中的任务，实现了异步任务的执行，使得 JavaScript 在单线程运行时也能够处理异步操作。同时，上下文、作用域和执行栈等概念，也是事件循环机制的重要组成部分。
+
+---
+
+## this指针
+
+在 JavaScript 中，this 关键字是一个特殊的对象引用，它指向当前执行上下文的对象。在函数中，this 引用的是该函数被调用时所在的对象。在全局上下文中，this 引用的是全局对象，如 window 或者 global。
+
+在**普通函数中**，this 的指向是在运行时确定的，它取决于调用该函数的方式。如果函数作为对象的方法调用，this 将指向该对象；如果函数作为普通函数调用，则 this 将指向全局对象。
+
+在**箭头函数中**，this 的指向是在定义时确定的，它取决于箭头函数所在的上下文。箭头函数的 this 始终指向定义该函数的父级上下文中的 this。
+
+此外，还有一些情况下，this 的指向可能会发生变化，比如**在事件处理程序**中，this 将引用触发事件的元素。**在 JavaScript 的模块中**，this 指向 undefined，因为模块中的代码运行在独立的作用域中。在**严格模式**下，this 的指向会更加严格。在**全局环境中，严格模式下的 this 始终为 undefined**；在函数内部，如果没有明确指定 this 的值，严格模式下的 this 为 undefined。
+
+在 JavaScript 的严格模式中，如果没有明确指定 this 的值，this 就会被设置为 undefined。这种情况下，如果想要使用 this 指针，有以下两种方法：
+
+1. 使用 Function.prototype.call() 或 Function.prototype.apply() 明确指定 this 指向。这两个方法的第一个参数即为 this 指向的对象。
+2. 使用箭头函数。箭头函数没有自己的 this 值，箭头函数内部的 this 值继承自外部的作用域。因此，在箭头函数中使用 this，其指向的就是外部函数的 this 值。**在箭头函数中，this 的值无法通过 call() 或 apply() 方法来修改。**
+
+---
+
+## Promise
+
+`Promise.all`会在promise数组其中一个promise失败后停止；当 `Promise.all()` 变成接受状态（fulfilled）时，`then` 方法会被调用。该方法有一个参数，[`then` 方法会被调用。该方法有一个参数，即接受的最终结果（the fulfillment value）](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)[1](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)。这个参数是一个数组，包含了所有传递给 `Promise.all()` 的 promises 的最终结果。
+
+`Promise.allSettled`会在所有Promise失败或者成功后完成，
+
+---
+
+## fetch和xhr
+
+Fetch和XHR都是获取远端数据的方式。**Fetch是原生js方法**，没有使用XMLHttpRequest对象，使用fetch可以不用引用http的类库即可实现。它提供了一种简单，合理的方式来跨网络异步获取资源。
+
+**而XMLHttpRequest（XHR）是一个构造函数**，对象用于与服务器交互。**它基于事件机制实现请求成功与失败**的回调，不符合关注分离（Separation of Concerns）的原则，配置和调用方式非常混乱。而Fetch通过Promise来实现回调，调用更加友好。
+
+在处理HTTP头部方面，XMLHttpRequest有一个setRequestHeader()方法用于设置HTTP请求头部。此方法必须在open()方法和send()之间调用。如果多次对同一个请求头赋值，只会生成一个合并了多个值的请求头1。
+
+而Fetch API提供了一个Headers接口，它与Map类型都有get()、set()、has()和delete()等实例方法，可以使用一个可迭代对象来初始化，当然也具有keys()、values()和entries()迭代器接口2。
+
+至于携带cookie方面，根据Fetch规范，Set-Cookie是一个禁止的响应标头，对应的响应在被暴露给前端代码前，必须滤除这一响应标头，即浏览器会阻止前端JavaScript代码访问Set-Cookie标头3。
+
+```js
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://www.example.com/');
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send();
+```
+
+```js
+fetch('http://www.example.com/', {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+```
+
+在使用XHR和Fetch时，你可以手动设置HTTP头部，但也有一些头部会被浏览器自动携带。例如，在发送跨域请求时，浏览器会自动添加Origin头部1。
+
+至于Cookie方面，XHR和Fetch默认都不会携带Cookie。如果你想要在请求中携带Cookie，需要进行额外的配置。对于XHR，你需要在$.ajax调用中添加`xhrFields: { withCredentials: true }`。而对于Fetch，你需要在请求配置中添加`credentials: 'include'`。
+
+---
+
+## 实现call方法
+
+核心是通过对象调用函数，显示保证函数内的this指针指向。
+
+```js
+Function.prototype.myCall = function(context) {
+    context = context || window;
+  	// myCall的调用者为函数自身，因此this就指向函数
+    context.fn = this;
+    var args = [];
+    for (var i = 1; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+    var result = context.fn(...args);
+    delete context.fn;
+    return result;
+}
+```
+

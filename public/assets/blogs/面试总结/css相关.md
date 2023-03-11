@@ -90,11 +90,11 @@ a :link、a:hover、a:visited、a:active中，定义CSS时候的顺序不同，�
 | 方式                             | 条件                                                         |
 | -------------------------------- | ------------------------------------------------------------ |
 | absolute + 负margin              | 知道父元素宽高                                               |
-| absolute + inset 0 + margin auto | 指定子元素宽高                                               |
+| absolute + inset 0 + margin auto | **指定**子元素宽高                                           |
 | absolute + calc                  | 知道自身宽高                                                 |
 | absolute + transform             | 无                                                           |
 | lineheight + text-align          | 子元素display  为inline-block<br />父元素高度确定            |
-| table                            | 子元素display  为inline-block<br />子元素的父元素类型为table-cell或为td元素 |
+| table                            | 1.子元素display: inline-block<br />2.子元素的父元素类型为`table-cell`或为`td`元素 |
 | css-table                        | 同上                                                         |
 | flex align-items justify-content | 无                                                           |
 | grid align-seft justify-self     | 无                                                           |
@@ -137,3 +137,14 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 ```
 
 需要注意的是，以上两种方式并不是所有浏览器和操作系统都支持的，开发者应该进行兼容性处理，以确保在各种设备上都能正常判断是否开启了暗黑模式。
+
+---
+
+## canvas和svg
+
+Canvas和SVG都是用来绘制图形的，但它们之间有一些区别。Canvas是基于像素点绘图，是位图，如果进行放大或缩小会失真；而SVG基于图形，用html标签描绘形状，放大缩小不会失真12。此外，Canvas需要在js中绘制，而SVG在html中绘制。
+
+Canvas和SVG都有各自的优缺点。**Canvas基于像素**，提供2D绘制函数，是一种HTML元素类型，依赖于HTML，**只能通过脚本绘制图案**1，。
+
+而SVG是一种**矢量图形语言**，**基于XML**，这意味着SVG DOM中的每个元素都是可用的。您可以为某个元素附加JavaScript事件处理器2，它适用于**需要绘制二维图像的场景**2。由于SVG能够完美解决不同分辨率和尺寸的屏幕显示问题，因此它在支持各种不同分辨率和尺寸的屏幕显示方面非常成功3。
+
