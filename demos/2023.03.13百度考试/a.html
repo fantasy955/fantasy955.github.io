@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./b.js" type="text/javascript"></script>
+    <style>
+        .main1 {
+            background: url(#);
+        }
+        .main2 {
+            background-image: url();
+        }
+        /* 只会产生一个http请求 */
+
+        [class='main1'] {
+            color: red;
+        }
+        /* 可以生效 */
+    </style>
+
+</head>
+
+<body>
+    <div class="main1">123</div>
+    <div class="main2"></div>
+</body>
+
+</html>
