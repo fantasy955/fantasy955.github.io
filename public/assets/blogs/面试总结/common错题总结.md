@@ -31,9 +31,12 @@
 ## css
 
 - sass的安装需要Ruby环境的，是在服务端上处理的，而Less是需要引入**less.js**来处理Less代码输出css到浏览器，也可以在开发环节使用Less，然后编译成css文件，直接放到项目中。变量符号Less是@，而Scss是$。但是lees.js是一个很大的文件，一般处理之后再在浏览器使用。less.js文件的引用必须在.less文件的引用之前。
-
 - i是行内元素；
-- 
+- `background-position `取值是百分比时，所表示的距离为(conwidth-imgwidth)*x%。容器宽度减图片宽度后剩余宽度的百分比。
+- text-size:bold不能使字体变粗。 font-weight:bold 这个是可以使字体变粗的样式。
+- padding部分是透明的，可以显示背景（content不是透明的）。
+- list-style-type，没有list-type；
+- 盒模型的属性：margin（外边距）、border（边框）、padding（内边距）、content（内容），visible这种不属于盒模型特有的属性；
 
 ## 基础知识
 

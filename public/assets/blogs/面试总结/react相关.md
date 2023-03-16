@@ -221,12 +221,6 @@ function HelloWord() {
 
 ---
 
-## redux
-
-reudx的 初始状态是第一次调用合并后的reducer，并传入undefined参数得到的！（不会命中任何action，返回初始状态。我们在使用createStore时只需要传入combine后的reducer也是这个原因）；
-
----
-
 ## react的fiber架构
 
 **React 16 之前的不足：**
@@ -295,6 +289,24 @@ React 调度流程图：
 
 ![img](assets/7000.png)
 
+
+
+---
+
+## jsx的转换流程
+
+jsx在编译阶段被babel编译成`React.createElement`函数，执行该函数会生成ReactElement对象。
+
+`createFiberFromElement`函数接收`ReactElement`作为输入并创建Fiber对象。
+
+在函数组件第一次渲染时，会创建该组件的Fiber对象，hooks信息以数组的形式保存在该对象上。
+
+需要注意的是，**函数组件被编译成的 JavaScript 代码并不是精确地返回一个 React.createElement 函数的调用结果**。实际上，React 会将这个调用结果包装在一个包含组件状态和生命周期等信息的对象中，这个对象被称为 Fiber 节点。在组件更新时，React 会更新这个 Fiber 节点并根据它来更新组件的 UI。
+
+fiber是任务调度方面的架构，与hooks并没有直接的联系，以前是vnode到dom，现在是vnode->fiber->dom。
+
+---
+
 **为什么vue不需要fiber架构？**
 
 react知道哪个组件触发了更新，但是不知道哪些子组件会受到影响。因此react需要生成改组件下的所有虚拟DOM结构，与原本的虚拟DOM结构进行对比，找出变动的部分。
@@ -312,5 +324,11 @@ react知道哪个组件触发了更新，但是不知道哪些子组件会受到
 ## 调用`setState`发生了什么
 
 在 React 组件中调用 `setState()` 方法会触发组件重新渲染，React 会**创建一个新的 Fiber 节点**来代表该组件的新状态，并**将该节点加入到更新队列**中。**更新队列是一个链表结构**，其中每个节点代表一个待更新的组件，**按照优先级**从高到低排序。
+
+---
+
+## redux
+
+reudx的 初始状态是第一次调用合并后的reducer，并传入undefined参数得到的！（不会命中任何action，返回初始状态。我们在使用createStore时只需要传入combine后的reducer也是这个原因）；
 
 ---
