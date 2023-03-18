@@ -325,6 +325,30 @@ react知道哪个组件触发了更新，但是不知道哪些子组件会受到
 
 在 React 组件中调用 `setState()` 方法会触发组件重新渲染，React 会**创建一个新的 Fiber 节点**来代表该组件的新状态，并**将该节点加入到更新队列**中。**更新队列是一个链表结构**，其中每个节点代表一个待更新的组件，**按照优先级**从高到低排序。
 
+### 同步和异步的问题
+
+在 React 中，setState 方法是异步更新组件状态的。这意味着，调用 setState 方法不会立即更新组件的状态，而是将新状态添加到更新队列中，等待 React 下一次更新时才会真正地更新组件的状态。
+
+`setState` 的“异步”并不是说内部由异步代码实现，其实本身执行的过程和代码都是同步的，只是合成事件和钩子函数的**调用顺序**在**更新之前**，导致在合成事件和钩子函数中没法立马拿到更新后的值，形成了所谓的“异步”，当然可以通过第二个参数`setState(partialState, callback)`中的`callback`拿到更新后的结果。`setState`将更新操作添加到任务队列中，而合成事件和钩子函数的执行在任务队列执行之前。也就是说有多个`setState`的话，他们都会添加到任务队列中，因此就会发生状态合并。执行完`setState`，`react`的调度器会执行`requestIdleCallback`等待合适时机执行。
+
+如果`setState`是在React合成事件或生命周期函数中调用，**那么React会判断是否处于批量更新模式**，如果是，则会将该`setState`操作放入更新队列中，等待后续统一处理；如果不是，则直接进行同步更新。
+
+如果`setState`是在原生事件或`setTimeout`等异步回调中调用，React会直接进行同步更新。这是因为React无法确定异步事件的触发时机，所以为了确保更新能够立即生效，只能同步执行`setState`。
+
+- [setState是同步还是异步？原理是什么？ - 掘金 (juejin.cn)](https://juejin.cn/post/7066423854259765279)
+
+---
+
+### 批量更新模式
+
+在`react`生命周期和合成事件执行前后都有相应的钩子，分别是`pre`钩子和`post`钩子
+
+- `pre`钩子会调用`batchedUpdate`方法将`isBatchingUpdates`变量置为`true`，也就是将状态标记为现在正处于更新阶段了。开启批量更新。
+
+`setState`的更新会被存入队列中，待同步代码执行完后，再执行队列中的`state`更新。 `isBatchingUpdates`若为 `true`，则把当前组件（即调用了 `setState`的组件）放入 `dirtyComponents` 数组中；否则 `batchUpdate` 所有队列中的更新
+
+- 而`post`钩子会将`isBatchingUpdates`置为`false`。
+
 ---
 
 ## redux
