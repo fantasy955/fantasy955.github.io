@@ -25,6 +25,8 @@
 
 - await 后面的promise不resolve，会一致阻塞。
 - 精度计算问题；0.2-0.1=0.1的原因是0.2是0.1的2倍，二进制乘2或者除2，左移或又移一位就行，所以0.2-0.1=0.1，但是0.8不是0.6的倍数，所以0.8-0.6！=0.2。
+- 函数内的`arguments`为实参，对`arguments`直接赋值可以修改形参；
+- `typeof null`的结果为`object`，一般用null表示一个未赋值的对象；
 
 
 
@@ -37,22 +39,39 @@
 - padding部分是透明的，可以显示背景（content不是透明的）。
 - list-style-type，没有list-type；
 - 盒模型的属性：margin（外边距）、border（边框）、padding（内边距）、content（内容），visible这种不属于盒模型特有的属性；
+- css使用服务端字体，使用`@font-face`；
+- DHTML中**动态样式**的作用是使网页作者改变内容的外部特征而不强制用户再次下载全部内容。例如，当鼠标指针移到文章段落中时，段落能够变成蓝色，**或者当鼠标指针移到一个超级链接上时，会自动生成一个下拉式子链接目录等**。
+- 当定义border:none时，表示**无边框样式**(不是边框长度为0），浏览器并不会对边框进行渲染，也就没有实际的宽度；
+- `<body background="background.gif">`可以插入背景图
+
+
+
+## HTML
+
+- 不要在 label 元素内部放置可交互的元素，比如 [anchors](https://hd.nowcoder.com/link.html?target=https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a) 或 [buttons](https://hd.nowcoder.com/link.html?target=https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/button)。这样做会让用户更难激活/触发与 label 相关联的表单输入元素。  [https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/label](https://hd.nowcoder.com/link.html?target=https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/label)。
+  当用户**选择该标签**时，浏览器就会自动**将焦点转到**和标签相关的表单控件上。 
+- 表单的默认编码格式为`application/x-www-form-urlencoded`，在发送前对所有字符进行编码；
+- 获取`select`下某个`option`的文本（不是值）`obj.options[obj.selectedIndex].text`;
+- input type可选值；
+- `aside`标签用来表示` <article> `标签外的内容，而不是`cite`。
+- 根据 HTML5 规范，在没有其他合适标签更合适时，才应该把 <b> 标签作为最后的选项。HTML5 规范声明：应该使用 `h1`到`h6` 来表示标题，使用`em` 标签来表示强调的文本，应该使用 `strong`标签来表示重要文本，应该使用 `<mark> `标签来表示标注的/突出显示的文本。
+
+
 
 ## 基础知识
-
-- `typeof null`的结果为`object`，一般用null表示一个未赋值的对象；
-
-- 函数内的`arguments`为实参，对`arguments`直接赋值可以修改形参；
 
 - 不同进制的数组在转换成字符串时（与字符串相加），会转换为10进制；
 
 - linux权限控制，`chmod`用于修改文件的访问权限，`chown`用于更改文件的所有者和组组信息。chmod中u表示文件所有者，g表示与文件所有者同组的用户，o表示其他用户，a表示所有用户，如果不指定用户，则用`chmod abc xxx_file`快速指定三类用户的权限，a b c可选值为1 2 4的组合1表示执行（x)，2表示写入（w），4表示读取（r）。
 
-- 表单的默认编码格式为`application/x-www-form-urlencoded`，在发送前对所有字符进行编码；
-
-- css使用服务端字体，使用`@font-face`；
-
   
+
+
+## 正则表达式
+
+- `g`全局匹配；`i`不区分大小写；`y`标志表示“粘性”搜索，**它会从lastIndex属性指定的位置开始匹配**，并且只有当匹配成功时才更新lastIndex属性。
+
+
 
 ## 操作dom
 

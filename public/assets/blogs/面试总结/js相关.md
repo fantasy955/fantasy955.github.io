@@ -24,7 +24,9 @@ C++中0.1+0.2的运算结果并不一定是正确的，这取决于你使用的�
 
 js是单线程的，一个时间只能做一件事，但js的执行并不是阻塞的，让js不是阻塞执行的方法就是事件循环。js中的任务分为宏任务和微任。
 
-当宏任务队列中有多个任务时，每次只会将一个宏任务放入执行栈中执行，当它执行完后，会先执行所有微任务队列中的任务，再进行下一个宏任务。
+当宏任务队列中有多个任务时，**每次只会将一个宏任务放入执行栈中执行，当它执行完后**，会先执行所有微任务队列中的任务，**再进行下一个宏任务**。
+
+**在执行一个微任务时产生了新的微任务，这些新的微任务也会在当前事件循环中被依次执行。**
 
 ### 参考资料
 
@@ -105,17 +107,13 @@ JavaScript中的对象都存储在堆上，垃圾回收主要是回收堆上那�
 
 ## 上下文、作用域、函数执行栈
 
-- 上下文（Context）：JavaScript 代码执行时所处的环境。每当代码执行到一个新的可执行块（如函数、模块等）时，都会进入一个新的上下文。一个上下文可以包含多个作用域。每个上下文都有自己的变量对象，用来存储在该上下文中定义的变量和函数。
+**事件循环机制与上下文、作用域和执行栈有以下关系**：
+
+- 上下文（Context）：JavaScript 代码执行时所处的环境。每当代码执行到一个新的可执行块（如函数、模块等）时，都会进入一个新的上下文。一个上下文可以包含多个作用域。**每个上下文都有自己的变量对象**，用来存储在该上下文中定义的变量和函数。
 - 作用域（Scope）：**指在当前上下文中可访问的变量和函数的集合**。JavaScript 使用**词法作用域**，**即函数的作用域是在函数定义时确定的，而不是在函数调用时**。一个变量的作用域取决于它在代码中定义的位置。当在一个上下文中使用一个变量时，JavaScript 引擎会首先在该上下文的变量对象中查找该变量，如果找不到，则会到父级作用域中查找，直到找到该变量为止。
 - 执行栈（Execution Context Stack）：JavaScript 引擎会维护一个执行栈，**用来存储当前正在执行的上下文**。当代码执行到一个新的可执行块时，会创建一个新的上下文并将其推入执行栈中，当该块执行完毕后**，该上下文会被弹出执行栈，控制权会回到上一个上下文中继续执行**。
 
 JavaScript 中的事件循环机制是指在单线程的 JavaScript 运行时中，为了处理异步任务，而采用的一种事件循环的机制。它通过监听任务队列中的任务，来实现异步任务的执行。
-
-**事件循环机制与上下文、作用域和执行栈有以下关系**：
-
-1. 上下文：JavaScript 中的上下文是指当前代码执行的环境，包括全局上下文和函数上下文。事件循环机制中的任务执行，都是在某个上下文中执行的。
-2. 作用域：JavaScript 中的作用域是指当前执行代码的变量可访问的范围。事件循环机制中的任务执行，也是在其所在的作用域中执行的。
-3. 执行栈：JavaScript 中的执行栈是指代码执行的顺序。事件循环机制中，任务首先进入任务队列，然后再由事件循环机制从任务队列中取出任务，放到执行栈中执行。
 
 **JavaScript 的事件循环机制主要分为以下几个阶段：**
 
@@ -124,6 +122,12 @@ JavaScript 中的事件循环机制是指在单线程的 JavaScript 运行时中
 3. 渲染：当所有微任务执行完成后，如果当前需要更新页面，则进行页面的渲染。
 
 总的来说，事件循环机制通过监听任务队列中的任务，实现了异步任务的执行，使得 JavaScript 在单线程运行时也能够处理异步操作。同时，上下文、作用域和执行栈等概念，也是事件循环机制的重要组成部分。
+
+### 块级作用域、全局作用域、函数作用域
+
+ES6虽然提出了块级作用域的概念，但是var声明的变量还是只有全局作用域或函数作用域，这可能是处于兼容之前代码的原因。
+
+使用let或const声明的变量会受到块级作用域的限制，出现`暂时性死区`的现象。
 
 ---
 
@@ -152,7 +156,9 @@ JavaScript 中的事件循环机制是指在单线程的 JavaScript 运行时中
 
 ---
 
-## fetch和xhr
+## 发送网络请求
+
+### fetch和xhr
 
 Fetch和XHR都是获取远端数据的方式。**Fetch是原生js方法**，没有使用XMLHttpRequest对象，使用fetch可以不用引用http的类库即可实现。它提供了一种简单，合理的方式来跨网络异步获取资源。
 
@@ -160,9 +166,9 @@ Fetch和XHR都是获取远端数据的方式。**Fetch是原生js方法**，没�
 
 在处理HTTP头部方面，XMLHttpRequest有一个setRequestHeader()方法用于设置HTTP请求头部。此方法必须在open()方法和send()之间调用。如果多次对同一个请求头赋值，只会生成一个合并了多个值的请求头1。
 
-而Fetch API提供了一个Headers接口，它与Map类型都有get()、set()、has()和delete()等实例方法，可以使用一个可迭代对象来初始化，当然也具有keys()、values()和entries()迭代器接口2。
+而**Fetch API提供了一个Headers接口**，它与Map类型都有get()、set()、has()和delete()等实例方法，可以使用一个可迭代对象来初始化，当然也具有keys()、values()和entries()迭代器接口2。
 
-至于携带cookie方面，根据Fetch规范，Set-Cookie是一个禁止的响应标头，对应的响应在被暴露给前端代码前，必须滤除这一响应标头，即浏览器会阻止前端JavaScript代码访问Set-Cookie标头3。
+至于**携带cookie方面**，根据Fetch规范，Set-Cookie是一个禁止的响应标头，对应的响应在被暴露给前端代码前，必须滤除这一响应标头，即浏览器会阻止前端JavaScript代码访问Set-Cookie标头。
 
 ```js
 var xhr = new XMLHttpRequest();
@@ -183,16 +189,42 @@ fetch('http://www.example.com/', {
 
 至于Cookie方面，XHR和Fetch默认都不会携带Cookie。如果你想要在请求中携带Cookie，需要进行额外的配置。对于XHR，你需要在$.ajax调用中添加`xhrFields: { withCredentials: true }`。而对于Fetch，你需要在请求配置中添加`credentials: 'include'`。
 
+### Ajax和Axios
+
+Ajax不仅仅是网络请求，**Ajax是一种编程技术**，它允许我们创建动态、复杂和异步的 Web 应用程序。Ajax 允许我们异步地从 Web 服务器发送和接收数据，而不会干扰当前网页或应用程序的状态或行为。
+
+XHR（XMLHttpRequest）是一个 JavaScript 对象，它与服务器交互。它**是 Ajax 的核心部分**。使用 XHR 可以在不刷新整个页面的情况下与服务器交换数据并更新部分网页内容。
+
+你可以把 XHR 看作是 Ajax 的一个子集，因为 Ajax 不仅仅包括 XHR，还包括其他技术，如 CSS 和 HTML。fetch也是Ajax技术下的一个API。
+
+[Ajax - Web 开发者指南 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/Guide/AJAX)
+
+[XMLHttpRequest - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest)
+
+**Axios 是一个基于 promise 封装的网络请求库**，它是基于 XHR 进行二次封装。Axios 可以说是 XHR 的一个子集，而 XHR 又是 Ajax 的一个子集。
+
+Axios 是一种通过 promise 对 ajax 技术进行封装的库，**就像 jQuery 实现了 ajax 封装一样**。Ajax 技术实现了网页的部分数据刷新，而 **axios 实现了对 ajax 的封装**。
+
 ---
 
-## 实现call方法
+## this指向
 
-核心是通过对象调用函数，显示保证函数内的this指针指向。
+在 JavaScript 中，this 关键字指的是它所属的对象。它拥有不同的值，具体取决于它的使用位置。**在方法中**，this 指的是所有者对象。**如果单独使用**，this 表示全局对象。**在函数中**，this 表示全局对象。**在函数中，在严格模式下**，this 是未定义的。
 
-```js
+如果你使用 `bind` 函数将一个函数绑定到 `window` 对象，那么无论如何调用这个函数，它内部的 `this` 都会指向 `window` 对象。
+
+### 实现call方法
+
+****
+
+
+核心是**通过对象**调用函数。
+
+```
 Function.prototype.myCall = function(context) {
     context = context || window;
   	// myCall的调用者为函数自身，因此this就指向函数
+  	// 我们是通过fn.myCall 调用此方法的，因此函数内的this指向目标函数。
     context.fn = this;
     var args = [];
     for (var i = 1; i < arguments.length; i++) {
@@ -204,3 +236,64 @@ Function.prototype.myCall = function(context) {
 }
 ```
 
+---
+
+## window对象
+
+### load事件
+
+**`load`** 事件在**整个页面**及**所有依赖资源**如样式表和图片都已完成加载时触发。它与 [`DOMContentLoaded`](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/DOMContentLoaded_event) 不同，后者只要页面 **DOM 加载完成**就触发，无需等待依赖资源的加载。`DOMContentLoaded` 事件会在 HTML 文档被完全解析后触发，它不会等待图片、子框架和异步脚本等其他资源加载完成。**但是，它会等待所有延迟脚本**（使用 `defer` 属性或者 `type=\"module\"` 的 `<script>` 标签）下载并执行完成[1](https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event)。
+
+---
+
+## 事件处理程序
+
+### 添加事件处理函数
+
+`onclick`事件**在同一时间只能指向唯一对象** `onclick`给一个事件注册多个listener，`addEventListener`对任何DOM都是有效的，而onclick仅限于HTML。
+
+在`onclick`和`onclick`的函数中，this都指向绑定事件的元素。在**内联方式**绑定事件的情况下，`myFunction`函数中的`this`指向的是触发事件的元素（`<button onclick="myFunction()">Click me</button>`）。
+
+---
+
+### PC和移动端指针事件
+
+鼠标事件包括：`click` `dbclick` `mousedown` `mouseup` `mouseover` `mouseover` `mouseout`
+
+**在移动端事件中**，使用的是触摸事件，包括`touchstart` `touchmove` `touchend` `touchcancel`。`touch`的事件处理函数会接受一个`TouchList`对象，当用户在触摸屏上使用多个手指进行触摸操作时，`TouchList `对象中会包含多个 Touch 对象。每个 Touch 对象都代表一个手指在屏幕上的接触点。
+
+在移动端设备上，React 中定义的鼠标事件（如 `onClick`、`onMouseDown` 等）**通常也能正常工作**。这是因为许多**移动端浏览器会将触摸事件模拟成鼠标事件**，以便能够兼容那些只使用鼠标事件的网页。（**浏览器做的，并不是React做的**）
+
+但是，需要注意的是，这种模拟并不总是完美的。在某些情况下，触摸事件和鼠标事件之间可能存在细微的差异。例如，在移动端浏览器中，当用户点击一个链接时，通常会有一个短暂的延迟（大约 300 毫秒），以便浏览器能够判断用户是否要执行双击操作。
+
+因此，在开发针对移动端设备的网页时，建议使用专门针对触摸屏设计的触摸事件（如 `onTouchStart`、`onTouchMove` 等），而不是依赖于鼠标事件。
+
+### 事件代理和事件委托
+
+两者是同一个东西的两种叫法，父级元素代理了子级元素的事件，子级元素将事件委托给父级元素。
+
+---
+
+## delete操作符
+
+- 函数形参不能被delete；
+- 不能删除var声明的变量；
+
+---
+
+## 严格模式
+
+- 变量使用前必须声明；
+
+- 严格模式下`setTimeout`函数中this也指向`window`；
+- 构造函数内`this`指向当前创建的对象；
+
+---
+
+## 隐式类型转换
+
+- 在比较对象和布尔值时，对象先转换为字符串，然后再转换为数字，布尔值直接转换为数字。
+- 在比较对象和字符串时，对象直接转换为字符串。
+- 在比较对象和数字时，对象先转换为字符串，然后再转换为数字。
+- 在比较字符串和数字时，字符串直接转换成数字。
+- 在比较字符串和布尔值时，二者全部都会被转化成数值再进行比较1。
