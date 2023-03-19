@@ -56,6 +56,10 @@ React Hooks原理是指React Hooks是如何实现的，以及它们是如何在�
 - [React Hooks的调用顺序和数量必须保持一致，否则会导致Hook节点和Fiber节点的不匹配，从而引发错误。React Hooks的调用顺序和数量是通过一个全局的指针来控制的，每次调用一个Hook，指针就会向后移动一个节点，每次渲染一个组件，指针就会重置到链表的头部](https://juejin.cn/post/6844903975838285838)[2](https://juejin.cn/post/6844903975838285838)[3](https://zhuanlan.zhihu.com/p/341167678)。
 - [React Hooks的更新和副作用是通过调度器和调和器来处理的，调度器负责安排组件的更新优先级和时间，调和器负责执行组件的更新和副作用。React Hooks的更新和副作用会根据Hook的类型，状态，依赖等信息，来决定是否需要触发组件的重新渲染或者执行副作用函数](https://juejin.cn/post/6844903975838285838)[2](https://juejin.cn/post/6844903975838285838)[3](https://zhuanlan.zhihu.com/p/341167678)。
 
+`hooks`是通过链表管理的，这个链表作为fiber节点的`memoizedState`属性值，在组件更新时，可以对新旧fiber上的hooks链表上的节点进行对比。
+
+![image-20230319134519911](assets/image-20230319134519911.png)
+
 ### useMemo和useCallback
 
 当我们需要从一个状态计算出另一个状态，或者传递一个函数给子组件时，可以使用useMemo。useMemo返回一个被缓存的值，只有当useMemo的依赖项发送变化时，才会重新执行创建函数。为什么使用useMemo是因为组件每次更新时，都会执行render函数，会重新计算状态或者生成新的函数引用，进而触发字组件的更新。
@@ -167,6 +171,12 @@ const refContainer = useRef(initialValue);
 ```
 
 [`useRef` 可以用来获取 DOM 元素或者保存某些数据。](https://blog.csdn.net/qq_45677671/article/details/116707927)[2](https://blog.csdn.net/qq_45677671/article/details/116707927)[1](https://blog.csdn.net/u011705725/article/details/115634265)[ 它在渲染周期内永远不会变，因此可以用来引用某些数据。](https://blog.csdn.net/qq_45677671/article/details/116707927)[2](https://blog.csdn.net/qq_45677671/article/details/116707927)
+
+---
+
+### 为什么只能在顶层调用hooks
+
+React 之所以不允许在条件式中使用 Hook，是因为 React 需要依靠 Hook 的调用顺序来确定每个 Hook 对应的状态。具体来说，React 需要根据 Hook 的调用顺序来为每个 Hook 分配一个唯一的编号，以此来跟踪每个 Hook 对应的状态。
 
 ---
 
@@ -333,7 +343,7 @@ react知道哪个组件触发了更新，但是不知道哪些子组件会受到
 
 如果`setState`是在React合成事件或生命周期函数中调用，**那么React会判断是否处于批量更新模式**，如果是，则会将该`setState`操作放入更新队列中，等待后续统一处理；如果不是，则直接进行同步更新。
 
-如果`setState`是在原生事件或`setTimeout`等异步回调中调用，React会直接进行同步更新。这是因为React无法确定异步事件的触发时机，所以为了确保更新能够立即生效，只能同步执行`setState`。
+如果`setState`是在原生事件或`setTimeout`等异步回调中调用，React会直接进行同步更新。这是因为React无法确定异步事件的触发时机，所以为了确保更新能够立即生效，只能同步执行`setState`。（在实际调试过程中，不是这样的，原生事件中也是进行异步更新）。
 
 - [setState是同步还是异步？原理是什么？ - 掘金 (juejin.cn)](https://juejin.cn/post/7066423854259765279)
 
@@ -350,6 +360,314 @@ react知道哪个组件触发了更新，但是不知道哪些子组件会受到
 - 而`post`钩子会将`isBatchingUpdates`置为`false`。
 
 ---
+
+### 与Vue3 nextTick的对比
+
+在vue中，假如我们修改响应式变量后，想拿到更新之后的DOM，需要在状态修改后使用`nextTick`，而不能是修改前。因为响应式变量的`set`方法中会创建一个新的任务进行DOM更新（不是渲染，渲染是由浏览器执行的，我们只需要拿到更新后的DOM，不必等到浏览器渲染），而`nextTick`之后也会创建一个任务，由于任务进入队列的顺序不同，当执行到`nextTick`时，DOM更新的任务已经完成了，所有可以拿到更新后的DOM。
+
+而在`React`中，我们之前讨论的其实是更新后的**状态**，他的状态是异步更新的，而在vue中，状态一直是同步更新的，DOM更新才是异步 的，状态在VDom上合并。`setState`的异步与vue 响应式变量更新导致的DOM更新的异步实现方法大体是相同的，如果是第一次执行，则创建一个微任务，**并添加任务开始标记**，之后的`setState`或响应式变量修改就无需创建新的微任务了，而是把要做的工作添加到队列中，这个微任务在执行时会遍历队列中的所有工作并执行。	在`React`还有一个批量更新模式决定是否要启用异步更新。
+
+---
+
+### 调试分析
+
+**类组件**：
+
+```tsx
+import * as React from "react";
+
+class App extends React.Component {
+  btnRef: React.RefObject<HTMLButtonElement>;
+  state: Readonly<{ data: string }>
+  constructor(props: any) {
+    super(props);
+    this.handleSetState = this.handleSetState.bind(this);
+    this.state = { data: 'hello' }
+    this.btnRef = React.createRef();
+  }
+
+  componentDidMount(): void {
+    const cThis = this;
+    this.btnRef.current?.addEventListener('mouseup', function (e) {
+      console.log(e);
+      debugger
+      cThis.setState({ ...cThis.state, data: 'hello world ' });
+      cThis.setState({ ...cThis.state, data: 'hello world 2' });
+      debugger
+      console.log('原生事件', cThis.state);
+    })
+    // 原生事件执行了两次, 为什么？！第一次输出更新前状态，第二次输出更新后状态
+  }
+
+  handleSetState(e: React.MouseEvent) {
+    console.log(e, this);
+    // this.setState({ ...this.state, data: 'hello world' });
+    // console.log('合成事件', this.state);
+    // 只有原生事件的前提下，此时输出的state没有更新
+  }
+
+  render(): React.ReactNode {
+    return (
+      <div>
+        Hello World
+        <button ref={this.btnRef} onClick={this.handleSetState}>setState</button>
+        <div>
+          {this.state.data}
+        </div>
+      </div>
+    )
+  }
+}
+
+export default App
+```
+
+`setState`似乎永远是异步更新的：
+
+```ts
+Component.prototype.setState = function (partialState, callback) {
+  if (typeof partialState !== 'object' && typeof partialState !== 'function' && partialState != null) {
+    throw new Error('setState(...): takes an object of state variables to update or a ' + 'function which returns an object of state variables.');
+  }
+
+  this.updater.enqueueSetState(this, partialState, callback, 'setState');
+};
+```
+
+`callback`是`setState`的第二个参数，在这个回调中可以拿到更新后的`state`。
+
+```ts
+var classComponentUpdater = {
+  isMounted: isMounted,
+  enqueueSetState: function (inst, payload, callback) {
+    var fiber = get(inst);
+    var eventTime = requestEventTime();
+    var lane = requestUpdateLane(fiber);
+    var update = createUpdate(eventTime, lane);
+    update.payload = payload;
+
+    if (callback !== undefined && callback !== null) {
+      {
+        warnOnInvalidCallback(callback, 'setState');
+      }
+
+      update.callback = callback;
+    }
+
+    var root = enqueueUpdate(fiber, update, lane);
+
+    if (root !== null) {
+      scheduleUpdateOnFiber(root, fiber, lane, eventTime);
+      entangleTransitions(root, fiber, lane);
+    }
+
+    {
+      markStateUpdateScheduled(fiber, lane);
+    }
+  },
+```
+
+当我们使用`setState`时：
+
+- 获取当前节点的fiber对象：`var fiber = get(inst)`，（`inst`是当前组件实例），`lane`表示更新优先级；
+
+- 生成一个更新任务（` var update = createUpdate(eventTime, lane)`），
+
+**函数组件**
+
+```tsx
+function MyFuncComponent() {
+  const [count, setCount] = React.useState(0);
+  return (
+    <div>
+      <h1>函数组件</h1>
+      <div>
+        {count}
+      </div>
+      <div>
+        <button onClick={() => {
+          debugger
+          setCount(count + 1)
+        }}>more</button>
+        <button onClick={() => {
+          debugger
+          setCount(count - 1)
+        }
+        }>less</button>
+      </div>
+    </div >
+  )
+}
+```
+
+函数组件与类组件最大的区别就是没有组件实例对象，类组件的`setState`方法可以直接拿到组件实例对象，然后拿到对应的`fiber`对象。函数组件通过`ReactCurrentDispatcher.current`拿到`dispatcher`对象（`dispatcher`对象上有所有React定义的`hooks`函数）。
+
+> 在 React 内部，每个函数组件实际上对应着一个 Fiber 对象，而该 Fiber 对象内部有一个指向 dispatcher 的指针。
+>
+> dispatcher 是 React 的内部管理工具，它用于管理函数组件的 Hooks 队列，并执行更新操作。每次使用 `useState`、`useEffect` 等 Hooks 时，都会使用 dispatcher 来管理对应的状态和副作用。
+>
+> 在使用 `useState` 时，函数组件会调用 React 内部的 `useState` 函数，该函数会从当前 Fiber 对象中获取 dispatcher 指针，并创建一个新的状态值和对应的更新函数。当我们调用更新函数时，它会将对应的更新操作添加到 dispatcher 管理的 Hooks 队列中，并通知 React 进行更新。
+>
+> ReactCurrentDispatcher.current 是当前正在执行的组件的 dispatcher。它是一个全局变量，但是不是全局唯一的。每个渲染器在执行时都会创建自己的 ReactCurrentDispatcher 实例。不同渲染器之间是相互独立的，它们拥有自己的 ReactCurrentDispatcher 实例。因此，在多个渲染器同时存在的情况下，不同的渲染器可以同时使用不同的 dispatcher。
+>
+> 组件更新时不会创建新的 dispatcher。在函数组件的每次更新中，使用同一个 dispatcher 对应着同一个组件实例的更新。当一个函数组件在更新时，React 会创建一个新的更新对象并将其添加到该组件的更新队列中，**使用同一个 dispatcher 对应的还是同一个组件实例，只是更新对象不同**。当更新被处理时，React 会使用当前的 dispatcher 处理该组件的更新。
+>
+> **在更新过程中**，React 会创建新的 Fiber 对象来表示组件的更新状态，并通过之前 Fiber 对象中的指针来获取对应组件实例的 Dispatcher。然后再使用该 Dispatcher 来进行 hooks 状态的更新操作。
+>
+> 所以说，Dispatcher 和 Fiber 是相互依赖的，Dispatcher 依赖于 Fiber 来获取组件实例，而 Fiber 依赖于 Dispatcher 来更新 hooks 相关状态。
+
+fiber对应的是一个更新任务，而dispatcher管理这些更新任务，并进行对比。
+
+React组件更新的触发条件是使用`setState`或`useState`返回的`set`函数，即只有状态发生变化才会触发组件更新。
+
+```ts
+function useState(initialState) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useState(initialState);
+}
+
+function useEffect(create, deps) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useEffect(create, deps);
+}
+
+function useCallback(callback, deps) {
+  var dispatcher = resolveDispatcher();
+  return dispatcher.useCallback(callback, deps);
+}
+
+// ..... 其他所有的hooks函数
+
+/**
+ * Keeps track of the current dispatcher.
+ */
+var ReactCurrentDispatcher = {
+  /**
+   * @internal
+   * @type {ReactComponent}
+   */
+  current: null
+};
+
+function resolveDispatcher() {
+  var dispatcher = ReactCurrentDispatcher.current;
+
+  {
+    if (dispatcher === null) {
+      error('******');
+    }
+  } // Will result in a null access error if accessed outside render phase. We
+  // intentionally don't throw our own error because this is in a hot path.
+  // Also helps ensure this is inlined.
+  // 需要在render内部调用
+  // 可能在render函数内会创建一个全局的ReactCurrentDispatcher
+
+  return dispatcher;
+}
+```
+
+在上述代码中，可以看到当我们调用`hooks`函数，首先需要获取当前的`dispatcher`，然后通过`dispatcher`执行`hooks`函数。由于`hooks`是需要绑定到当前组件的`fiber`对象上的，我们有理由相信`dispathcer`维持了对当前组件`fiber`对象的引用，并将这个`hook`添加到`fiber`对象的`memoizedState`链表上。
+
+### 函数组件渲染和useState
+
+在渲染子组件前，React做了这些操作：
+
+```ts
+function renderWithHooks(current, workInProgress, Component, props, secondArg, nextRenderLanes) {
+  renderLanes = nextRenderLanes;
+  currentlyRenderingFiber$1 = workInProgress;
+
+  {
+    hookTypesDev = current !== null ? current._debugHookTypes : null;
+    hookTypesUpdateIndexDev = -1; // Used for hot reloading:
+
+    ignorePreviousDependencies = current !== null && current.type !== workInProgress.type;
+  }
+
+  workInProgress.memoizedState = null;
+  workInProgress.updateQueue = null;
+  workInProgress.lanes = NoLanes; // The following should have already been reset
+  // currentHook = null;
+  // workInProgressHook = null;
+  // didScheduleRenderPhaseUpdate = false;
+  // localIdCounter = 0;
+  // TODO Warn if no hooks are used at all during mount, then some are used during update.
+  // Currently we will identify the update render as a mount because memoizedState === null.
+  // This is tricky because it's valid for certain types of components (e.g. React.lazy)
+  // Using memoizedState to differentiate between mount/update only works if at least one stateful hook is used.
+  // Non-stateful hooks (e.g. context) don't get added to memoizedState,
+  // so memoizedState would be null during updates and mounts.
+
+  {
+    if (current !== null && current.memoizedState !== null) {
+      ReactCurrentDispatcher$1.current = HooksDispatcherOnUpdateInDEV;
+    } else if (hookTypesDev !== null) {
+      // This dispatcher handles an edge case where a component is updating,
+      // but no stateful hooks have been used.
+      // We want to match the production code behavior (which will use HooksDispatcherOnMount),
+      // but with the extra DEV validation to ensure hooks ordering hasn't changed.
+      // This dispatcher does that.
+      ReactCurrentDispatcher$1.current = HooksDispatcherOnMountWithHookTypesInDEV;
+    } else {
+      ReactCurrentDispatcher$1.current = HooksDispatcherOnMountInDEV;
+    }
+  }
+
+  var children = Component(props, secondArg); // Check if there was a render phase update
+```
+
+`Component`就是我们的组件函数。
+
+`currentlyRenderingFiber$1 = workInProgress;`将`currentlyRenderingFiber$1`执行当前fiber。然后初始化当前fiber的一些属性。
+
+由于`currentlyRenderingFiber$1`是全局的，接下来我们执行组件的渲染函数时，如果遇到`hooks`函数，就可以拿到当前组件的fiber对象。
+
+> 在 React 中，双缓存机制是通过使用双缓存 Fiber 树来实现的。在组件更新过程中，React 会创建两个 Fiber 树，一个用于当前更新，另一个用于下一次更新。在当前更新过程中，React 使用 `ReactCurrentDispatcher$1` 来获取之前的 dispatcher。
+
+`react-dom.devlopment.js`和`react.development.js`中都有`ReactCurrentDispatcher$1`和`ReactCurrentDispatcher`。
+
+最终需要在`react-dom.devlopment.js`中执行hook（Dispatcher对象是在这个文件中定义的），但是是通过`react.development.js`中的`dispatcher`调用的，也就是说下面代码中的`this`指向需要发送改变。
+
+```ts
+	useState: function (initialState) {
+      currentHookNameInDev = 'useState';
+      mountHookTypesDev();
+      var prevDispatcher = ReactCurrentDispatcher$1.current;
+      ReactCurrentDispatcher$1.current = InvalidNestedHooksDispatcherOnMountInDEV;
+
+      try {
+        return mountState(initialState);
+      } finally {
+        ReactCurrentDispatcher$1.current = prevDispatcher;
+      }
+    },
+```
+
+```ts
+function mountState(initialState) {
+  var hook = mountWorkInProgressHook();
+
+  if (typeof initialState === 'function') {
+    // $FlowFixMe: Flow doesn't like mixed types
+    initialState = initialState();
+  }
+
+  hook.memoizedState = hook.baseState = initialState;
+  var queue = {
+    pending: null,
+    interleaved: null,
+    lanes: NoLanes,
+    dispatch: null,
+    lastRenderedReducer: basicStateReducer,
+    lastRenderedState: initialState
+  };
+  hook.queue = queue;
+  var dispatch = queue.dispatch = dispatchSetState.bind(null, currentlyRenderingFiber$1, queue);
+  return [hook.memoizedState, dispatch];
+}
+```
+
+返回了一个`dispatch`函数，绑定当前fiber和hook队列。`queue` 是 `useState` Hook 中用于实现异步更新的重要数据结构，其作用是保存 state 更新队列，并在组件更新时根据更新情况进行状态的更新。
 
 ## redux
 
