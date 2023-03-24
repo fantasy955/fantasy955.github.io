@@ -85,6 +85,7 @@ categories.value.forEach((category) => {
       demo.name = demo.path.split(".")[0];
     }
   });
+  childrenJson.demos = childrenJson.demos.filter((demo) => demo.name[0] !== '_')
   category.children = childrenJson.demos;
 });
 
