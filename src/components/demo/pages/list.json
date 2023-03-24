@@ -11,9 +11,14 @@
    "path": "DemoComponents.vue"
   },
   {
-   "name": "AntV案例",
+   "name": "_AntV案例",
    "description": "",
    "path": "AntVDemos.vue"
+  },
+  {
+   "name": "指针仪表配置器",
+   "description": "",
+   "path": "PointerConfigurer.vue"
   }
  ]
 }

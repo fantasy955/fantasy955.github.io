@@ -16,18 +16,24 @@ import { debounce } from '@/utils/common.js';
 const screenSize = useScreenSize();
 const canvas = ref(null);
 var graph = undefined;
+const nodeType = new Map();
 
 const handleDragItemEnd = (e, item) => {
     let point = graph.getPointByClient(e.clientX, e.clientY);
     if (point.x < 0 || point.y < 0) {
         return
     }
-    console.log(item);
+
+    console.log('@@')
     graph.addItem('node', {
         x: point.x,
         y: point.y,
-        type: 'rect',
+        // type: 'customNode',
+        // type: 'rect',
+        // shape: 'customNode',
+        shape: 'html-node',
         label: item.name,
+        html: '12345',
         style: {
             fill: 'white',
             // 节点的描边颜色。
@@ -40,6 +46,7 @@ const handleDragItemEnd = (e, item) => {
             cursor: 'pointer',
             // 圆角
             radius: 4,
+            // size: 16,
         },
     })
 }
@@ -80,7 +87,63 @@ const items = [
         name: '组件3',
         src: '',
     },
+    {
+        name: '自定义组件1',
+        src: '',
+        shape: 'my-node-1',
+    }
 ]
+
+G6.registerNode('html-node', {
+    draw(cfg, group) {
+        const div = document.createElement('div');
+        div.innerHTML = cfg.html;
+        div.style.backgroundColor = '#eee';
+        div.style.padding = '8px';
+        div.style.borderRadius = '4px';
+        div.style.boxShadow = '2px 2px 4px #aaa';
+        const shape = group.addShape('html', {
+            attrs: {
+                x: cfg.x,
+                y: cfg.y,
+                width: 100,
+                height: 36,
+                html: div,
+            },
+        });
+        return shape;
+    },
+});
+
+G6.registerNode('customNode', {
+    draw(cfg, group) {
+        // 创建一个圆形
+        const circle = group.addShape('circle', {
+            attrs: {
+                x: 0,
+                y: 0,
+                r: cfg.size,
+                fill: cfg.style.fill,
+                stroke: cfg.style.stroke,
+                lineWidth: cfg.style.lineWidth,
+            },
+        });
+
+        // 创建一个文本
+        const label = group.addShape('text', {
+            attrs: {
+                x: 0,
+                y: cfg.size + 8,
+                text: cfg.label,
+                textAlign: 'center',
+                textBaseline: 'top',
+            },
+        });
+
+        // 返回该节点的 KeyShape 和 Label
+        return circle;
+    },
+});
 
 watch(screenSize,
     // 第三个参数onCleanup
