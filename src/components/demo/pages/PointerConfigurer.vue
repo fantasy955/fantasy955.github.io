@@ -65,6 +65,7 @@ export default {
                 1: { position: { x: 0, y: 0 }, ratio: 0, active: false },
                 2: { position: { x: 0, y: 0 }, ratio: 0, active: false },
             },
+            dirty: false,
             operations: [
                 {
                     id: 0, name: '中心', eventHandler: (e) => {
@@ -95,8 +96,14 @@ export default {
                 this.canvasEvent(e);
             }
         });
-        window.addEventListener('resize', this.updateCanvasRatio);
-        // this.updateCanvasRatio = this.updateCanvasRatio.bind(this);
+        this.observer = new ResizeObserver((entries) => {
+            this.updateCanvasRatio();
+        });
+        this.observer.observe(this.$refs.canvas);
+    },
+    unmounted() {
+        this.observer.disconnect();
+        this.canvasEvent = null;
     },
     methods: {
         // 根据摄像头id 获取目标设备图像
@@ -157,6 +164,7 @@ export default {
         },
         draw: function (oid, x, y) {
             // console.log(oid, x, y);
+            this.dirty = true;
             this.clear(oid);
             this.addArc(x, y);
             this.lastState[oid].position.x = x;
@@ -216,5 +224,6 @@ td {
 input {
     width: 5rem;
     font-size: 0.8rem;
+    text-align: center;
 }
 </style>

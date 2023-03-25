@@ -1,24 +1,29 @@
 {
- "demos": [
-  {
-   "name": "FantasyVideo界面",
-   "description": "",
-   "path": "FanytasyVideo.vue"
-  },
-  {
-   "name": "_独立组件演示",
-   "description": "",
-   "path": "DemoComponents.vue"
-  },
-  {
-   "name": "_AntV案例",
-   "description": "",
-   "path": "AntVDemos.vue"
-  },
-  {
-   "name": "指针仪表配置器",
-   "description": "",
-   "path": "PointerConfigurer.vue"
-  }
- ]
+    "demos": [
+        {
+            "name": "FantasyVideo界面",
+            "description": "",
+            "path": "FanytasyVideo.vue"
+        },
+        {
+            "name": "_独立组件演示",
+            "description": "",
+            "path": "DemoComponents.vue"
+        },
+        {
+            "name": "_AntV案例",
+            "description": "",
+            "path": "AntVDemos.vue"
+        },
+        {
+            "name": "指针仪表配置器",
+            "description": "",
+            "path": "PointerConfigurer.vue"
+        },
+        {
+            "name": "液晶屏仪表配置器",
+            "description": "",
+            "path": "LcdConfigurer.vue"
+        }
+    ]
 }
