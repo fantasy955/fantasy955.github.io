@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h5 style="display: inline-block; margin-right: 8px;">选择输入源</h5>
+        <h5 style="display: inline-block; margin-right: 8px;">选择视频源</h5>
         <select @change="$emit('onSourceChange', $event, $event.target.value)" :disabled="disabled">
             <option disabled selected hidden>请选择摄像设备</option>
             <option :key="item.id" :value="item.id" v-for="item in sourceList">{{ item.name }}</option>

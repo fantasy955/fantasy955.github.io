@@ -45,16 +45,14 @@
 </template>
 
 <script>
-import SourceSelector from './components/SourceSelector.vue';
-import Loading from './components/Loading.vue';
 import { debounce } from '@/utils/common';
 import { nextTick } from 'vue';
+import CommonConfigurer from './components/CommonConfigurer';
 
 export default {
     name: 'PointerCOnfigurer',
-    components: [
-        SourceSelector,
-        Loading,
+    mixins: [
+        CommonConfigurer
     ],
     data() {
         return {
@@ -116,8 +114,8 @@ export default {
                     // 画布的实际大小不会改变，始终是图片大小，改变的是渲染大小
                     this.canvasContext.drawImage(img, 0, 0);
                     this.updateCanvasRatio();
+                    this.load(sid);
                 });
-
             };
             this.img = img;
             this.sid = sid;
@@ -146,49 +144,12 @@ export default {
             this.canvasEvent = operation.eventHandler;
             this.activeOperation = operation;
         },
-        getEventPositionOffset: function (event, el, absolute) {
-            const { x: ex, y: ey } = this.getEventPosition(event);
-            if (absolute) {
-                // console.log('绝对定位', ex, ey);
-                return { x: ex, y: ey };
-            }
-            // console.log('指针坐标', ex, ey);
-            const { left, top } = this.offset(el);
-            // console.log('偏移', left, top);
-            const [x, y] = [ex - left, ey - top];
-            return { x, y };
-        },
-        getEventPosition: function (ev) {
-            let x, y;
-            //注：使用这个函数，需要给Canvas元素的position设为absolute。
-            if (ev.layerX || ev.layerX == 0) {
-                x = ev.layerX;
-                y = ev.layerY;
-            } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-                x = ev.offsetX;
-                y = ev.offsetY;
-            }
-            return { x: x, y: y };
-        },
-        offset: function (el) {
-            // get the client offset of the target element
-            let top = el.offsetTop
-            let left = el.offsetLeft
-            while (el.offsetParent) {
-                el = el.offsetParent
-                top += el.offsetTop
-                left += el.offsetLeft
-            }
-            return {
-                left: left,
-                top: top
-            }
-        },
         save: function () {
-
+            // 将lastState数据保存到数据库
         },
         load: function (sid) {
-
+            // 从数据库加载位置信息并调用draw方法绘制
+            // 如果没有已存在的配置则不进行绘制
         },
         saveBackground: function () {
             console.log('save')
