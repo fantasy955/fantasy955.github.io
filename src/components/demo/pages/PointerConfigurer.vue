@@ -7,8 +7,9 @@
         </div>
         <div style="width: 100%; display: flex;" ref="container">
             <div style="position: relative; flex: 3; max-width: 500px;">
-                <canvas ref="canvas"
+                <canvas v-show="!loading" ref="canvas"
                     style="user-select: none; width: 100%; -webkit-user-select: none; position: absolute; left: 0; top: 0"></canvas>
+                <Loading message="加载中" v-show="loading"></Loading>
             </div>
             <div style="flex: 2; row-gap: 0.5rem;">
                 <div style="display: flex;">
@@ -45,11 +46,15 @@
 
 <script>
 import SourceSelector from './components/SourceSelector.vue';
+import Loading from './components/Loading.vue';
+import { debounce } from '@/utils/common';
+import { nextTick } from 'vue';
 
 export default {
     name: 'PointerCOnfigurer',
     components: [
         SourceSelector,
+        Loading,
     ],
     data() {
         return {
@@ -93,6 +98,7 @@ export default {
             }
         });
         window.addEventListener('resize', this.updateCanvasRatio);
+        // this.updateCanvasRatio = this.updateCanvasRatio.bind(this);
     },
     methods: {
         // 根据摄像头id 获取目标设备图像
@@ -103,12 +109,15 @@ export default {
             this.loading = true;
             img.onload = () => {
                 this.loading = false;
-                this.$refs.canvas.width = img.width;
-                this.$refs.canvas.height = img.height;
-                // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
-                // 画布的实际大小不会改变，始终是图片大小，改变的是渲染大小
-                this.canvasContext.drawImage(img, 0, 0);
-                this.updateCanvasRatio();
+                nextTick(() => {
+                    this.$refs.canvas.width = img.width;
+                    this.$refs.canvas.height = img.height;
+                    // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
+                    // 画布的实际大小不会改变，始终是图片大小，改变的是渲染大小
+                    this.canvasContext.drawImage(img, 0, 0);
+                    this.updateCanvasRatio();
+                });
+
             };
             this.img = img;
             this.sid = sid;
@@ -118,13 +127,16 @@ export default {
                 this.lastState[_id].position.y = 0;
             }
         },
-        updateCanvasRatio: function () {
+        // 不能使用箭头函数（需要通过apply调用）
+        updateCanvasRatio: debounce(function () {
             // console.log(this.$refs.canvas)
+            // console.log(this);
             const clientWidth = this.$refs.canvas.clientWidth;  // 这个是客户端渲染的大小
             const imageWidth = this.$refs.canvas.width;  // 这个属性不变
             this.ratio = imageWidth / clientWidth;
-            this.$refs.container.style.height = `${this.$refs.canvas.clientHeight + 20}px`;
-        },
+            this.$refs.container.style.height = `${this.$refs.canvas.clientHeight + 50}px`;
+            // console.log(this.ratio, imageWidth, clientWidth);
+        }, 200),
         addOperation: function (operation) {
             if (this.activeOperation === operation) {
                 this.canvasEvent = null;
@@ -238,5 +250,10 @@ td {
     /* border: 1px solid #bbb; */
     /* padding: 2px 8px 0; */
     text-align: center;
+}
+
+input {
+    width: 5rem;
+    font-size: 0.8rem;
 }
 </style>

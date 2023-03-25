@@ -95,7 +95,8 @@ export const initAeronautics = function (canvas, width, height) {
             }
             $.drawImage(c1, 0, 0, _w, _h, 0, 0, _w, _h);
             $.globalCompositeOperation = "source-over";
-
+            
+            // 递归调用
             window.requestAnimFrame(draw);
         })();
     }, true);

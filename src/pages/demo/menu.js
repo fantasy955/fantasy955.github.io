@@ -1,6 +1,10 @@
 export default {
     categories: [
         {
+            name: '页面演示',
+            path: 'pages',
+        },
+        {
             name: "文件处理",
             path: "fileandblob",
         },
@@ -13,9 +17,6 @@ export default {
         }, {
             name: "Vue",
             path: 'vue',
-        }, {
-            name: '页面演示',
-            path: 'pages',
         }
     ]
 }
