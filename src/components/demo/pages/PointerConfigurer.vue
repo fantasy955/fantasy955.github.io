@@ -14,8 +14,8 @@
             <div style="flex: 2; row-gap: 0.5rem;">
                 <div style="display: flex;">
                     <button v-for="operation in operations" :key="operation.id"
-                        :class="activeOperation && operation.id === activeOperation.id ? 'operation-active' : 'operation-default'"
-                        @click="addOperation(operation)">
+                        :class="selected && activeOperation && operation.id === activeOperation.id ? 'operation-active' : 'operation-default'"
+                        @click="() => selected && addOperation(operation)">
                         {{ '标记' + operation.name }}
                     </button>
                 </div>
@@ -37,6 +37,33 @@
                                     @input="this.draw(operation.id, lastState[operation.id].position.x, parseInt($event.target.value))">
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="3">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">最小值</td>
+                            <td colspan="2">
+                                <input :value="this.min" @input="($event) => { min = $event.target.value }" type="number"
+                                    step="0.1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">最大值</td>
+                            <td colspan="2">
+                                <input :value="this.max" @input="($event) => { max = $event.target.value }" type="number"
+                                    step="0.1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">正常范围</td>
+                            <td colspan="2">
+                                <input style="width: 4rem;" type="number" step="0.1">
+                                ~
+                                <input style="width: 4rem;" type="number" step="0.1">
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -48,6 +75,7 @@
 import { debounce } from '@/utils/common';
 import { nextTick } from 'vue';
 import CommonConfigurer from './components/CommonConfigurer';
+import axios from 'axios';
 
 export default {
     name: 'PointerCOnfigurer',
@@ -65,7 +93,10 @@ export default {
                 1: { position: { x: 0, y: 0 }, ratio: 0, active: false },
                 2: { position: { x: 0, y: 0 }, ratio: 0, active: false },
             },
+            selected: false,
             dirty: false,
+            min: 0,
+            max: 0,
             operations: [
                 {
                     id: 0, name: '中心', eventHandler: (e) => {
@@ -114,15 +145,14 @@ export default {
             this.loading = true;
             img.onload = () => {
                 this.loading = false;
-                nextTick(() => {
-                    this.$refs.canvas.width = img.width;
-                    this.$refs.canvas.height = img.height;
-                    // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
-                    // 画布的实际大小不会改变，始终是图片大小，改变的是渲染大小
-                    this.canvasContext.drawImage(img, 0, 0);
-                    this.updateCanvasRatio();
-                    this.load(sid);
-                });
+                this.$refs.canvas.width = img.width;
+                this.$refs.canvas.height = img.height;
+                // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
+                // 画布的实际大小不会改变，始终是图片大小，改变的是渲染大小
+                this.canvasContext.drawImage(img, 0, 0);
+                this.load(sid);
+                this.updateCanvasRatio();
+                this.selected = true;
             };
             this.img = img;
             this.sid = sid;
@@ -153,6 +183,27 @@ export default {
         },
         save: function () {
             // 将lastState数据保存到数据库
+            let url = '';
+            let data = {
+                sid: this.id,
+                center: {
+                    x: this.lastState[0].x,
+                    y: this.lastState[0].y,
+                },
+                start: {
+                    x: this.lastState[1].x,
+                    y: this.lastState[1].y,
+                },
+                end: {
+                    x: this.lastState[2].x,
+                    y: this.lastState[2].y,
+                },
+                min: this.min,
+                max: this.max,
+            }
+            axios.post(url, data)
+                .then(() => { })
+                .catch(() => { });
         },
         load: function (sid) {
             // 从数据库加载位置信息并调用draw方法绘制

@@ -13,7 +13,8 @@
             </div>
             <div style="flex: 2; row-gap: 0.5rem;">
                 <div style="display: flex;">
-                    <button :class="active ? 'operation-active' : 'operation-default'" @click="addOperation">
+                    <button :class="active && selected ? 'operation-active' : 'operation-default'"
+                        @click="() => selected && addOperation()">
                         {{ '添加识别目标' }}
                     </button>
                 </div>
@@ -21,11 +22,7 @@
                     <thead>
                         <tr>
                             <th>识别名称</th>
-                            <th>X轴坐标</th>
-                            <th>Y轴坐标</th>
-                            <th>宽度</th>
-                            <th>高度</th>
-                            <th></th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,20 +30,15 @@
                             <td>
                                 <input @input="(event) => { target.name = event.target.value }" :value="target.name">
                             </td>
-                            <td><input :value="target.sX" type="number" pattern="^[1-9]\d+" @input="() => { }">
+                            <td>
+                                <button class="del" @click="remove(target.id)">移除</button>
                             </td>
-                            <td><input :value="target.sY" type="number" pattern="^[1-9]\d+" @input="() => { }">
-                            </td>
-                            <td><input :value="target.eX" type="number" pattern="^[1-9]\d+" @input="() => { }">
-                            </td>
-                            <td><input :value="target.eY" type="number" pattern="^[1-9]\d+" @input="() => { }">
-                            </td>
-                            <td></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <InputModal ref="modal" title="请输入项目名称" @input="handleInput" />
     </div>
 </template>
 
@@ -54,11 +46,16 @@
 import { nextTick } from 'vue';
 import CommonConfigurer from './components/CommonConfigurer';
 import { debounce } from '@/utils/common';
+import axios from 'axios';
+import InputModal from './components/InputModal.vue';
 
 export default {
     name: 'LcdConfigurer',
     mixins: [
         CommonConfigurer
+    ],
+    components: [
+        InputModal
     ],
     data() {
         return {
@@ -67,6 +64,7 @@ export default {
             ratio: 0,
             targetList: [],
             dirty: false,
+            selected: false,
         }
     },
     mounted() {
@@ -110,6 +108,7 @@ export default {
                     this.updateCanvasRatio();
                     this.load(sid);
                 });
+                this.selected = true;
             };
             this.img = img;
             this.sid = sid;
@@ -157,8 +156,12 @@ export default {
                 } else {
                     active = false;
                     // console.log('put');
-                    this.targetList.push({ name: '未命名', sX, sY, sRatio, eX, eY, eRatio, id: this.uuid() });
                     this.moveEvent = null;
+                    this.$refs.modal.showModal();
+                    // console.log(this.$refs.modal)
+                    this.inputCallback = (name) => {
+                        this.targetList.push({ name, sX, sY, sRatio, eX, eY, eRatio, id: this.uuid() });
+                    };
                 }
             };
         },
@@ -185,7 +188,30 @@ export default {
 
         },
         save() {
+            let url = '';
+            axios.post(url, {
+                id: this.sid,
+                targets: JSON.stringify(this.targetList),
+            });
+        },
+        remove(id) {
+            if (this.$delete) {
+                this.$delete(this.targetList, this.targetList.findIndex((item) => item.id === id))
+            } else {
+                this.targetList.splice(this.targetList.findIndex((item) => item.id === id), 1);
+            }
+            this.clear();
+        },
+        async getInput() {
 
+        },
+        handleInput(status, name) {
+            console.log(name);
+            if (status) {
+                this.inputCallback(name.length ? name : '未命名');
+            }
+            this.$refs.modal.close();
+            this.clear();
         },
     }
 }
@@ -219,11 +245,16 @@ td {
     /* border: 1px solid #bbb; */
     /* padding: 2px 8px 0; */
     text-align: center;
+    width: 5.2rem;
 }
 
 input {
     width: 5rem;
     font-size: 0.8rem;
     text-align: center;
+}
+
+button.del {
+    color: red;
 }
 </style>
