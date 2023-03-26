@@ -1,10 +1,10 @@
 <template>
-    <router-view v-slot="{ Component, route }">
-      <keep-alive>
-        <component :is="Component" :key="route.path" v-if="route.meta.keepAlive" />
-      </keep-alive>
-      <component :is="Component" :key="route.path" v-if="!route.meta.keepAlive" />
-    </router-view>
+  <router-view v-slot="{ Component, route }">
+    <keep-alive>
+      <component :is="Component" :key="route.path" v-if="route.meta.keepAlive" />
+    </keep-alive>
+    <component :is="Component" :key="route.path" v-if="!route.meta.keepAlive" />
+  </router-view>
 </template>
 
 <script setup>
@@ -30,8 +30,32 @@
   cursor: pointer;
 }
 
-body{
+body {
   overflow: hidden;
 }
 
+.scroll-wrap {
+  position: fixed;
+  top: 76px;
+  bottom: 40px;
+  /* height: 100%; */
+  overflow: hidden;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media(max-width: 768px) {
+  .scroll-wrap {
+    top: 128px;
+  }
+}
+
+.scrollbar-wrap {
+  height: 100%;
+  margin-right: -30px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 </style>

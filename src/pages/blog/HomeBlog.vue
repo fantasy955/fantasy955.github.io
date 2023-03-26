@@ -4,12 +4,14 @@
       <canvas id="canvas" class="canvas"></canvas>
     </div>
     <HomeBlogLeftSide></HomeBlogLeftSide>
-    <div class="col-md-10" role="main">
-      <HomeBlogNav :menu="menu"></HomeBlogNav>
-      <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->
-      <!-- 对于过高的元素，不能用sticky属性限制其距离顶部的高度 -->
-      <HomeBlogCategory v-for="categoryInfo in categoryInfoList" :key="categoryInfo.aname" :categoryInfo="categoryInfo">
-      </HomeBlogCategory>
+    <div class="col-md-10  scroll-wrap" role="main">
+      <div class="scrollbar-wrap">
+        <HomeBlogNav :menu="menu"></HomeBlogNav>
+        <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->
+        <!-- 对于过高的元素，不能用sticky属性限制其距离顶部的高度 -->
+        <HomeBlogCategory v-for="categoryInfo in categoryInfoList" :key="categoryInfo.aname" :categoryInfo="categoryInfo">
+        </HomeBlogCategory>
+      </div>
     </div>
   </div>
 </template>
@@ -74,15 +76,15 @@ onMounted(() => {
   position: fixed;
   /* background: hsla(223, 30%, 45%, 1); */
   top: 0;
-  width: 1920px;
-  height: 1080px;
+  width: 100%;
+  height: 100%;
   padding: 0;
   z-index: -999;
 }
 
 .canvas-cantainer>.canvas {
-  width: 1920px;
-  height: 1080px;
+  width: 100%;
+  height: 100%;
   padding: 0;
 }
 </style>

@@ -1,5 +1,4 @@
 <template>
-  <div></div>
   <div class="container-xxl main">
     <RightAsideNavBar v-if="showRightNavBar" :mask="true" @closeNav="handleCloseNav">
       <template #header>
@@ -180,6 +179,9 @@ onMounted(() => {
 .main {
   display: flex;
   column-gap: 12px;
+  border: 1px;
+  border-color: antiquewhite;
+  overflow: auto;
 }
 
 .demo-content {
@@ -274,13 +276,6 @@ aside {
 
 a.active {
   background-color: aquamarine;
-}
-
-main {
-  /* background-color: blanchedalmond; */
-  border: 1px;
-  border-color: antiquewhite;
-  overflow-x: auto;
 }
 
 .right-aside-nav .btn {
