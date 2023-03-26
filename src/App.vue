@@ -34,11 +34,11 @@ body {
   overflow: hidden;
 }
 
+/* 需要提供滚动的元素都必须脱离文档流 */
 .scroll-wrap {
   position: fixed;
   top: 76px;
   bottom: 40px;
-  /* height: 100%; */
   overflow: hidden;
   left: 0;
   right: 0;
@@ -56,6 +56,7 @@ body {
   height: 100%;
   margin-right: -30px;
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
+/* scroll end */
 </style>
