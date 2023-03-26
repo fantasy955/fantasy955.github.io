@@ -30,6 +30,7 @@ footer {
   flex-wrap: wrap;
   position: absolute;
   width: 100%;
+  height: 40px;
   bottom: 0;
 }
 
