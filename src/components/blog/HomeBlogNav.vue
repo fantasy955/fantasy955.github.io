@@ -3,8 +3,8 @@
   <!-- fix 与 sticky的区别 -->
   <nav class="navbar navbar-blog sticky-top" :class="topBarExpand ? bgW : bgW50">
     <!-- <a class="nav-link category-item" @click="toTop">Top</a> -->
-    <button ref="btnRef" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
-      aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"
+    <button ref="btnRef" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"
       @click="topBarExpand = !topBarExpand">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,8 +42,10 @@ function scrollIntoView(event) {
   if (event) {
     let el = document.getElementById("div-" + event.target.name);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      btnRef.value.click();
+      el.scrollIntoView(true, { behavior: "smooth" });
+      if (window.getComputedStyle(btnRef.value).getPropertyValue('display') !== 'none') {
+        btnRef.value.click();
+      }
     }
   }
 }
