@@ -4,7 +4,7 @@
       <canvas id="canvas" class="canvas"></canvas>
     </div>
     <HomeBlogLeftSide></HomeBlogLeftSide>
-    <div class="col-md-10  scroll-wrap" role="main">
+    <div class="col-md-10 scroll-wrap" role="main">
       <div class="scrollbar-wrap">
         <HomeBlogNav :menu="menu"></HomeBlogNav>
         <!-- 二者处于同一div下，当nav没有处于顶部时，会把下面的内容往下推（没有触发sticky） -->

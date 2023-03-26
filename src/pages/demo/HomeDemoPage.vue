@@ -1,55 +1,61 @@
 <template>
-  <div class="container-xxl main">
-    <RightAsideNavBar v-if="showRightNavBar" :mask="true" @closeNav="handleCloseNav">
-      <template #header>
-        <h3>效果演示</h3>
-      </template>
-      <template #main>
-        <ul class="list-unstyled mb-0 py-3 pt-md-1">
-          <li class="mb-1" v-for="category in categories" :key="category.name">
-            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
-              :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
-              {{ category.name }}
-            </button>
+  <div class="scroll-wrap">
+    <div class="scrollbar-wrap">
+      <div class="container-xxl main">
+        <RightAsideNavBar v-if="showRightNavBar" :mask="true" @closeNav="handleCloseNav">
+          <template #header>
+            <h3>效果演示</h3>
+          </template>
+          <template #main>
+            <ul class="list-unstyled mb-0 py-3 pt-md-1">
+              <li class="mb-1" v-for="category in categories" :key="category.name">
+                <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
+                  :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
+                  {{ category.name }}
+                </button>
 
-            <div class="collapse" :id="`${category.name}-collapse`" style="">
-              <ul class="list-unstyled fw-normal pb-1 small">
-                <li v-for="item in category.children" :key="item.path">
-                  <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
-                  " class="d-inline-flex align-items-center rounded" aria-current="page">{{ item.name }}</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </template>
-    </RightAsideNavBar>
-    <aside class="bd-sidebar">
-      <nav class="bd-links collapse" id="bd-demo-nav" aria-label="Docs navigation" style="">
-        <ul class="list-unstyled mb-0 py-3 pt-md-1">
-          <li class="mb-1" v-for="category in categories" :key="category.name">
-            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
-              :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
-              {{ category.name }}
-            </button>
+                <div class="collapse" :id="`${category.name}-collapse`" style="">
+                  <ul class="list-unstyled fw-normal pb-1 small">
+                    <li v-for="item in category.children" :key="item.path">
+                      <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
+                      " class="d-inline-flex align-items-center rounded" aria-current="page">{{ item.name }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </template>
+        </RightAsideNavBar>
 
-            <div class="collapse" :id="`${category.name}-collapse`" style="">
-              <ul class="list-unstyled fw-normal pb-1 small">
-                <li v-for="item in category.children" :key="item.path">
-                  <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
-                  " class="d-inline-flex align-items-center rounded" :class="{
+        <aside class="bd-sidebar">
+          <nav class="bd-links collapse" id="bd-demo-nav" aria-label="Docs navigation" style="">
+            <ul class="list-unstyled mb-0 py-3 pt-md-1">
+              <li class="mb-1" v-for="category in categories" :key="category.name">
+                <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse"
+                  :data-bs-target="`#${category.name}-collapse`" aria-expanded="false" aria-current="true">
+                  {{ category.name }}
+                </button>
+
+                <div class="collapse" :id="`${category.name}-collapse`" style="">
+                  <ul class="list-unstyled fw-normal pb-1 small">
+                    <li v-for="item in category.children" :key="item.path">
+                      <a style="cursor: pointer;" @click="(event) => viewDemoDetail(event, category.path, item.path)
+                      " class="d-inline-flex align-items-center rounded" :class="{
   active: activeDemoPath === `./${category.path}/${item.path}`,
 }" aria-current="page">{{ item.name }}</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-    <main class="demo-content order-1">
-      <component :is="demoContent" />
-    </main>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+
+        <main class="demo-content order-1">
+          <component :is="demoContent" />
+        </main>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -177,6 +183,7 @@ onMounted(() => {
 
 <style scoped>
 .main {
+  width: 100%;
   display: flex;
   column-gap: 12px;
   border: 1px;
