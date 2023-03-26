@@ -1,29 +1,33 @@
 <template>
-  <div class="row">
-    <div class="col-xl-2 pl-3 pr-3">
-      <div class="sticky-top text-center">
-        <div class="text-muted">Share this</div>
-        <div class="share d-inline-block">
-          <!-- AddToAny BEGIN -->
-          <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-            <a class="a2a_button_facebook"></a>
-            <a class="a2a_button_twitter"></a>
+  <div class="scroll-wrap">
+    <div class="scrollbar-wrap">
+      <div class="row">
+        <div class="col-xl-2 pl-3 pr-3">
+          <div class="sticky-top text-center">
+            <div class="text-muted">Share this</div>
+            <div class="share d-inline-block">
+              <!-- AddToAny BEGIN -->
+              <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+                <a class="a2a_button_facebook"></a>
+                <a class="a2a_button_twitter"></a>
+              </div>
+              <component src="https://static.addtoany.com/menu/page.js" :is="'script'" async>
+              </component>
+              <!-- AddToAny END -->
+            </div>
           </div>
-          <component src="https://static.addtoany.com/menu/page.js" :is="'script'" async>
-          </component>
-          <!-- AddToAny END -->
         </div>
+
+        <div class="col-xl-8 border order-1" role="main">
+          <div id="article-body">加载中</div>
+        </div>
+        <div class="col-md-2 pl-3" :class="screenWidth <= 1200 ? first : second" id="div-article-toc">
+          <div class="sticky-top mr-1 toc-scroll" style="top: 90px" id="article-toc"></div>
+        </div>
+        <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
       </div>
     </div>
-
-    <div class="col-xl-8 border order-1" role="main">
-      <div id="article-body">加载中</div>
-    </div>
-    <div class="col-md-2 pl-3" :class="screenWidth <= 1200 ? first : second" id="div-article-toc">
-      <div class="sticky-top mr-1 toc-scroll" style="top: 90px" id="article-toc"></div>
-    </div>
-    <component src="./assets/js/MathJaxConfig.js" :is="'script'"></component>
   </div>
 </template>
 
@@ -172,11 +176,29 @@ onBeforeUnmount(() => {
   max-height: 500px;
 }
 
+.scroll-wrap {
+  position: fixed;
+  top: 80px;
+  bottom: 40px;
+  overflow: hidden;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scrollbar-wrap {
+  height: 100%;
+  margin-right: -17px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .toc-scroll::-webkit-scrollbar {
   /*滚动条整体样式*/
   width: 10px;
   /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
+  height: 5px;
 }
 
 .toc-scroll::-webkit-scrollbar-thumb {
@@ -198,6 +220,10 @@ onBeforeUnmount(() => {
 @media (max-width: 500px) {
   .toc-scroll {
     max-height: 300px;
+  }
+
+  .scroll-wrap {
+    top: 120px;
   }
 }
 
