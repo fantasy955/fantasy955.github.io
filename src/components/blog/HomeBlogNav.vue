@@ -2,8 +2,8 @@
   <!-- fixed-top -->
   <!-- fix 与 sticky的区别 -->
   <nav class="navbar navbar-blog sticky-top" :class="topBarExpand ? bgW : bgW50">
-    <a class="nav-link category-item" @click="toTop">Top</a>
-    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
+    <!-- <a class="nav-link category-item" @click="toTop">Top</a> -->
+    <button ref="btnRef" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
       aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"
       @click="topBarExpand = !topBarExpand">
       <span class="navbar-toggler-icon"></span>
@@ -15,7 +15,7 @@
         <li class="nav-item" v-for="item in menu" :key="item.sname">
           <a class="nav-link category-item" style="padding-right: 0rem" v-on:click="scrollIntoView"
             v-bind:name="item.sname">{{
-    item.sname
+              item.sname
             }}</a>
         </li>
       </ul>
@@ -33,6 +33,7 @@ defineProps({
 });
 
 const topBarExpand = ref(false);
+const btnRef = ref(null);
 
 const bgW = "bg-white";
 const bgW50 = "bg-white-50";
@@ -42,12 +43,9 @@ function scrollIntoView(event) {
     let el = document.getElementById("div-" + event.target.name);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
+      btnRef.value.click();
     }
   }
-}
-
-function toTop() {
-  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
 
