@@ -1,0 +1,2 @@
+[Year:]YYYY-[Month:]MM-DD
+1642064229723

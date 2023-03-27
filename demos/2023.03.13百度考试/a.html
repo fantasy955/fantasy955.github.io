@@ -14,7 +14,7 @@
         .main2 {
             background-image: url();
         }
-        /* 只会产生一个http请求 */
+        /* 不会产生http请求 */
 
         [class='main1'] {
             color: red;
@@ -27,6 +27,17 @@
 <body>
     <div class="main1">123</div>
     <div class="main2"></div>
+    <div>
+        <!-- 点击label不会触发a标签的事件 -->
+        <label for="tobaidu">测试</label>
+        <a id="tobaidu" href="www.baidu.com">baidu</a>
+    </div>
+    <script type="text/javascript">
+        aEl = document.querySelector('#tobaidu');
+        aEl.addEventListener('click', function(){
+            console.log('点击a标签');
+        })
+    </script>
 </body>
 
 </html>

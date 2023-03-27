@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="forward">forward</button>
+    <button id="back">back</button>
+    <button id="push">push</button>
+    <button id="replace">replace</button>
+    <script>
+        let forwardBtn = document.querySelector('#forward');
+        let backBtn = document.querySelector('#back')
+        let pushBtn = document.querySelector('#push')
+        let replaceBtn = document.querySelector('#replace')
+        forwardBtn.addEventListener('click', function () {
+            history.forward();
+            console.log('forward')
+        })
+        backBtn.addEventListener('click', function () {
+            history.back();
+            console.log('back')
+        })
+        let i = 0;
+        // push 和replace不会触发popstate事件
+        push.addEventListener('click', function () {
+            history.pushState({ data: i }, '', `/${i++}`)
+            console.log('push')
+        })
+        replaceBtn.addEventListener('click', function () {
+            history.pushState({ data: i }, '', `/${i}`)
+            console.log('replace')
+        })
+    </script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
