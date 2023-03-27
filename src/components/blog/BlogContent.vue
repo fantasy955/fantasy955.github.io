@@ -168,7 +168,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .toc-scroll {
   /*要设置滚动条的容器样式*/
   overflow-y: auto;
