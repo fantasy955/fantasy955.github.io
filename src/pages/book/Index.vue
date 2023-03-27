@@ -1,12 +1,16 @@
 <template>
-    <div class="cantainer">
-        <Item v-for="book in filterdBooks" :key="book.file" :post="book.post" :title="book.title" :file="book.file"
-            :desc="book.desc"></Item>
-        <vue-particles class="particle" color="#dedede" :particleOpacity="0.7" :particlesNumber="160" shapeType="circle"
-            :particleSize="4" linesColor="#dedede" :linesWidth="1" :lineLinked="true" :lineOpacity="0.4"
-            :linesDistance="150" :moveSpeed="3" :hoverEffect="true" hoverMode="grab" :clickEffect="true"
-            clickMode="push">
-        </vue-particles>
+    <div class="scroll-wrap">
+        <div class="scrollbar-wrap">
+            <div class="cantainer">
+                <Item v-for="book in filterdBooks" :key="book.file" :post="book.post" :title="book.title" :file="book.file"
+                    :desc="book.desc"></Item>
+                <vue-particles class="particle" color="#dedede" :particleOpacity="0.7" :particlesNumber="160"
+                    shapeType="circle" :particleSize="4" linesColor="#dedede" :linesWidth="1" :lineLinked="true"
+                    :lineOpacity="0.4" :linesDistance="150" :moveSpeed="3" :hoverEffect="true" hoverMode="grab"
+                    :clickEffect="true" clickMode="push">
+                </vue-particles>
+            </div>
+        </div>
     </div>
 </template>
 
