@@ -42,7 +42,10 @@ function scrollIntoView(event) {
   if (event) {
     let el = document.getElementById("div-" + event.target.name);
     if (el) {
-      el.scrollIntoView(true, { behavior: "smooth" });
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: 'center',
+      });
       if (window.getComputedStyle(btnRef.value).getPropertyValue('display') !== 'none') {
         btnRef.value.click();
       }
