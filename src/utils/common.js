@@ -24,9 +24,10 @@ export const throttle = function (fn, delay) {
         if (!flag) {
             return false;
         }
+        // console.log(args);
         // 工作时间，执行函数并且在间隔期内把状态位设为无效
         flag = false;
-        fn.apply(that, ...args);
+        fn.call(that, ...args);
         setTimeout(() => {
             flag = true;
         }, delay)

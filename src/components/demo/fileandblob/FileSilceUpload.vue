@@ -86,7 +86,11 @@ const handlePause = throttle(() => {
     }
 }, 200)
 
-const showMsg = throttle(({ showClose = true, message = '', type = 'info', grouping = true }) => {
+const showMsg = throttle(function (option) {
+    let defaultOption = { showClose: true, message: '', type: 'info', grouping: true };
+    let mergedOption = Object.assign(defaultOption, option);
+    let { showClose, message, grouping, type } = mergedOption;
+    // console.log(option, mergedOption);
     ElMessage({
         showClose,
         message,
@@ -94,7 +98,7 @@ const showMsg = throttle(({ showClose = true, message = '', type = 'info', group
         type,
         duration: 1000,
     })
-}, 1)
+}, 1);
 
 /**
  * 
