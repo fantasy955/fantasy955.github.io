@@ -11,6 +11,16 @@ React的事件机制是基于Virtual DOM实现了一个SyntheticEvent（合成�
 
 那么，为什么不能用事件委托呢？其实，这里的不能用事件委托是指不能用组件层面的事件委托，也就是说，不能把10个button的click事件委托到它们的父组件上，而必须在每个button上单独绑定click事件。这是因为，React的自定义组件并不是一个真实的DOM元素，它不存在点击事件，它只是一个虚拟的组件，最终会被渲染成真实的DOM元素。所以，如果把click事件传给自定义组件，组件只会认为它是一个prop，而不会触发任何事件。**只有真实的DOM元素才能绑定和触发事件**。组件如果不声明`click` prop，无法添加属性。
 
+### 合成事件
+
+React通过提供合成事件来抹平不同浏览器事件对象之间的差异。合成事件是React封装的一套事件机制，它能够模拟原生事件并提供跨浏览器的一致性。
+
+React还采用了顶层事件代理机制，能够保证冒泡一致性并跨浏览器执行。这意味着，无论您在哪个浏览器中使用React，都可以使用相同的事件处理程序代码，并期望它们以相同的方式工作。
+
+React合成事件主要用于抹平不同浏览器之间的差异，它并不能直接用于小程序开发。如果您希望在小程序中使用React，可以考虑使用诸如Remax或Taro等框架，它们能够将React代码编译为小程序代码。
+
+这些框架通常会提供自己的事件系统，用于在小程序中处理事件。
+
 ### 总结
 
 原生事件上定义的捕获事件和响应事件都会先于React添加的事件执行，因为React添加的事件被代理到了document上，之后才能冒泡到document。因此React合成事件的`stopPropagation`无法阻止原生事件到达document的冒泡，注意这里说的是**无法阻止到达document之前**的冒泡，原生事件无法继续冒泡到window上。
@@ -209,7 +219,13 @@ function HelloWord() {
 
 ---
 
-## react更新优化
+## react组件更新
+
+当 React 组件更新时，它会重新执行渲染函数来生成新的虚拟 DOM 树。然后，React 会将新的虚拟 DOM 树与旧的虚拟 DOM 树进行比较，以确定需要更新哪些部分。这个过程称为“协调”。
+
+在协调过程中，React 会更新 Fiber 树上的属性，并确定哪些组件需要更新。然后，React 会调用这些组件的生命周期方法或 Hooks 来执行更新。
+
+### react更新优化
 
 > react中父子组件都订阅了一个store中的值，且子组件又从父组件获取了一个依赖的变量，store中值改了会导致子组件先渲染，父组件后渲染，因为依赖子组件会再渲染一次的情况，这种情况其实react帮我们处理了
 
@@ -231,7 +247,7 @@ function HelloWord() {
 
 ---
 
-## react的fiber架构
+### react的fiber架构
 
 **React 16 之前的不足：**
 
@@ -674,3 +690,104 @@ function mountState(initialState) {
 reudx的 初始状态是第一次调用合并后的reducer，并传入undefined参数得到的！（不会命中任何action，返回初始状态。我们在使用createStore时只需要传入combine后的reducer也是这个原因）；
 
 ---
+
+## 高阶组件
+
+### 为什么使用高阶组件
+
+高阶组件（HOC）是一种用于复用组件逻辑的高级技巧。它不是React API的一部分，而是一种基于React的组合特性而形成的设计模式。
+
+高阶组件的主要优点是它能够在不修改现有组件代码的情况下，对其进行扩展和复用。这可以帮助我们避免重复编写相同的逻辑代码，从而提高代码的可维护性和可读性。
+
+例如，假设我们有多个组件需要跟踪鼠标位置。我们可以创建一个名为`withMouse`的高阶组件，它接受一个组件作为参数，并返回一个新的组件，该组件能够跟踪鼠标位置并将其作为prop传递给被包装的组件。这样，我们就可以轻松地在多个组件之间复用鼠标跟踪逻辑，而无需在每个组件中重复编写相同的代码。
+
+### ref
+
+在React中，ref不是prop属性。就像key一样，它被React进行了特殊处理。如果你对HOC添加ref，该ref将引用最外层的容器组件，而不是被包裹的组件。
+
+下面是一个使用`React.forwardRef`的例子：
+
+```javascript
+import React from 'react';
+
+const FancyButton = React.forwardRef((props, ref) => (
+  <button ref={ref} className="FancyButton">
+    {props.children}
+  </button>
+));
+
+// 你现在可以直接获取DOM button的ref：
+const ref = React.createRef();
+<FancyButton ref={ref}>Click me!</FancyButton>;
+```
+
+ref只是被转发到了内部DOM上，函数组件还是没有实例。
+
+### withRouter
+
+withRouter高阶组件的原理是它会返回一个新的组件，该组件会将被包装的组件包裹在一个Route组件中。这样，当我们渲染被包装的组件时，它将能够访问路由相关的props。
+
+withRouter高阶组件并不会将函数组件转换为类组件。它只是返回一个新的函数组件，该组件会渲染一个Route组件，并将被包装的组件作为其子组件。
+
+下面是一个简化版的withRouter高阶组件的实现：
+
+```js
+import React from 'react';
+import { Route } from 'react-router-dom';
+
+function withRouter(Component) {
+  function WithRouter(props) {
+    return (
+      <Route
+        render={routeProps => <Component {...props} {...routeProps} />}
+      />
+    );
+  }
+
+  return WithRouter;
+}
+```
+
+在上面的示例中，我们定义了一个名为withRouter的高阶组件。它接受一个组件作为参数，并返回一个新的函数组件。该函数组件会渲染一个Route组件，并将被包装的组件作为其子组件。这样，当我们渲染被包装的组件时，它将能够访问路由相关的props。
+
+## Suspense组件
+
+[react 原理分析 - Suspense 是如何工作的？ - 掘金 (juejin.cn)](https://juejin.cn/post/7145450651383201822)
+
+lazy是React中的一个函数，它允许你渲染一个动态导入的组件。
+
+由于 Lazy 往往是从远程加载，在加载完成之前 react 并不知道该如何渲染该组件。此时如果不显示任何内容，则会造成不好的用户体验。因此 Suspense 还有一个强制的参数为 fallback，表示 Lazy 组件加载的过程中应该显示什么内容。往往 fallback 会使用一个加载动画。当加载完成后，Suspense 就会将 fallback 切换为 Lazy 组件的内容。
+
+1. 当 react 在 beginWork 的过程中遇到一个 Suspense 组件时，会首先将 primary 组件作为其子节点，根据 react 的遍历算法，下一个遍历的组件就是**未加载完成**的 primary 组件。
+
+2. 当遍历到 primary 组件时，primary 组件会抛出一个异常。该异常内容为**组件 promise**，react 捕获到异常后，发现其是一个 promise，会将其 then 方法添加一个**回调函数，该回调函数的作用是触发 Suspense 组件的更新**。并且将**下一个需要遍历的元素重新设置为 Suspense**，因此在一次 beginWork 中，Suspense 会被访问两次。
+
+3. 又一次遍历到 Suspense，本次会将 primary 以及 fallback 都生成，并且关系如下:
+
+    Suspense 会在 beginWork 阶段直接**返回 fallback**。使得直接跳过 primary 的遍历。因此此时 primary 必定没有加载完成，所以也没必要再遍历一次。本次渲染结束后，屏幕上会展示 fallback 的内容
+
+4. 当 primary 组件加载完成后，会触发步骤 2 中 then，使得在 Suspense 上调度一个更新，由于此时加载已经完成，Suspense 会直接渲染加载完成的 primary 组件，并删除 fallback 组件。
+
+这 4 个步骤看起来还是比较复杂。**相对于普通的组件主要有两个不同的流程:**
+
+1. primary 会组件抛出异常，react 捕获异常后继续 beginWork 阶段。
+2. 整个 beginWork 节点，Suspense 会被访问两次
+
+不过基本逻辑还是比较简单，即是:
+
+1. 抛出异常
+2. react 捕获，添加回调
+3. 展示 fallback
+4. 加载完成，执行回调
+5. 展示加载完成后的组件
+
+整个 beginWork 遍历顺序为:
+
+```js
+ Suspense -> primary -> Suspense -> fallback
+```
+
+### 实现loading 的其他方式
+
+- 切换路由时，如果目标路由的loader函数没有执行完毕，可以使用`navigation.location`判断当前有没有路由在被加载；
+- 进入组件后，再执行异步请求，执行异步操作时显示loading；

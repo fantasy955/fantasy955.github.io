@@ -33,6 +33,30 @@ js是单线程的，一个时间只能做一件事，但js的执行并不是阻�
 - [[前端进阶\] - 搞懂浏览器进程和线程 - 掘金 (juejin.cn)](https://juejin.cn/post/7053974933931556900)
 - [从浏览器多进程到JS单线程，JS运行机制最全面的一次梳理 - 掘金 (juejin.cn)](https://juejin.cn/post/6844903553795014663)
 
+### 宏任务和微任务的本质
+
+宏任务和微任务是JavaScript中的异步任务的两种类型。
+
+**宏任务是由宿主（浏览器或Node.js）发起的**，例如setTimeout，setInterval，setImmediate，requestAnimationFrame等。
+
+**微任务是由JavaScript自身发起的**，例如Promise，MutationObserver，process.nextTick等。
+
+宏任务和微任务的执行顺序是：
+
+执行全局同步代码。
+执行当前层级的微任务队列，直到清空。
+执行下一个层级的宏任务，回到第二步。
+
+### node事件循环和浏览器事件循环的区别
+
+Node中的事件循环与浏览器中的事件循环有以下不同：
+
+- 浏览器的事件循环是在HTML5中定义的规范，而Node中的事件循环是由libuv库实现的。
+- 浏览器的事件循环只有一个宏任务队列，而Node中的事件循环有六个宏任务队列，分别是timers，I/O callbacks，idle/prepare，poll，check，close callbacks。
+- 览器中的微任务队列是每个宏任务执行完之后执行，而Node中的微任务队列是在事件循环的各个阶段之间执行。
+
+[nodejs中的事件循环 (weijl.top)](https://weijl.top/#/blog/NodeJS/nodejs中的事件循环.md/.%2Fassets%2Fblogs%2FNodeJS%2Fnodejs中的事件循环.md)
+
 ---
 
 ## 高阶函数、纯函数和函数柯里化
@@ -87,6 +111,35 @@ JavaScript中的对象都存储在堆上，垃圾回收主要是回收堆上那�
 标记过程首先找到内存中所有被引用的对象，并做标记，之后遍历整个堆，将没有被标记的对象的内存进行回收，回收方式一般是将内存标记为可用。
 
 [Javascript的垃圾回收机制知多少？ - 掘金 (juejin.cn)](https://juejin.cn/post/7038593947995734030#heading-8)
+
+### JS执行
+
+V8引擎负责执行JavaScript代码，包括预编译和执行两个阶段。在预编译阶段，V8引擎会扫描代码，查找变量声明和函数声明，并在内存中创建它们的引用1（变量提升，函数提升）。
+
+在预编译阶段中，变量会被默认初始化为undefined，但是函数不会被初始化。
+
+函数提升的优先级高于变量提升。在预编译阶段，JavaScript引擎会扫描代码，查找变量声明和函数声明，并在内存中创建它们的引用。函数声明会覆盖变量声明，但不会被变量赋值覆盖。
+
+```javascript
+foo(); // 输出: "函数声明"
+var foo = 2;
+function foo() {
+    console.log("函数声明");
+}
+```
+
+```javascript
+function foo() {
+    console.log("函数声明");
+}
+var foo;
+foo(); // 输出: "函数声明"
+foo = 2;
+```
+
+- 为什么foo不是undefined
+
+  函数提升的优先级高于变量提升，函数声明覆盖了变量声明；
 
 ---
 
@@ -155,11 +208,72 @@ ES6虽然提出了块级作用域的概念，但是var声明的变量还是只�
 
 ---
 
-## Promise
+## 函数
 
-`Promise.all`会在promise数组其中一个promise失败后停止；当 `Promise.all()` 变成接受状态（fulfilled）时，`then` 方法会被调用。该方法有一个参数，[`then` 方法会被调用。该方法有一个参数，即接受的最终结果（the fulfillment value）](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)[1](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)。这个参数是一个数组，包含了所有传递给 `Promise.all()` 的 promises 的最终结果。
+### 箭头函数
 
-`Promise.allSettled`会在所有Promise失败或者成功后完成，
+- 为什么要使用箭头函数
+
+  箭头函数是一种简洁的函数表达式，它有两个主要的优点：1
+
+  简明的语法，可以省略 function 关键字和 return 语句2
+  直观的作用域和 this 的绑定，不会创建自己的 this，而是继承上层的 this3
+  箭头函数适合用于一些简单的函数，例如对象转换、数组操作、事件处理等4。
+
+- 箭头函数的问题
+
+  但是，箭头函数也有一些限制，例如不能用作构造函数、不能使用 arguments 对象、不能使用 yield 语句等3。
+
+### eval函数
+
+eval函数的返回值是字符串中最后一条语句的返回值。如果字符串中最后一条语句没有返回值，那么eval函数会返回undefined。
+
+在Node.js中，require语句用于导入模块。当Node.js执行require语句时，它会按照以下步骤查找并加载模块：
+
+首先检查缓存，如果缓存中有则直接返回加载，如果没有进行第2步 1。
+如果X是内置模块，直接返回模块，不继续执行 1。
+如果X带路径，包含./ …/等，则根据X所在的父模块确定X的绝对路径。当作文件查找X文件，只要有一个文件，就返回该文件，不再继续执行 。
+如果不带路径，则按照父模块的路径查找可能安装的目录，在这些目录下搜索可能的X文件或者X目录，找到则返回该文件或者目录。
+没有找到，返回not found 。
+此外，在加载模块后，Node.js会将其缓存起来。这意味着如果你多次使用require语句导入同一个模块，Node.js只会在第一次执行时加载该模块，之后都会直接从缓存中获取 。
+
+Node.js会在**当前执行上下文**中同步执行该模块中的代码
+
+eval函数可以访问全局变量。如果直接调用eval函数，**它会在调用者的作用域内执行**。如果调用`window.eval(code)`，则会在全局作用域内执行。
+
+作用域为当前上下文：
+
+```js
+var x = 3;
+function fun(){
+    var x = 4;
+    eval('console.log(x)');
+}
+fun(); // 4
+window.x; // 3
+```
+
+可以沿着作用域链搜索：
+
+```js
+var x = 3;
+function fun(){
+    eval('console.log(x)');
+}
+fun(); // 3
+```
+
+window调用时上下文为window：
+
+```js
+var x = 3;
+function fun(){
+    var x = 4;
+    window.eval('console.log(x)');
+}
+fun(); // 3
+window.x; // 3
+```
 
 ---
 
@@ -211,6 +325,174 @@ XHR（XMLHttpRequest）是一个 JavaScript 对象，它与服务器交互。它
 **Axios 是一个基于 promise 封装的网络请求库**，它是基于 XHR 进行二次封装。Axios 可以说是 XHR 的一个子集，而 XHR 又是 Ajax 的一个子集。
 
 Axios 是一种通过 promise 对 ajax 技术进行封装的库，**就像 jQuery 实现了 ajax 封装一样**。Ajax 技术实现了网页的部分数据刷新，而 **axios 实现了对 ajax 的封装**。
+
+---
+
+### axios请求拦截和响应拦截原理
+
+使用`axios.interceptors.request.use`方法，拦截axios请求，为请求添加一些同一配置。
+
+`config` 是一个对象，它包含了**请求的配置信息**。例如，你可以在 `config` 对象中设置请求的 URL、方法、头部、数据等信息。
+
+axios的请求拦截就是在发送请求前，对`config`对象进行处理，拦截函数要返回config，通过Promise进行链式调用。
+
+响应拦截是获取请求的返回结果，通用基于promise进行链式调用，拦截函数需要将结果返回，以进行链式调用；或者返回一个Promise，同样需要设计成支持链式调用。
+
+`axios.create` 方法可以创建一个新的 axios 实例，这个新实例与默认的 axios 实例是独立的。你可以为新实例指定自己的配置，例如基础 URL、超时时间、头部信息等。这样，当你使用新实例发送请求时，就会使用这些配置。
+
+请求拦截和响应拦截是基于Promise的链式调用的。
+
+```ts
+function Axios(instanceConfig) {
+  this.defaults = instanceConfig;
+  this.interceptors = {
+    request: new InterceptorManager(),
+    response: new InterceptorManager()
+  };
+}
+
+function InterceptorManager() {
+  this.handlers = [];
+}
+
+// Provide aliases for supported request methods
+utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
+  /*eslint func-names:0*/
+  Axios.prototype[method] = function (url, config) {
+    return this.request(mergeConfig(config || {}, {
+      method: method,
+      url: url,
+      data: (config || {}).data
+    }));
+  };
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  /*eslint func-names:0*/
+  Axios.prototype[method] = function (url, data, config) {
+    return this.request(mergeConfig(config || {}, {
+      method: method,
+      url: url,
+      data: data
+    }));
+  };
+});
+
+Axios.prototype.request = function request(configOrUrl, config) {
+  /*eslint no-param-reassign:0*/
+  // Allow for axios('example/url'[, config]) a la fetch API
+  if (typeof configOrUrl === 'string') {
+    config = config || {};
+    config.url = configOrUrl;
+  } else {
+    config = configOrUrl || {};
+  }
+
+  config = mergeConfig(this.defaults, config);
+
+  // Set config.method
+  if (config.method) {
+    config.method = config.method.toLowerCase();
+  } else if (this.defaults.method) {
+    config.method = this.defaults.method.toLowerCase();
+  } else {
+    config.method = 'get';
+  }
+
+  /** */
+  
+  // filter out skipped interceptors
+  var requestInterceptorChain = [];
+  var synchronousRequestInterceptors = true;
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    /** */
+    // 遍历interceptors.request上的所有handler
+  });
+	
+  // 响应拦截要执行的函数
+  var responseInterceptorChain = [];
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    /** */
+    // 遍历interceptors.response上的所有handler
+  });
+
+  var promise;
+	
+  if (!synchronousRequestInterceptors) {
+    // dispatchRequest是负责发送请求的
+    var chain = [dispatchRequest, undefined];
+		
+    // 在头部添加用户自定义的请求拦截函数（unshift
+    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+    // 在尾部添加响应拦截函数
+    chain = chain.concat(responseInterceptorChain);
+		
+    // 将config作为参数传递
+    // 用户定义的拦截函数必须返回config或response，以支持链式调用
+    promise = Promise.resolve(config);
+    while (chain.length) {
+      promise = promise.then(chain.shift(), chain.shift());
+    }
+
+    return promise;
+  }
+
+  var newConfig = config;
+  while (requestInterceptorChain.length) {
+    var onFulfilled = requestInterceptorChain.shift();
+    var onRejected = requestInterceptorChain.shift();
+    try {
+      newConfig = onFulfilled(newConfig);
+    } catch (error) {
+      onRejected(error);
+      break;
+    }
+  }
+
+  try {
+    promise = dispatchRequest(newConfig);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  while (responseInterceptorChain.length) {
+    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
+  }
+
+  return promise;
+};
+```
+
+### axios中的适配器
+
+axios能够同时在`node`环境和浏览器环境中使用。
+
+Axios是一个基于Promise的HTTP客户端，用于浏览器和node.js。它是同构的（=它可以在浏览器和nodejs中使用相同的代码库运行）。在服务器端，它使用原生的node.js `http`模块，而在客户端（浏览器）中，它使用`XMLHttpRequests`。
+
+Axios适配器是一个函数，它负责处理请求并返回一个Promise，该Promise解析为响应对象。它允许您自定义如何处理HTTP请求，例如，**您可以使用适配器来模拟响应**，而不是实际发出HTTP请求。
+
+因此这也是为什么说axios只是基于`xhr`的一个封装。
+
+`axios`根据环境判断使用哪一个适配器：
+
+```ts
+var adapter = config.adapter || defaults.adapter;
+/**
+* adapter: getDefaultAdapter(),
+*/
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = require('../adapters/xhr');
+  } else if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
+    // For node use HTTP adapter
+    adapter = require('../adapters/http');
+  }
+  return adapter;
+}
+```
 
 ---
 
@@ -279,6 +561,12 @@ Function.prototype.myCall = function(context) {
 
 两者是同一个东西的两种叫法，父级元素代理了子级元素的事件，子级元素将事件委托给父级元素。
 
+### MouseEvent
+
+- `clientX`/`clientY`，相对窗口的偏移距离；
+- `pageX`/`pageY`，相对文档边缘的偏移距离（会考虑滚动的不在窗口中的内容宽度和高度）；
+- `offsetX`/`offsetY`，返回相对于目标元素的偏移距离；
+
 ---
 
 ## delete操作符
@@ -301,8 +589,138 @@ Function.prototype.myCall = function(context) {
 
 ## 隐式类型转换
 
-- 在比较对象和布尔值时，对象先转换为字符串，然后再转换为数字，布尔值直接转换为数字。
+当JavaScript尝试将一个对象转换为原始值时，它会**首先调用**对象的`valueOf`方法，如果该方法返回一个原始值，则使用该值。如果`valueOf`方法没有返回一个原始值，则调用对象的`toString`方法，如果该方法返回一个原始值，则使用该值。如果两个方法都没有返回一个原始值，则会抛出一个错误。
+
+- 在比较对象和布尔值时，**对象先转换为字符串，然后再转换为数字**，布尔值直接转换为数字。
 - 在比较对象和字符串时，对象直接转换为字符串。
-- 在比较对象和数字时，对象先转换为字符串，然后再转换为数字。
+- 在比较对象和数字时，**对象先转换为字符串，然后再转换为数字**。
 - 在比较字符串和数字时，字符串直接转换成数字。
-- 在比较字符串和布尔值时，二者全部都会被转化成数值再进行比较1。
+- 在比较字符串和布尔值时，二者全部都会被转化成数值再进行比较。
+
+---
+
+## 设计模式
+
+### 策略模式
+
+策略模式中有一个接口`Stratage`，接口中包含一个执行策略的方法。
+
+具体的策略需要继承这个接口，实现这个方法。不同策略有不一样的行为，即方法的实现是不一致的。
+
+在具体的场景，我们传入具体的策略。
+
+### 适配器模式
+
+适配器模式描述的场景是，我们已经有可以实现功能的对象或者类，但是它跟我们目前的环境不兼容
+
+适配器模式应该在以下情况使用：
+
+1. 系统需要使用现有的类，而此类的接口不符合系统的需要，即接口不兼容。
+
+   当系统需要使用现有的类，但此类的接口不符合系统的需要时，可以使用适配器模式。例如，JAVA JDK 1.1 提供了 Enumeration 接口，而在 1.2 中提供了 Iterator 接口，想要使用 1.2 的 JDK，则要将以前系统的 Enumeration 接口转化为 Iterator 接口，这时就需要适配器模式。
+
+2. 想建立一个可以重复使用的类，用于与一些彼此之间没有太大关联的一些类，包括一些可能在将来引进的类一起工作。
+
+   例如Axios，整合了浏览器环境和node环境下了网络请求接口，让Axios能在两个环境中使用。
+
+3. 需要一个统一的输出接口，而输入端的类型不可预知[2](https://bing.com/search?q=什么时候应该使用适配器模式)。
+   读卡器是作为内存卡和笔记本之间的适配器。您将内存卡插入读卡器，再将读卡器插入笔记本，这样就可以通过笔记本来读取内存卡。
+
+   应用程序只需要针对读卡器设计接口。
+
+---
+
+## JS运行时
+
+### nodejs
+
+全局变量Global，var声明的变量不会添加到Global上。var声明的变量只能在当前模块访问。
+
+---
+
+## 数据类型
+
+### 遍历对象属性
+
+- `let key in obj` 是一种 for…in 循环，它可以遍历对象自身的属性以及从原型链上继承的可枚举属性。但是，它不会遍历不可枚举的属性。
+
+- `Object.keys(obj)` 是一个方法，它返回一个数组，包含对象自身的所有可枚举属性的键名。但是，它不会返回从原型链上继承的属性。
+
+- 使用 `Object.getOwnPropertyNames()` 方法来获取对象自身的所有属性（包括不可枚举的属性），但不包括从原型链上继承的属性。
+
+  例如：
+
+  ```javascript
+  let obj = {a: 1, b: 2};
+  Object.defineProperty(obj, 'c', {value: 3, enumerable: false});
+  console.log(Object.getOwnPropertyNames(obj)); // ["a", "b", "c"]
+  ```
+
+  如果要获取对象从原型链上继承的属性，可以使用 `Object.getPrototypeOf()` 方法来获取对象的原型，然后再使用 `Object.getOwnPropertyNames()` 方法来获取原型对象的属性。例如：
+
+  ```javascript
+  let obj = {a: 1, b: 2};
+  let proto = Object.getPrototypeOf(obj);
+  console.log(Object.getOwnPropertyNames(proto)); // ["constructor", "__defineGetter__", "__defineSetter__", "hasOwnProperty", ...]
+  ```
+
+### Map和WeakMap
+
+Map和WeakMap都是ES6中新增的数据结构，它们都可以用来存储键值对。但是，它们之间也有一些重要的区别。
+
+Map的键可以是任意类型的值，包括原始类型和对象类型。但是，WeakMap的键只能是对象类型，不能是原始类型。
+
+此外，WeakMap的键名所引用的对象是弱引用的。这意味着，如果一个对象只被WeakMap的键名所引用，那么当垃圾回收器运行时，这个对象就有可能被回收。而Map的键名所引用的对象则不会被垃圾回收器回收。
+
+由于这些特性，WeakMap通常用于存储那些不希望被长期保留在内存中的数据。例如，你可以使用WeakMap来存储一个对象的私有数据，当这个对象不再被使用时，它所对应的私有数据也会被自动释放。
+
+### Symbol
+
+Symbol用于创建一个唯一的符号，构造函数传递的只是Symbol的描述，并不会做转换。
+
+```js
+Symbol()
+Symbol(description)
+```
+
+Symbol.for()用于创建一个全局共享的Symbol，**`Symbol.for(key)`** 方法会根据给定的键 `key`，来从运行时的 symbol 注册表中找到对应的 symbol，如果找到了，则返回它，**否则，新建**一个与该键关联的 symbol，并放入全局 symbol 注册表中。
+
+Symbol.keyFor(symbol)用户获取一个Symbol的键。
+
+### 获取对象类型
+
+Object.prototype.toString.call()的输出是一个字符串，表示调用该方法的对象的类型。12345
+
+例如：
+
+Object.prototype.toString.call(123) // “[object Number]” Object.prototype.toString.call(“abc”) // “[object String]” Object.prototype.toString.call(true) // “[object Boolean]” Object.prototype.toString.call(null) // “[object Null]” Object.prototype.toString.call(undefined) // “[object Undefined]” Object.prototype.toString.call([1, 2, 3]) // “[object Array]” Object.prototype.toString.call({a: 1, b: 2}) // “[object Object]” Object.prototype.toString.call(function() {}) // “[object Function]”
+
+这个方法可以用来精确判断数据的类型，因为它不会受到对象自定义的toString()方法或Symbol.toStringTag属性的影响。
+
+
+
+---
+
+## 异步
+
+### Promise
+
+- `finally`
+
+  `finally`方法不会改变Promise的状态或值，它只是在Promise完成后执行一个操作。因此，在`finally`方法后调用的`then`方法仍然会接收到原始的Promise值。
+
+- Promise.all
+
+  `Promise.all`会在promise数组其中一个promise失败后停止；当 `Promise.all()` 变成接受状态（fulfilled）时，`then` 方法会被调用。该方法有一个参数，[`then` 方法会被调用。该方法有一个参数，即接受的最终结果（the fulfillment value）](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)[1](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)。这个参数是一个数组，包含了所有传递给 `Promise.all()` 的 promises 的最终结果。
+
+  `Promise.allSettled`会在所有Promise失败或者成功后完成，
+
+- catch之后再触发then
+
+  如果你想在`catch`方法后继续调用`then`方法，可以在`catch`方法中返回一个值或Promise对象。这样，后面的`then`方法就会接收到这个值或Promise对象的结果。
+
+## DOM操作
+
+### 获取子节点
+
+- `node.childNodes`返回的是一个包含指定节点的子节点的集合，其中**只包括元素节点、文本节点和注释节点等**，不包括属性节点。
