@@ -104,7 +104,63 @@ target.addEventListener('drop', function(event) {
 
 
 
-- 
+- 可以使用`preload`加载字体文件（`@font-face`会使用）。
 
-  可以使用`preload`加载字体文件（`@font-face`会使用）。
+## 表格
+
+### 表头固定在顶部
+
+一个条件是不能脱离文档流，否则无法根据表格每一列的宽度改变大小；
+
+可以使用sticky定位；
+
+### 动态改变列的宽度
+
+需要使用事件监听；判断鼠标位置距离单元格边界的距离；
+
+```js
+table.addEventListener("mousedown", function(e) {
+    if (e.target.nodeName === "TH" && e.offsetX > e.target.offsetWidth - 10) {
+      initResizer(e);
+      table.classList.add("resizing");
+      e.preventDefault();
+    }
+  });
+
+  table.addEventListener("mousemove", function(e) {
+    resizeColumn(e);
+  });
+
+  table.addEventListener("mouseup", function() {
+    stopResizer();
+    table.classList.remove("resizing");
+  });
+```
+
+addEventListener默认是冒泡事件。(父级监听了点击事件就行，点击事件会从最底部冒泡)
+
+
+
+### 让列固定在坐标或者右边
+
+同样使用stick定位；
+
+```
+td:nth-child(1),
+th:nth-child(1) {
+    position: sticky;
+    left: 0;
+    /* 首行在左 */
+    z-index: 1;
+    background-color: lightpink;
+}
+
+td:nth-child(2),
+th:nth-child(2) {
+    position: sticky;
+    left: 100px;
+    z-index: 1;
+    background-color: lightpink;
+}
+```
 

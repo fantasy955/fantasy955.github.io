@@ -57,7 +57,10 @@
 
 #### 属性值
 
+- flex默认值：0 1 auto；
+
 - flex: none; 表示flex: 0 0 auto，元素不会缩放，大小由元素本身决定；
+- flex: 1; 表示flex: 1 1 auto；
 
 ### top和fixed
 
@@ -84,6 +87,26 @@
 一个是行内的，一个是行与父级盒子；
 
 `align-contet`只在多行情况下才生效；**如果只有一行**，那么 `align-content` 属性不会生效。在这种情况下，你可以使用 `align-items` 属性来控制单行的对齐方式 。**如果有两行**，那么 `align-content` 属性会生效。如果你设置了 `align-content: center`，那么这两行会朝向容器的中心填充，每行互相紧挨，相对于容器居中对齐。
+
+### min-width和max-width优先级以及width
+
+min-witdh优先级大于max-width，即他们冲突时，max-width不会生效。这意味着元素的宽度不会小于min-width的值，**也不会大于**min-width的值。
+
+当元素设置了width时，min-width和max-width都会被忽略。
+
+### flex-basis和width
+
+flex-basis是指定弹性元素在主轴方向上的初始大小，**它不包括内边距**[1](https://www.jianshu.com/p/6d6847fadd08)。弹性元素的最终大小还会受到flex-grow和flex-shrink属性的影响，这些属性决定了弹性元素在主轴方向上的伸缩能力[2](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Flexible_Box_Layout/Controlling_Ratios_of_Flex_Items_Along_the_Main_Ax)。
+
+**当flex-grow和flex-shrink为0时：**
+
+当flex-grow和flex-shrink为0的时候，flex-basis和width的效果相似，但不完全等价。flex-basis仍然会受到min-width和max-width属性的限制，而width则不会。另外，flex-basis和width的计算方式也有所不同，flex-basis是基于内容区域的，而width是基于边框区域的2。因此，如果你想让flex-basis和width完全一致，你需要设置box-sizing为border-box，并且确保没有设置min-width和max-width属性。
+
+### position: stick
+
+元素根据正常文档流进行定位，然后相对它的*最近滚动祖先*（nearest scrolling ancestor）和 [containing block](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Containing_block)（最近块级祖先 nearest block-level ancestor），包括 table-related 元素，基于 `top`、`right`、`bottom` 和 `left` 的值进行偏移。偏移值不会影响任何其他元素的位置。 该值总是创建一个新的[层叠上下文](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Positioning/Understanding_z_index/The_stacking_context)（stacking context）。注意，一个 sticky 元素会“固定”在离它最近的一个拥有“滚动机制”的祖先上（当该祖先的 `overflow` 是 `hidden`、`scroll`、`auto` 或 `overlay` 时），即便这个祖先不是最近的真实可滚动祖先。
+
+该属性不会导致元素脱离文档流；
 
 ---
 

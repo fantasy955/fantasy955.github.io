@@ -275,13 +275,41 @@ fun(); // 3
 window.x; // 3
 ```
 
+### 声明式语法和过程式语法
+
+过程式语法：
+
+```javascript
+const arr = [1, 2, 3, 4];
+const result = [];
+for (let i = 0; i < arr.length; i++) {
+  result.push(arr[i] * 2);
+}
+console.log(result); // [2, 4, 6, 8]
+```
+
+声明式语法：
+
+```javascript
+const arr = [1, 2, 3, 4];
+const result = arr.map((item) => item * 2);
+console.log(result); // [2, 4, 6, 8]
+```
+
+在过程式语法中，我们需要关注如何做，需要使用循环来遍历数组并将每个元素乘以2。而在声明式语法中，我们只需要关注要做什么，使用`map`函数即可将数组中的每个元素乘以2。
+
 ---
 
 ## 发送网络请求
 
+### xhr事件回调
+
+- onreadystatechange 事件处理程序会在请求的状态发生变化时被触发，而 onload 事件处理程序则会在请求成功完成时被触发。
+- onreadystatechange 事件处理程序会在请求的每个状态变化时被触发，而 onload 事件处理程序则只会在请求成功完成时被触发。
+
 ### fetch和xhr
 
-Fetch和XHR都是获取远端数据的方式。**Fetch是原生js方法**，没有使用XMLHttpRequest对象，使用fetch可以不用引用http的类库即可实现。它提供了一种简单，合理的方式来跨网络异步获取资源。
+Fetch和XHR都是获取远端数据的方式。**Fetch是原生js方法**（浏览器提供的，HTML5API），没有使用XMLHttpRequest对象，使用fetch可以不用引用http的类库即可实现。它提供了一种简单，合理的方式来跨网络异步获取资源。
 
 **而XMLHttpRequest（XHR）是一个构造函数**，对象用于与服务器交互。**它基于事件机制实现请求成功与失败**的回调，不符合关注分离（Separation of Concerns）的原则，配置和调用方式非常混乱。而Fetch通过Promise来实现回调，调用更加友好。
 
@@ -494,6 +522,14 @@ function getDefaultAdapter() {
 }
 ```
 
+### 携带cookie
+
+- `fetch(url,{ credentials: 'include' });`
+- `xhr.withCredentials = true;`，在send方法调用前配置；
+- 全局配置：`axios.defaults.withCredentials = true;` 
+- 使用时配置：
+  ![image-20230411094139630](assets/image-20230411094139630.png)
+
 ---
 
 ## this指向
@@ -569,6 +605,32 @@ Function.prototype.myCall = function(context) {
 
 ---
 
+### 冒泡事件机制
+
+首先明确一点：**事件只在具体的元素上触发**；
+
+事件捕获和冒泡都需要基于这个前提，一个子元素上的点击事件，捕获阶段是从上往下的，冒泡是从这个元素往上；
+
+- 为什么在父级元素上定义了冒泡事件，在子元素上可以被触发，并且event.target指向子元素？
+
+  这是因为事件冒泡机制。**事件冒泡是指事件从最具体的元素开始接收**，然后逐级向上传播到较为不具体的节点（文档）。所以当子元素上的事件被触发时，它会向上传播到父元素，从而触发父元素上的事件。如果想要阻止事件冒泡，可以在子元素事件中添加stop来阻止事件冒泡。
+
+  **event.target指向触发事件的元素**（总是），而不是绑定事件的元素。所以当子元素上的事件被触发时，event.target指向子元素。
+  
+  如果定义的是捕获事件，**event.target指向的是触发事件的元素**，而不是绑定事件的元素。因为在捕获阶段，最先来到的元素是父元素，然后是子元素，接着是孙元素，**最后才是触发事件的元素**。所以在捕获阶段，event.target指向触发事件的元素。
+  
+- 避免子元素触发事件
+
+  event.target指向的是事件触发的元素，子元素的事件触发 会在父级（定义的事件监听的元素）上被执行。因此避免子元素触发事件，可以判断event.target指向的是谁。
+
+  > [`Event`](https://developer.mozilla.org/zh-CN/docs/Web/API/Event) 接口的 **`stopPropagation()`** 方法阻止捕获和冒泡阶段中当前事件的进一步传播。但是，它不能防止任何默认行为的发生；例如，对链接的点击仍会被处理。如果要停止这些行为，请参见 [`preventDefault()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Event/preventDefault) 方法，它可以阻止事件触发后默认动作的发生。它也不能阻止附加到相同元素的相同事件类型的其他事件处理器，如果要阻止这些处理器的运行，请参见 [`stopImmediatePropagation()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Event/stopImmediatePropagation) 方法。
+
+- `event.stopImmediatePropagation`
+
+  如果多个事件监听器被附加到**相同元素**的**相同事件类型上**，当此事件触发时，它们会按其被添加的顺序被调用。如果在其中一个事件监听器中执行 `stopImmediatePropagation()` ，那么剩下的事件监听器都不会被调用。
+
+---
+
 ## delete操作符
 
 - 函数形参不能被delete；
@@ -636,17 +698,23 @@ Function.prototype.myCall = function(context) {
 
 全局变量Global，var声明的变量不会添加到Global上。var声明的变量只能在当前模块访问。
 
+### 即时编译 JIT
+
+JIT是JavaScript的一种技术，它是一种在运行时编译JavaScript代码的技术。JIT会监视代码的运行状态，把重复执行多次的代码进行优化，从而提高JavaScript的运行速度。
+
+根据调用次数决定是不是热点代码。
+
 ---
 
 ## 数据类型
 
 ### 遍历对象属性
 
-- `let key in obj` 是一种 for…in 循环，它可以遍历对象自身的属性以及从原型链上继承的可枚举属性。但是，它不会遍历不可枚举的属性。
+- `let key in obj` 是一种 for…in 循环，它可以遍历对象自身的属性**以及从原型链上继承**的可枚举属性。但是，它不会遍历不可枚举的属性。
 
-- `Object.keys(obj)` 是一个方法，它返回一个数组，包含对象自身的所有可枚举属性的键名。但是，它不会返回从原型链上继承的属性。
+- `Object.keys(obj)` 是一个方法，它返回一个数组，包含对象**自身**的所有可枚举属性的键名。但是，它不会返回从原型链上继承的属性。
 
-- 使用 `Object.getOwnPropertyNames()` 方法来获取对象自身的所有属性（包括不可枚举的属性），但不包括从原型链上继承的属性。
+- 使用 `Object.getOwnPropertyNames()` 方法来获取对象**自身**的所有属性（包括不可枚举的属性），但不包括从原型链上继承的属性。
 
   例如：
 
@@ -689,15 +757,24 @@ Symbol.keyFor(symbol)用户获取一个Symbol的键。
 
 ### 获取对象类型
 
-Object.prototype.toString.call()的输出是一个字符串，表示调用该方法的对象的类型。12345
+Object.prototype.toString.call()的输出是一个字符串，**表示调用该方法的对象的类型**。他不是用来判断这个对象是不是哪一个类的实例的，只是判断类型。
 
 例如：
 
-Object.prototype.toString.call(123) // “[object Number]” Object.prototype.toString.call(“abc”) // “[object String]” Object.prototype.toString.call(true) // “[object Boolean]” Object.prototype.toString.call(null) // “[object Null]” Object.prototype.toString.call(undefined) // “[object Undefined]” Object.prototype.toString.call([1, 2, 3]) // “[object Array]” Object.prototype.toString.call({a: 1, b: 2}) // “[object Object]” Object.prototype.toString.call(function() {}) // “[object Function]”
+```js
+Object.prototype.toString.call(123) // “[object Number]” Object.prototype.toString.call(“abc”) // “[object String]” 
+Object.prototype.toString.call(true) // “[object Boolean]” Object.prototype.toString.call(null) // “[object Null]” 
+Object.prototype.toString.call(undefined) // “[object Undefined]” 
+Object.prototype.toString.call([1, 2, 3]) // “[object Array]” 
+Object.prototype.toString.call({a: 1, b: 2}) // “[object Object]” 
+Object.prototype.toString.call(function() {}) // “[object Function]”
+```
 
 这个方法可以用来精确判断数据的类型，因为它不会受到对象自定义的toString()方法或Symbol.toStringTag属性的影响。
 
 
+
+instanceof的内部机制是通过判断对象的**原型链中**是不是能找到类型的`prototype`，而`Object.prototype.toString.call()`方法则常用于**判断浏览器内置对象**。
 
 ---
 
@@ -719,8 +796,101 @@ Object.prototype.toString.call(123) // “[object Number]” Object.prototype.to
 
   如果你想在`catch`方法后继续调用`then`方法，可以在`catch`方法中返回一个值或Promise对象。这样，后面的`then`方法就会接收到这个值或Promise对象的结果。
 
+### Promise原理
+
+Promise是JavaScript中的一种异步编程解决方案，它是一个对象，用于表示一个异步操作的最终完成（或失败）及其结果值。Promise对象有三种状态：pending（进行中）、fulfilled（已成功）和rejected（已失败）。
+
+Promise的实现原理是通过回调函数来实现的，只不过是把回调封装在了内部，使用上一直通过then方法的链式调用，使得多层的回调嵌套看起来变成了同一层的，书写上以及理解上会更直观和简洁一些。
+
+Promise的实现原理可以参考这篇文章：[图解 Promise 实现原理（一）—— 基础实现](https://zhuanlan.zhihu.com/p/58428287)。
+
+```js
+
+class MyPromise {
+    constructor(excutor) {
+        this.status = 'pending';
+        this.dirty = false;
+        this.onSuccessCallbacks = [];
+        this.onFailedCallbacks = [];
+        this.result = undefined;
+        excutor(this.resolve.bind(this), this.reject.bind(this));
+    }
+    resolve(msg) {
+        if (this.dirty) {
+            return
+        }
+        this.dirty = true;
+        this.status = 'fullfilled';
+        this.result = msg;
+        while (this.onFailedCallbacks.length) {
+            let cb = this.onSuccessCallbacks.shift();
+            cb(msg);
+        }
+    }
+    reject(reason) {
+        if (this.dirty) {
+            return
+        }
+        this.dirty = true;
+        this.status = 'reject';
+        this.result = reason;
+        while (this.onFailedCallbacks.length) {
+            let cb = this.onFailedCallbacks.shift();
+            cb(reason);
+        }
+    }
+    then(cb1, cb2) {
+        if (this.status === 'pending') {
+            this.onSuccessCallbacks.push(cb1);
+            if (cb2 !== undefined) {
+                this.onFailedCallbacks.push(cb2);
+            }
+        }
+        if (this.status === 'fullfilled') {
+            cb1(this.result);
+        }
+        if (this.status === 'reject') {
+            if (cb2 !== undefined) {
+                cb2(this.result);
+            }
+        }
+        return this;
+    }
+}
+
+module.exports = MyPromise;
+```
+
 ## DOM操作
 
 ### 获取子节点
 
 - `node.childNodes`返回的是一个包含指定节点的子节点的集合，其中**只包括元素节点、文本节点和注释节点等**，不包括属性节点。
+
+### jquery和querySelector的区别
+
+jquery的选择器获取的是满足条件的所有元素，这个元素不是原生的DOM元素（jquery对象，**本身是一个数组对象**）；
+
+querySelector返回的是满足条件的第一个元素；
+
+[HTML DOM querySelector() 方法 | 菜鸟教程 (runoob.com)](https://www.runoob.com/jsref/met-document-queryselector.html)
+
+## 文件读取
+
+### BLOB对象
+
+Blob对象表示一个不可变、原始数据的类文件对象。它的数据可以按文本或二进制的格式进行读取，也可以转换成ReadableStream来用于数据操作。Blob表示的不一定是JavaScript原生格式的数据。File接口基于Blob，继承了blob的功能并将其扩展以支持用户系统上的文件。
+
+### FileReader和File
+
+`FileReader`是一个用于读取文件的Web API，它可以读取Blob或File对象中的数据。File是一个表示文件的JavaScript对象，它可以通过文件选择器或拖放操作获取。在使用`FileReader`读取文件时，需要将``File`对象作为参数传递给`FileReader`的构造函数，以便读取文件内容。
+
+`FileReader`对象允许Web应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容，使用File或Blob对象指定要读取的文件或数据。
+
+其中File对象可以是来自用户在一个`<input>`元素上选择文件后返回的`FileList`对象，也可以来自拖放操作生成的`DataTransfer`对象，还可以是来自在一个`HTMLCanvasElement`上执行`mozGetAsFile()`方法后返回结果。
+
+重要提示：`FileReader`仅用于以安全的方式从用户（远程）系统读取文件内容。**它不能用于从文件系统中按路径名简单地读取文件**。
+
+### ArrayBuffer
+
+`ArrayBuffer`是一种用于存储二进制数据的JavaScript对象，它可以在内存中分配一段连续的空间来存储数据。在使用FileReader读取文件时，可以使用`readAsArrayBuffer()`方法将文件内容读取到一个`ArrayBuffer`对象中，以便进行后续处理。

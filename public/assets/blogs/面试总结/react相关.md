@@ -317,6 +317,10 @@ React 调度流程图：
 
 
 
+### 无法做到精确更新
+
+在 React 中，`setState()` 函数是用来更新组件状态的。**尽管在使用该函数时，我们可以很清楚地知道在哪一个组件中调用了它**，但是它仍然无法做到精确更新的原因是，React 的更新机制是基于组件的树形结构，并且由于 React 在处理更新时采用了一些优化措施，因此可能会出现一些意外的情况。
+
 ---
 
 ## jsx的转换流程
@@ -791,3 +795,18 @@ lazy是React中的一个函数，它允许你渲染一个动态导入的组件�
 
 - 切换路由时，如果目标路由的loader函数没有执行完毕，可以使用`navigation.location`判断当前有没有路由在被加载；
 - 进入组件后，再执行异步请求，执行异步操作时显示loading；
+
+## 类组件
+
+### 生命周期
+
+React类组件的生命周期主要有以下几个阶段：挂载阶段、更新阶段、卸载阶段。
+
+挂载阶段包括constructor()、getDerivedStateFromProps()、render()、componentDidMount()；
+
+更新阶段包括getDerivedStateFromProps()、shouldComponentUpdate()、render()、getSnapshotBeforeUpdate()、componentDidUpdate()；
+
+卸载阶段包括componentWillUnmount()。
+
+**React没有像Vue一样的卸载后的生命周期**，**以及挂载前的生命周期**，是因为React认为这些生命周期不是必要的，而且会增加代码的复杂度。React认为，组件的生命周期应该尽可能简单，只包含必要的钩子函数。
+

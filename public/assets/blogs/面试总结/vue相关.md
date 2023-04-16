@@ -204,6 +204,13 @@ Vue中的mixins属性接收一个包含组件选项对象的数组，这些选�
 
 [vue事件总线 (weijl.top)](https://weijl.top/#/blog/前端/vue事件总线.md/.%2Fassets%2Fblogs%2FBrowserSide%2Fvue事件总线.md)
 
+### keep-alive组件
+
+- 在Vue中，当组件被卸载后，响应式数据的依赖项会自动移除。
+- 在Vue中，使用了keep-alive的组件以后，组件上就会自动加上了activated钩子和deactivated钩子。
+
+`ReactiveEffec`中存在一个stop方法，用于从响应式数据中移除自己；
+
 ## 编译过程
 
 ### 渲染函数
@@ -221,3 +228,95 @@ Vue中的mixins属性接收一个包含组件选项对象的数组，这些选�
 在渲染函数期间，会执行 `beforeUpdate` 和 `updated` 这两个生命周期钩子函数。`beforeUpdate` 钩子函数会在组件即将因为一个响应式状态变更而更新其 DOM 树之前调用。`updated` 钩子函数则会在组件因为一个响应式状态变更而更新其 DOM 树之后调用。
 
 执行渲染函数期间，Vue 会调用一些内部函数来更新组件的 DOM。这些函数包括 `__patch__` 函数，它负责比较新旧虚拟 DOM 并更新真实 DOM；`render` 函数，它负责生成虚拟 DOM；以及 `update` 函数，它负责调用 `render` 函数并将生成的虚拟 DOM 传递给 `__patch__` 函数。
+
+## 对比React
+
+React 和 Vue 都是目前非常流行的前端框架，它们都有自己的优势和劣势。
+
+React 的优势：
+
+1. 高性能：React 使用 Virtual DOM 技术，通过将组件的状态和页面的真实 DOM 分离，从而避免了大量的 DOM 操作，提高了应用的性能。
+2. 强大的生态系统：React 生态系统非常强大，拥有丰富的第三方库和插件，可以帮助开发者快速构建应用。
+3. 可以在多个平台上使用：React Native 可以将 React 组件转换成原生组件，从而可以在移动端应用中使用。
+
+Vue 的优势：
+
+1. 简单易学：Vue 的 API 设计非常简单易学，即使是初学者也能很快上手开发。
+2. 高效开发：Vue 提供了丰富的指令和组件，可以让开发者快速构建出复杂的页面。
+3. 更好的可维护性：Vue 的代码组织非常清晰，通过组件化的方式可以让代码更易于维护和管理。
+
+React 的劣势：
+
+1. 学习成本较高：React 的学习曲线比较陡峭，需要掌握 JSX 和一些函数式编程的概念。
+2. 可读性较差：使用 React 开发的代码通常会比较冗长，可读性较差。
+3. 需要自己选择一些辅助库：React 没有内置的路由和状态管理库，需要自己选择一些辅助库进行开发。
+
+Vue 的劣势：
+
+1. 生态系统不如 React：尽管 Vue 的生态系统越来越完善，但仍然不如 React。
+2. 转变到大型应用的开发：尽管 Vue 可以很好地处理中小型应用程序，但转变到大型应用程序时，可能需要更多的工具和库来解决一些复杂的问题。
+3. 社区相对较小：Vue 的社区相对较小，因此可能难以找到相应的支持或解决方案。
+
+综上所述，React 和 Vue 都有自己的优势和劣势，需要根据具体的开发需求来选择。如果需要开发跨平台的应用或者应用需要更好的性能，可以选择 React；如果需要快速开发并且可维护性更好，可以选择 Vue。
+
+---
+
+### 组件更新方面
+
+[阿里三面：灵魂拷问——有react fiber，为什么不需要vue fiber？-CSDN博客](https://blog.csdn.net/frontend_frank/article/details/123700502)
+
+> React
+>
+> 修改父组件的状态，父子组件都会重新渲染：点击`change Father state`，不仅打印了`Father:render`，还打印了`child:render`。
+
+>Vue
+>
+>无论是修改哪个状态，组件都只重新渲染最小颗粒：点击`change Father state`，只打印`Father:render`，不会打印`child:render`。
+
+**VUE:**
+
+当父组件更新时，子组件会重新渲染，**但是子组件重新渲染只会走它的beforeUpdate和updated这些周期函数**，data不会重新执行。如果刚开始第一次渲染的时候，把属性都挂载到当前组件的data中，只有第一次渲染子组件才会执行，不管以后对子组件怎么刷新都不起作用。
+
+Vue的响应式数据变化时，就会将所有关联的组件的渲染函数推到更新队列中（创建一个promise任务负责执行这个队列）。由于父节点的渲染函数会被先添加响应式数据的依赖项中，当触发更新时，父组件也会先于子组件重新渲染，但是父组件的重新渲染过程（diff过程）是递归的。
+
+**REACT**
+
+react因为先天的不足——无法精确更新，所以需要react fiber把组件渲染工作切片；**而vue基于数据劫持，更新粒度很小，没有这个压力；**
+
+## API
+
+### 自定义指令
+
+> 只有当所需功能**只能通过直接的 DOM 操作来实现时**，才应该使用自定义指令。其他情况下应该尽可能地使用 `v-bind` 这样的内置指令来声明式地使用模板，这样更高效，也对服务端渲染更友好。
+
+组件是主要的构建模块，而组合式函数则侧重于**有状态的逻辑**。另一方面，自定义指令主要是为了重用涉及普通元素的**底层 DOM 访问的逻辑**。
+
+一个自定义指令由一个包含**类似组件生命周期钩子**的对象来定义。
+
+一个指令的定义对象可以提供几种钩子函数 (都是可选的)：
+
+js
+
+```javascript
+const myDirective = {
+  // 在绑定元素的 attribute 前
+  // 或事件监听器应用前调用
+  created(el, binding, vnode, prevVnode) {
+    // 下面会介绍各个参数的细节
+  },
+  // 在元素被插入到 DOM 前调用
+  beforeMount(el, binding, vnode, prevVnode) {},
+  // 在绑定元素的父组件
+  // 及他自己的所有子节点都挂载完成后调用
+  mounted(el, binding, vnode, prevVnode) {},
+  // 绑定元素的父组件更新前调用
+  beforeUpdate(el, binding, vnode, prevVnode) {},
+  // 在绑定元素的父组件
+  // 及他自己的所有子节点都更新后调用
+  updated(el, binding, vnode, prevVnode) {},
+  // 绑定元素的父组件卸载前调用
+  beforeUnmount(el, binding, vnode, prevVnode) {},
+  // 绑定元素的父组件卸载后调用
+  unmounted(el, binding, vnode, prevVnode) {}
+}
+```
