@@ -199,10 +199,10 @@ export default {
                 start_y: parseInt(this.lastState[1].position.y * this.lastState[1].ratio),
                 end_x: parseInt(this.lastState[2].position.x * this.lastState[2].ratio),
                 end_y: parseInt(this.lastState[2].position.y * this.lastState[2].ratio),
-                start: this.start,
-                end: this.end,
-                min: this.min,
-                max: this.max,
+                start: parseFloat(this.start),
+                end: parseFloat(this.end),
+                min: parseFloat(this.min),
+                max: parseFloat(this.max),
             }
             console.log(JSON.stringify(data));
             axios.post(url, data)

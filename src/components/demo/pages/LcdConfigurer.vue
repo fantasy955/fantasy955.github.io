@@ -202,16 +202,19 @@ export default {
         },
         save() {
             let savedTargetArr = this.targetList.map((target) => this.deepCopy(target));
-            savedTargetArr = savedTargetArr.map((target) => ({
-                name: target.name,
-                x: target.sX < target.eX ? parseInt(target.sX) : parseInt(target.eX),
-                y: target.sY < target.eY ? parseInt(target.sY) : parseInt(target.eY),
-                width: parseInt(Math.abs(target.sX - target.eX)),
-                height: parseInt(Math.abs(target.sY - target.eY)),
-                // target.sX = target.sX * target.sRatio;
-                // target.sY = target.sY * target.sRatio;
-                // target.eY = target.eY * target.eRatio;
-                // target.eX = target.eX * target.eRatio;
+            savedTargetArr = savedTargetArr.map((target) => {
+                target.sX = target.sX * target.sRatio;
+                target.sY = target.sY * target.sRatio;
+                target.eY = target.eY * target.eRatio;
+                target.eX = target.eX * target.eRatio;
+
+                let _target = {
+                    name: target.name,
+                    x: target.sX < target.eX ? parseInt(target.sX) : parseInt(target.eX),
+                    y: target.sY < target.eY ? parseInt(target.sY) : parseInt(target.eY),
+                    width: parseInt(Math.abs(target.sX - target.eX)),
+                    height: parseInt(Math.abs(target.sY - target.eY)),
+                };
 
                 // let leftTop = {
                 //     x: target.sX < target.eX ? parseInt(target.sX) : parseInt(target.eX),
@@ -222,8 +225,8 @@ export default {
                 // target.leftTop = leftTop;
                 // target.width = width;
                 // target.height = height;
-                // return target;
-            }));
+                return _target;
+            });
             const data = {
                 id: this.sid,
                 targets: savedTargetArr,
