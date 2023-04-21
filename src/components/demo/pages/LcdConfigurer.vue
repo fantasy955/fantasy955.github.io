@@ -22,6 +22,8 @@
                     <thead>
                         <tr>
                             <th>识别名称</th>
+                            <th>最小值</th>
+                            <th>最大值</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -29,6 +31,14 @@
                         <tr v-for="target in targetList" :key="target.id">
                             <td>
                                 <input @input="(event) => { target.name = event.target.value }" :value="target.name">
+                            </td>
+                            <td>
+                                <input type="number" step="0.1" pattern="\d+(.\d+)?"
+                                    @input="(event) => { target.min = event.target.value }" :value="target.min">
+                            </td>
+                            <td>
+                                <input type="number" step="0.1" pattern="\d+(.\d+)?"
+                                    @input="(event) => { target.max = event.target.value }" :value="target.max">
                             </td>
                             <td>
                                 <button class="del" @click="remove(target.id)">移除</button>
@@ -110,6 +120,9 @@ export default {
                 });
                 this.selected = true;
             };
+            img.onerror = () => {
+                this.loading = false;
+            }
             this.img = img;
             this.sid = sid;
         },
@@ -160,7 +173,7 @@ export default {
                     this.$refs.modal.showModal();
                     // console.log(this.$refs.modal)
                     this.inputCallback = (name) => {
-                        this.targetList.push({ name, sX, sY, sRatio, eX, eY, eRatio, id: this.uuid() });
+                        this.targetList.push({ name, sX, sY, sRatio, eX, eY, eRatio, id: this.uuid(), min: -1, max: -1 });
                     };
                 }
             };
@@ -188,11 +201,39 @@ export default {
 
         },
         save() {
-            let url = '';
-            axios.post(url, {
+            let savedTargetArr = this.targetList.map((target) => this.deepCopy(target));
+            savedTargetArr = savedTargetArr.map((target) => ({
+                name: target.name,
+                x: target.sX < target.eX ? parseInt(target.sX) : parseInt(target.eX),
+                y: target.sY < target.eY ? parseInt(target.sY) : parseInt(target.eY),
+                width: parseInt(Math.abs(target.sX - target.eX)),
+                height: parseInt(Math.abs(target.sY - target.eY)),
+                // target.sX = target.sX * target.sRatio;
+                // target.sY = target.sY * target.sRatio;
+                // target.eY = target.eY * target.eRatio;
+                // target.eX = target.eX * target.eRatio;
+
+                // let leftTop = {
+                //     x: target.sX < target.eX ? parseInt(target.sX) : parseInt(target.eX),
+                //     y: target.sY < target.eY ? parseInt(target.sY) : parseInt(target.eY)
+                // };
+                // let width = parseInt(Math.abs(target.sX - target.eX));
+                // let height = parseInt(Math.abs(target.sY - target.eY));
+                // target.leftTop = leftTop;
+                // target.width = width;
+                // target.height = height;
+                // return target;
+            }));
+            const data = {
                 id: this.sid,
-                targets: JSON.stringify(this.targetList),
-            });
+                targets: savedTargetArr,
+                width: this.img.width,
+                height: this.img.height,
+            };
+            console.log(JSON.stringify(data));
+            // console.log(this.targetList, savedTargetArr);
+            let url = 'http://127.0.0.1:5000/post/lcd/config';
+            axios.post(url, data);
         },
         remove(id) {
             if (this.$delete) {
@@ -206,7 +247,7 @@ export default {
 
         },
         handleInput(status, name) {
-            console.log(name);
+            // console.log(name);
             if (status) {
                 this.inputCallback(name.length ? name : '未命名');
             }

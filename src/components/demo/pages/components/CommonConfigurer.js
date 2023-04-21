@@ -51,5 +51,21 @@ export default {
             const v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         }),
+        deepCopy(any) {
+            if (typeof any === 'object') {
+                if (Array.isArray(any)) {
+                    return any.map((item) => this.deepCopy(item))
+                } else if (Object.prototype.toString.call(any).slice(8, -1) === 'Function') {
+                    return new Function(`return ${any.toString()}`)
+                } else {
+                    const newObj = {}
+                    for (const key in any) {
+                        newObj[key] = this.deepCopy(any[key])
+                    }
+                    return newObj;
+                }
+            }
+            return any
+        }
     }
 }

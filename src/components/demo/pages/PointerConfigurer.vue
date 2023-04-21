@@ -45,23 +45,25 @@
                         <tr>
                             <td style="text-align: right;">最小值</td>
                             <td colspan="2">
-                                <input :value="this.min" @input="($event) => { min = $event.target.value }" type="number"
-                                    step="0.1">
+                                <input :value="this.start" @input="($event) => { start = $event.target.value }"
+                                    type="number" step="0.1">
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">最大值</td>
                             <td colspan="2">
-                                <input :value="this.max" @input="($event) => { max = $event.target.value }" type="number"
+                                <input :value="this.end" @input="($event) => { end = $event.target.value }" type="number"
                                     step="0.1">
                             </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">正常范围</td>
                             <td colspan="2">
-                                <input style="width: 4rem;" type="number" step="0.1">
+                                <input :value="this.min" @input="($event) => { min = $event.target.value }"
+                                    style="width: 4rem;" type="number" step="0.1">
                                 ~
-                                <input style="width: 4rem;" type="number" step="0.1">
+                                <input :value="this.max" @input="($event) => { max = $event.target.value }"
+                                    style="width: 4rem;" type="number" step="0.1">
                             </td>
                         </tr>
                     </tbody>
@@ -95,8 +97,10 @@ export default {
             },
             selected: false,
             dirty: false,
-            min: 0,
-            max: 0,
+            min: -1,
+            max: -1,
+            start: 0,
+            end: 0,
             operations: [
                 {
                     id: 0, name: '中心', eventHandler: (e) => {
@@ -154,6 +158,9 @@ export default {
                 this.updateCanvasRatio();
                 this.selected = true;
             };
+            img.onerror = () => {
+                this.loading = false;
+            }
             this.img = img;
             this.sid = sid;
             for (let _id of Object.keys(this.lastState)) {
@@ -183,24 +190,21 @@ export default {
         },
         save: function () {
             // 将lastState数据保存到数据库
-            let url = '';
+            let url = 'http://127.0.0.1:5000/post/pointer/config';
             let data = {
                 sid: this.id,
-                center: {
-                    x: this.lastState[0].x,
-                    y: this.lastState[0].y,
-                },
-                start: {
-                    x: this.lastState[1].x,
-                    y: this.lastState[1].y,
-                },
-                end: {
-                    x: this.lastState[2].x,
-                    y: this.lastState[2].y,
-                },
+                center_x: parseInt(this.lastState[0].position.x * this.lastState[0].ratio),
+                center_y: parseInt(this.lastState[0].position.y * this.lastState[0].ratio),
+                start_x: parseInt(this.lastState[1].position.x * this.lastState[1].ratio),
+                start_y: parseInt(this.lastState[1].position.y * this.lastState[1].ratio),
+                end_x: parseInt(this.lastState[2].position.x * this.lastState[2].ratio),
+                end_y: parseInt(this.lastState[2].position.y * this.lastState[2].ratio),
+                start: this.start,
+                end: this.end,
                 min: this.min,
                 max: this.max,
             }
+            console.log(JSON.stringify(data));
             axios.post(url, data)
                 .then(() => { })
                 .catch(() => { });
