@@ -5,6 +5,9 @@
             <option disabled selected hidden>请选择摄像设备</option>
             <option :key="item.id" :value="item.id" v-for="item in sourceList">{{ item.name }}</option>
         </select>
+        <input type="file" id="input-image" style="display: none;" accept="image/png, image/jpeg"
+            @input="$emit('onFileChange', $event.target.files[0])">
+        <label for="input-image"><span style="padding: 3px; cursor: pointer">选择图片</span></label>
         <slot></slot>
     </div>
 </template>
@@ -27,7 +30,7 @@ export default {
             { id: 3, name: 'd', desc: '' },
         ]
     },
-    emits: ['onSourceChange']
+    emits: ['onSourceChange', 'onFileChange']
 }
 </script>
 

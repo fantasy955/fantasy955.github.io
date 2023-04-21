@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="display: flex; align-items: center;">
-            <SourceSelector @onSourceChange="onSourceChange" :disabled="loading">
+            <SourceSelector @onSourceChange="onSourceChange" @onFileChange="onFileChange" :disabled="loading">
                 <button @click="save">保存配置</button>
             </SourceSelector>
         </div>
@@ -125,6 +125,30 @@ export default {
             }
             this.img = img;
             this.sid = sid;
+        },
+        onFileChange(file) {
+            if (!file) {
+                return;
+            }
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            if (this.selected) {
+                this.canvasContext.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+            }
+            img.onload = () => {
+                this.loading = false;
+                while (this.targetList.length) {
+                    this.targetList.shift();
+                }
+                nextTick(() => {
+                    this.$refs.canvas.width = img.width;
+                    this.$refs.canvas.height = img.height;
+                    this.canvasContext.drawImage(img, 0, 0);
+                    this.updateCanvasRatio();
+                });
+                this.selected = true;
+            }
+            this.img = img;
         },
         updateCanvasRatio: debounce(function () {
             // console.log(this.$refs.canvas);

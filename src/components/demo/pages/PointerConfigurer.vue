@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="display: flex; align-items: center;">
-            <SourceSelector @onSourceChange="onSourceChange" :disabled="loading">
+            <SourceSelector @onSourceChange="onSourceChange" @onFileChange="onFileChange" :disabled="loading">
                 <button @click="save">保存配置</button>
             </SourceSelector>
         </div>
@@ -147,6 +147,9 @@ export default {
             let img = new Image();
             img.src = '/assets/shzn/0.png';
             this.loading = true;
+            if (this.selected) {
+                this.canvasContext.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+            }
             img.onload = () => {
                 this.loading = false;
                 this.$refs.canvas.width = img.width;
@@ -163,6 +166,30 @@ export default {
             }
             this.img = img;
             this.sid = sid;
+            for (let _id of Object.keys(this.lastState)) {
+                this.lastState[_id].active = false;
+                this.lastState[_id].position.x = 0;
+                this.lastState[_id].position.y = 0;
+            }
+        },
+        onFileChange(file) {
+            if(!file){
+                return;
+            }
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            if (this.selected) {
+                this.canvasContext.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+            }
+            img.onload = () => {
+                this.$refs.canvas.width = img.width;
+                this.$refs.canvas.height = img.height;
+                // 先是参考自己的本身画布大小进行绘制，绘制完毕，由style指定的大小，渲染在浏览器页面
+                this.canvasContext.drawImage(img, 0, 0);
+                this.updateCanvasRatio();
+                this.selected = true;
+            }
+            this.img = img;
             for (let _id of Object.keys(this.lastState)) {
                 this.lastState[_id].active = false;
                 this.lastState[_id].position.x = 0;
