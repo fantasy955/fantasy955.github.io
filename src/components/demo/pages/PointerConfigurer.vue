@@ -49,6 +49,7 @@
                                     type="number" step="0.1">
                             </td>
                         </tr>
+                        <img src="/api/img.png">
                         <tr>
                             <td style="text-align: right;">最大值</td>
                             <td colspan="2">
@@ -143,7 +144,7 @@ export default {
     methods: {
         // 根据摄像头id 获取目标设备图像
         // 读取已有配置，并显示
-        onSourceChange: function (e, sid) {
+        onSourceChange: debounce(function (e, sid) {
             let img = new Image();
             img.src = '/assets/shzn/0.png';
             this.loading = true;
@@ -171,9 +172,9 @@ export default {
                 this.lastState[_id].position.x = 0;
                 this.lastState[_id].position.y = 0;
             }
-        },
+        }, 100),
         onFileChange(file) {
-            if(!file){
+            if (!file) {
                 return;
             }
             const img = new Image();
@@ -257,7 +258,7 @@ export default {
         addArc: function (x, y) {
             this.canvasContext.fillStyle = 'red';
             this.canvasContext.beginPath();
-            this.canvasContext.arc(x * this.ratio, y * this.ratio, 1, 0, 2 * Math.PI);
+            this.canvasContext.arc(x * this.ratio, y * this.ratio, this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500), 0, 2 * Math.PI);
             this.canvasContext.fill();
         },
         clear: function (oid) {

@@ -102,7 +102,7 @@ export default {
         this.moveEvent = null;
     },
     methods: {
-        onSourceChange(e, sid) {
+        onSourceChange: debounce(function (e, sid) {
             let img = new Image();
             img.src = '/assets/shzn/1.jpg';
             this.loading = true;
@@ -125,7 +125,7 @@ export default {
             }
             this.img = img;
             this.sid = sid;
-        },
+        }, 100),
         onFileChange(file) {
             if (!file) {
                 return;
@@ -143,6 +143,7 @@ export default {
                 nextTick(() => {
                     this.$refs.canvas.width = img.width;
                     this.$refs.canvas.height = img.height;
+                    console.log('image size', img.width, img.height);
                     this.canvasContext.drawImage(img, 0, 0);
                     this.updateCanvasRatio();
                 });
@@ -155,6 +156,7 @@ export default {
             const clientWidth = this.$refs.canvas.clientWidth;
             const imageWidth = this.$refs.canvas.width;
             this.ratio = imageWidth / clientWidth;
+            console.log('update ratio', this.ratio)
             this.$refs.container.style.height = `${this.$refs.canvas.clientHeight + 50}px`;
         }, 200),
         addOperation() {
@@ -184,7 +186,7 @@ export default {
 
             this.clickEvent = (e) => {
                 const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
-                // console.log(x, y);
+                console.log('click', x, y);
                 if (!active) {
                     [sX, sY] = [x, y];
                     sRatio = this.ratio;
@@ -213,7 +215,7 @@ export default {
             this.canvasContext.beginPath();
             this.canvasContext.trokeStyle = 'red';
             this.canvasContext.fillStyle = "rgba(0,0,0,0)";
-            this.canvasContext.clientWidth = 2;
+            this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500);
             this.canvasContext.strokeRect(sX * sRatio, sY * sRatio,
                 (eX - sX) * eRatio, (eY - sY) * eRatio);
             this.canvasContext.fillRect(sX * sRatio, sY * sRatio,
@@ -238,6 +240,8 @@ export default {
                     y: target.sY < target.eY ? parseInt(target.sY) : parseInt(target.eY),
                     width: parseInt(Math.abs(target.sX - target.eX)),
                     height: parseInt(Math.abs(target.sY - target.eY)),
+                    min: parseFloat(target.min),
+                    max: parseFloat(target.max),
                 };
 
                 // let leftTop = {

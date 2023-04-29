@@ -9,7 +9,9 @@ export default {
     ],
     methods: {
         getEventPositionOffset: function (event, el, absolute) {
-            const { x: ex, y: ey } = this.getEventPosition(event);
+            let { x: ex, y: ey } = this.getEventPosition(event);
+            ex = parseInt(ex * window.devicePixelRatio);
+            ey = parseInt(ey * window.devicePixelRatio);
             if (absolute) {
                 // console.log('绝对定位', ex, ey);
                 return { x: ex, y: ey };
