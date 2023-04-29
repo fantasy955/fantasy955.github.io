@@ -1,4 +1,5 @@
 import { createApp, createSSRApp, defineComponent, h } from 'vue';
+import Renderer from '@vue/server-renderer';
 import { createPinia } from 'pinia';
 import Particles from 'vue-particles';
 import App from "./App.vue";
@@ -17,6 +18,8 @@ app.use(router);
 app.use(pinia)
 app.use(uConifg);
 app.component('vue-markdown', VueMarkdown);
+// const html = Renderer.renderToString(app);
+// console.log(html);
 // app.use(MathJax);
 app.mount('#app');
 

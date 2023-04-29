@@ -8,6 +8,12 @@
 </template>
 
 <script setup>
+import DevicePixelRatio from '@/utils/DevicePixelRatio';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  new DevicePixelRatio().init()
+});
 
 </script>
 
@@ -58,5 +64,6 @@ body {
   overflow-y: scroll;
   overflow-x: auto;
 }
+
 /* scroll end */
 </style>
