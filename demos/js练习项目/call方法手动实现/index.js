@@ -1,11 +1,8 @@
-Function.prototype.myCall = function (context) {
+
+
+Function.prototype.myCall = function (context, ...args) {
     context = context || window;
     context.fn = this;
-    console.log(this);
-    var args = [];
-    for (var i = 1; i < arguments.length; i++) {
-        args.push(arguments[i]);
-    }
     var result = context.fn(...args);
     delete context.fn;
     return result;

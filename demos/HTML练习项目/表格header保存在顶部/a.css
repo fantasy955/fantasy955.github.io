@@ -1,0 +1,16 @@
+td:nth-child(1),
+th:nth-child(1) {
+    position: sticky;
+    left: 0;
+    /* 首行在左 */
+    z-index: 1;
+    background-color: lightpink;
+}
+
+td:nth-child(2),
+th:nth-child(2) {
+    position: sticky;
+    left: 100px;
+    z-index: 1;
+    background-color: lightpink;
+}

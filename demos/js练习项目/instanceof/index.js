@@ -8,7 +8,7 @@ function instance_of(L, R) {
     if (baseType.includes(typeof (L))) { return false }
 
     let RP = R.prototype;  //取 R 的显示原型
-    L = L.__proto__;       //取 L 的隐式原型
+    L = Object.getPrototypeOf(L);       //取 L 的隐式原型
     // eslint-disable-next-line no-constant-condition
     while (true) {           // 无线循环的写法（也可以使 for(;;) ）
         if (L === null) {    //找到最顶层
@@ -17,6 +17,6 @@ function instance_of(L, R) {
         if (L === RP) {       //严格相等
             return true;
         }
-        L = L.__proto__;  //没找到继续向上一层原型链查找
+        L = Object.getPrototypeOf(L);  //没找到继续向上一层原型链查找
     }
 }

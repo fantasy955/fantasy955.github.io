@@ -70,18 +70,18 @@ scheduler.add(() => timeout(1000).then(() => {
     console.log('task 1');
 }).catch((e) => {
     console.log('task 1 failed')
-})).then(()=>{
+})).then(() => {
     console.log('promise task 1');
-}).catch(()=>{
+}).catch(() => {
     console.log('promise task 1 failed');
 });
 scheduler.add(() => timeout(2000).then(() => {
     console.log('task 2');
 }).catch((e) => {
     console.log('task 2 faild')
-})).then(()=>{
+})).then(() => {
     console.log('promise task 2');
-}).catch(()=>{
+}).catch(() => {
     console.log('promise task 2 failed');
 });
 
@@ -89,9 +89,9 @@ scheduler.add(() => timeout(3000).then(() => {
     console.log('task 3');
 }).catch((e) => {
     console.log('task3 faild')
-})).then(()=>{
+})).then(() => {
     console.log('promise task 3');
-}).catch(()=>{
+}).catch(() => {
     console.log('promise task 3 failed');
 });
 
@@ -99,9 +99,9 @@ scheduler.add(() => timeout(5000).then(() => {
     console.log('task 4');
 }).catch((e) => {
     console.log('task 4 faild')
-})).then(()=>{
+})).then(() => {
     console.log('promise task 4');
-}).catch(()=>{
+}).catch(() => {
     console.log('promise task 4 failed');
 });
 
@@ -109,9 +109,9 @@ scheduler.add(() => timeout(0).then(() => {
     console.log('task 5');
 }).catch((e) => {
     console.log('task 5 faild')
-})).then(()=>{
+})).then(() => {
     console.log('promise task 5');
-}).catch(()=>{
+}).catch(() => {
     console.log('promise task 5 failed');
 });
 // 1 3 5 2 4

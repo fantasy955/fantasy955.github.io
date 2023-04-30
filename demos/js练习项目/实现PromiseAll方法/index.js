@@ -13,12 +13,28 @@ function promiseAll(promises) {
                     resolvedCounter++
                     resolvedValues[i] = value
                     if (resolvedCounter == promiseNum) {
-                        return resolve(resolvedValues)
+                        resolve(resolvedValues)
                     }
                 }, function (reason) {
-                    return reject(reason)
+                    reject(reason)
                 })
             })(i)
         }
     })
 }
+
+
+let i = 0;
+let promises = new Array(100).fill(0).map(() => new Promise((resolve, reject) => {
+    if (Math.random() < 0.2) {
+        reject('random error');
+    } else {
+        resolve(i++);
+    }
+}))
+
+promiseAll(promises).then((res) => {
+    console.log(res);
+}).catch((err) => {
+    console.log(err);
+})

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script type="module" src="./index.js"></script>
+    <style>
+        html {
+            font-size: 100px;
+        }
+
+        body {
+            background: #E3E3E3;
+        }
+
+        .card {
+            width: 7rem;
+            height: 2rem;
+            background-image: url(https://gw.alipayobjects.com/mdn/rms_7527d7/afts/img/A*HD9_S4RyppUAAAAAAAAAAAAAARQnAQ);
+            background-size: 100% auto;
+            background-position: center;
+            margin-bottom: 0.4rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .card-left {
+            width: 70%;
+            padding-left: 0.1rem;
+        }
+
+        .card-right {
+            width: 25%;
+            position: relative;
+        }
+        .card-right .discountDesc{
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.2rem;
+            color: #83530C;
+            background-color: orange;
+            width: 60%;
+            text-align: center;
+            border-radius: 0 0 0.1rem 0.1rem;
+        }
+
+        .card-right .btn{
+            width: 1.24rem;
+            height: 0.6rem;
+            color: white;
+            background-color: red;
+            border-radius: 0.3rem;
+            font-size: 0.36rem;
+            position: absolute;
+            border: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card .card-left-title {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            vertical-align: middle;
+            line-height: 0.36rem;
+        }
+
+        .card .card-left-title img {
+            line-height: 0.36rem;
+            vertical-align: middle;
+            height: 0.36rem;
+            width: 0.36rem;
+        }
+
+        .card .card-left .card-left-content {
+            width: 100%;
+            display: flex;
+            column-gap: 0.12rem;
+            align-items: stretch;
+        }
+
+
+        .card .card-left .card-left-content img {
+            display: inline-block;
+            width: 1.4rem;
+            height: 1.4rem;
+            object-fit: cover;
+            border-radius: 0.05rem;
+        }
+
+        .card .card-left-title span {
+            font-size: 0.24rem;
+            vertical-align: middle;
+            color: black;
+        }
+
+        .card .card-left-title .distance span {
+            color: grey;
+        }
+
+        .card .card-left .card-left-content .desc {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-between;
+        }
+
+        .card .card-left .card-left-content .desc .promoLogo {
+            font-size: 0;
+            text-align: left;
+        }
+
+        .card .card-left .card-left-content .desc .promoLogo img {
+            height: 0.3rem;
+            padding-right: 0.15rem;
+            width: fit-content;
+            object-fit: contain;
+            font-size: 0.24rem;
+            line-height: 0.3rem;
+        }
+
+        .card .card-left .card-left-content .desc .oriPrice {
+            font-size: 0.15rem;
+            color: gray;
+            text-decoration: line-through;
+        }
+
+        .card .card-left .card-left-content .desc .voucher {
+            font-size: 0.24rem;
+            font-weight: bold;
+        }
+
+        .card .card-left .card-left-content .desc .amount {
+            color: red;
+            font-weight: bold;
+            font-size: 0.32rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>
