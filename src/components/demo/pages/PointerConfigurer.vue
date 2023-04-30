@@ -6,7 +6,7 @@
             </SourceSelector>
         </div>
         <div style="width: 100%; display: flex;" ref="container">
-            <div style="position: relative; flex: 3; max-width: 500px;">
+            <div style="position: relative; flex: 3; max-width: 70%; overflow: hidden;">
                 <canvas v-show="!loading" ref="canvas"
                     style="user-select: none; width: 100%; -webkit-user-select: none; position: absolute; left: 0; top: 0"></canvas>
                 <Loading message="加载中" v-show="loading"></Loading>
@@ -49,7 +49,6 @@
                                     type="number" step="0.1">
                             </td>
                         </tr>
-                        <img src="/api/img.png">
                         <tr>
                             <td style="text-align: right;">最大值</td>
                             <td colspan="2">
@@ -105,19 +104,21 @@ export default {
             operations: [
                 {
                     id: 0, name: '中心', eventHandler: (e) => {
-                        const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
+                        // console.log(this.getRealPosition);
+                        const { x, y } = this.getRealPosition(e);
+                        // console.log(x, y);
                         this.draw(0, x, y);
                     }
                 },
                 {
                     id: 1, name: '起始刻度', eventHandler: (e) => {
-                        const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
+                        const { x, y } = this.getRealPosition(e);
                         this.draw(1, x, y);
                     }
                 },
                 {
                     id: 2, name: '最大刻度', eventHandler: (e) => {
-                        const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
+                        const { x, y } = this.getRealPosition(e);
                         this.draw(2, x, y);
                     }
                 },
@@ -127,11 +128,54 @@ export default {
     mounted() {
         this.canvasContext = this.$refs.canvas.getContext('2d');
         this.canvasEvent = null;
+        this.canvasScale = 1;
         this.$refs.canvas.addEventListener('click', (e) => {
             if (this.canvasEvent) {
                 this.canvasEvent(e);
             }
         });
+
+        this.$refs.canvas.addEventListener('mousedown', (e) => {
+            if (!this.canvasEvent) {
+                // 没有注册绘图事件，支持拖动
+                // 注册拖动的鼠标移动事件
+                let [start_x, start_y] = [e.clientX, e.clientY];
+                let [base_x, base_y] = [parseInt(this.$refs.canvas.style.left), parseInt(this.$refs.canvas.style.top)]
+                this.moveEvent = (e) => {
+                    let [x, y] = [e.clientX, e.clientY];
+                    let [left, top] = [base_x + (x - start_x), base_y + (y - start_y)];
+                    this.$refs.canvas.style.left = `${left}px`;
+                    this.$refs.canvas.style.top = `${top}px`;
+                };
+            }
+        });
+        this.$refs.canvas.addEventListener('mouseup', (e) => {
+            if (!this.canvasEvent) {
+                this.moveEvent = null;
+            }
+        });
+
+        this.$refs.canvas.addEventListener('wheel', (e) => {
+            if (!this.canvasEvent) {
+                e.preventDefault();
+                this.canvasScale += e.deltaY * -0.001;
+                // Restrict scale
+                this.canvasScale = Math.min(Math.max(.125, this.canvasScale), 100);
+                // Apply scale transform
+                this.$refs.canvas.style.transform = `scale(${this.canvasScale})`;
+                this.lt_x = this.center_x - (this.canvasWrapWidth * this.canvasScale / 2);
+                this.lt_y = this.center_y - (this.canvasWrapWidth * this.canvasScale / 2);
+            } else {
+                alert('请取消标注功能后再执行缩放');
+            }
+        });
+        this.moveEvent = null;
+        this.$refs.canvas.addEventListener('mousemove', (e) => {
+            if (this.moveEvent) {
+                this.moveEvent(e);
+            }
+        });
+
         this.observer = new ResizeObserver((entries) => {
             this.updateCanvasRatio();
         });
@@ -142,9 +186,16 @@ export default {
         this.canvasEvent = null;
     },
     methods: {
+        initCanvas() {
+            this.$refs.canvas.style.left = '0px';
+            this.$refs.canvas.style.top = '0px';
+            this.$refs.canvas.style.transform = `scale(1)`;
+            this.canvasScale = 1;
+        },
         // 根据摄像头id 获取目标设备图像
         // 读取已有配置，并显示
         onSourceChange: debounce(function (e, sid) {
+            this.initCanvas();
             let img = new Image();
             img.src = '/assets/shzn/0.png';
             this.loading = true;
@@ -177,6 +228,7 @@ export default {
             if (!file) {
                 return;
             }
+            this.initCanvas();
             const img = new Image();
             img.src = URL.createObjectURL(file);
             if (this.selected) {
@@ -196,6 +248,14 @@ export default {
                 this.lastState[_id].position.x = 0;
                 this.lastState[_id].position.y = 0;
             }
+        },
+        getRealPosition(e) {
+            let [x, y] = [e.clientX * window.devicePixelRatio, e.clientY * window.devicePixelRatio];
+            const rect = this.$refs.canvas.getBoundingClientRect(); // 获取 Canvas 元素在视口中的位置和尺寸
+            let [left, top] = [rect.left, rect.top];
+            [x, y] = [(x - left) / this.canvasScale, (y - top) / this.canvasScale];
+
+            return { x, y };
         },
         // 不能使用箭头函数（需要通过apply调用）
         updateCanvasRatio: debounce(function () {
@@ -258,7 +318,7 @@ export default {
         addArc: function (x, y) {
             this.canvasContext.fillStyle = 'red';
             this.canvasContext.beginPath();
-            this.canvasContext.arc(x * this.ratio, y * this.ratio, this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500), 0, 2 * Math.PI);
+            this.canvasContext.arc(x * this.ratio, y * this.ratio, this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500 / this.canvasScale), 0, 2 * Math.PI);
             this.canvasContext.fill();
         },
         clear: function (oid) {

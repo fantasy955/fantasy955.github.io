@@ -6,7 +6,8 @@
             </SourceSelector>
         </div>
         <div style="width: 100%; display: flex;" ref="container">
-            <div style="position: relative; flex: 3; max-width: 500px;">
+            <div style="position: relative; flex: 3; max-width: 70%; overflow: hidden; border: 1px solid black;"
+                ref="cavnasWrap">
                 <canvas v-show="!loading" ref="canvas"
                     style="user-select: none; width: 100%; -webkit-user-select: none; position: absolute; left: 0; top: 0"></canvas>
                 <Loading message="加载中" v-show="loading"></Loading>
@@ -58,6 +59,7 @@ import CommonConfigurer from './components/CommonConfigurer';
 import { debounce } from '@/utils/common';
 import axios from 'axios';
 import InputModal from './components/InputModal.vue';
+import { Rect } from '@antv/g-canvas/lib/shape';
 
 export default {
     name: 'LcdConfigurer',
@@ -80,11 +82,49 @@ export default {
     mounted() {
         this.canvasContext = this.$refs.canvas.getContext('2d');
         this.clickEvent = null;
+        this.canvasScale = 1;
+
         this.$refs.canvas.addEventListener('click', (e) => {
-            if (this.clickEvent) {
+            if (this.clickEvent) {  // 注册了绘图事件
                 this.clickEvent(e);
             }
         });
+
+        this.$refs.canvas.addEventListener('mousedown', (e) => {
+            if (!this.clickEvent) {
+                // 没有注册绘图事件，支持拖动
+                // 注册拖动的鼠标移动事件
+                let [start_x, start_y] = [e.clientX, e.clientY];
+                let [base_x, base_y] = [parseInt(this.$refs.canvas.style.left), parseInt(this.$refs.canvas.style.top)]
+                this.moveEvent = (e) => {
+                    let [x, y] = [e.clientX, e.clientY];
+                    let [left, top] = [base_x + (x - start_x), base_y + (y - start_y)];
+                    this.$refs.canvas.style.left = `${left}px`;
+                    this.$refs.canvas.style.top = `${top}px`;
+                };
+            }
+        });
+        this.$refs.canvas.addEventListener('mouseup', (e) => {
+            if (!this.clickEvent) {
+                this.moveEvent = null;
+            }
+        });
+
+        this.$refs.canvas.addEventListener('wheel', (e) => {
+            if (!this.clickEvent) {
+                e.preventDefault();
+                this.canvasScale += e.deltaY * -0.001;
+                // Restrict scale
+                this.canvasScale = Math.min(Math.max(.125, this.canvasScale), 100);
+                // Apply scale transform
+                this.$refs.canvas.style.transform = `scale(${this.canvasScale})`;
+                this.lt_x = this.center_x - (this.canvasWrapWidth * this.canvasScale / 2);
+                this.lt_y = this.center_y - (this.canvasWrapWidth * this.canvasScale / 2);
+            } else {
+                alert('请取消标注功能后再执行缩放');
+            }
+        });
+
         this.moveEvent = null;
         this.$refs.canvas.addEventListener('mousemove', (e) => {
             if (this.moveEvent) {
@@ -102,7 +142,27 @@ export default {
         this.moveEvent = null;
     },
     methods: {
+        initCanvas() {
+            this.$refs.canvas.style.left = '0px';
+            this.$refs.canvas.style.top = '0px';
+            this.$refs.canvas.style.transform = `scale(1)`;
+            this.canvasScale = 1;
+        },
+        getDefaultTransfromOrigin() {
+            // 获取元素的计算样式
+            const style = window.getComputedStyle(this.$refs.canvas);
+
+            // 从计算样式中获取 transform-origin 属性的值
+            const transformOrigin = style.getPropertyValue('transform-origin');
+
+            // 解析出 transform-origin 属性的坐标值
+            const [x, y] = transformOrigin.split(' ').map(value => parseFloat(value));
+
+            // console.log(`transform-origin 坐标值为 (${x}, ${y})`);
+            return { x, y };
+        },
         onSourceChange: debounce(function (e, sid) {
+            this.initCanvas();
             let img = new Image();
             img.src = '/assets/shzn/1.jpg';
             this.loading = true;
@@ -130,6 +190,7 @@ export default {
             if (!file) {
                 return;
             }
+            this.initCanvas();
             const img = new Image();
             img.src = URL.createObjectURL(file);
             if (this.selected) {
@@ -143,7 +204,6 @@ export default {
                 nextTick(() => {
                     this.$refs.canvas.width = img.width;
                     this.$refs.canvas.height = img.height;
-                    console.log('image size', img.width, img.height);
                     this.canvasContext.drawImage(img, 0, 0);
                     this.updateCanvasRatio();
                 });
@@ -153,12 +213,19 @@ export default {
         },
         updateCanvasRatio: debounce(function () {
             // console.log(this.$refs.canvas);
-            const clientWidth = this.$refs.canvas.clientWidth;
+            const clientWidth = this.$refs.canvas.clientWidth * this.canvasScale;
             const imageWidth = this.$refs.canvas.width;
             this.ratio = imageWidth / clientWidth;
-            console.log('update ratio', this.ratio)
             this.$refs.container.style.height = `${this.$refs.canvas.clientHeight + 50}px`;
         }, 200),
+        getRealPosition(e) {
+            let [x, y] = [e.clientX * window.devicePixelRatio, e.clientY * window.devicePixelRatio];
+            const rect = this.$refs.canvas.getBoundingClientRect(); // 获取 Canvas 元素在视口中的位置和尺寸
+            let [left, top] = [rect.left, rect.top];
+            [x, y] = [(x - left) / this.canvasScale, (y - top) / this.canvasScale];
+
+            return { x, y };
+        },
         addOperation() {
             if (this.active) {
                 this.active = false;
@@ -176,7 +243,7 @@ export default {
                         if (eX !== undefined && eY !== undefined) {
                             this.clear();
                         }
-                        const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
+                        const { x, y } = this.getRealPosition(e);
                         [eX, eY] = [x, y];
                         eRatio = this.ratio
                         this.draw(sX, sY, sRatio, eX, eY, eRatio);
@@ -185,8 +252,8 @@ export default {
             }
 
             this.clickEvent = (e) => {
-                const { x, y } = this.getEventPositionOffset(e, this.$refs.canvas, true);
-                console.log('click', x, y);
+                let { x, y } = this.getRealPosition(e);
+
                 if (!active) {
                     [sX, sY] = [x, y];
                     sRatio = this.ratio;
@@ -215,7 +282,7 @@ export default {
             this.canvasContext.beginPath();
             this.canvasContext.trokeStyle = 'red';
             this.canvasContext.fillStyle = "rgba(0,0,0,0)";
-            this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500);
+            this.canvasContext.lineWidth = 2 * Math.ceil(this.img.width / 500 / this.canvasScale);
             this.canvasContext.strokeRect(sX * sRatio, sY * sRatio,
                 (eX - sX) * eRatio, (eY - sY) * eRatio);
             this.canvasContext.fillRect(sX * sRatio, sY * sRatio,
