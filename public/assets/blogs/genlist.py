@@ -62,7 +62,7 @@ if __name__ == '__main__':
                 fileInfo['updatetime']['hour'] = struct_time.tm_hour
                 fileInfo['updatetime']['min'] = struct_time.tm_min
                 fileInfo['updatetime']['sec'] = struct_time.tm_sec
-                json_dict['pages'][currentPage-1]['files'].append(fileInfo)
+                json_dict['pages'][int(currentPage-1)]['files'].append(fileInfo)
                 json_dict['files'].append(fileInfo)
                 addFile += 1
 
