@@ -67,5 +67,5 @@ if __name__ == '__main__':
                 addFile += 1
 
         json_str = json.dumps(json_dict, ensure_ascii=False) 
-        with open(target, 'w+', encoding='utf-8') as f:
+        with open(target, 'w+') as f:
             json.dump(json_dict, f, ensure_ascii=False, indent=1)
