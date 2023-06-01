@@ -63,6 +63,24 @@
 
 
 
+## DOM事件是怎么变成Graph内部事件的
+
+首先明确一件事，所有事件的源头都是浏览器支持的事件类型。
+
+那么`maxGraph`的实现方法呢？
+
+核心是`packages\core\src\view\event\InternalEvent.ts`,
+
+它内部对于不同设备进行了兼容，例如一个鼠标滚轮事件，如果当前浏览器是Safari并且支持触摸事件，就用触摸事件模拟滚动。
+
+它内部有两种事件类型，一种是手势事件，一种是鼠标事件。
+
+在`packages\core\src\view\mixins\CellsMixin.ts`中，有根据事件位置获取指定的cell，以及根据范围，获取所有cells的方法。
+
+
+
+
+
 # 图交互
 
 多种高亮状态，如何进行状态的保存和恢复。
