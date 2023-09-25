@@ -39,3 +39,15 @@ if (cluster.isMaster) {
 ```
 
 在这个例子中，我们首先判断当前进程是否是主进程。如果是主进程，则使用cluster.fork方法来创建多个工作进程。如果不是主进程，则说明当前进程是一个工作进程，在这里可以启动服务器。
+
+## 事件循环
+
+nodejs中也有宏任务与微任务的区别，但是宏任务由多个队列组成
+
+### 宏任务执行顺序
+
+![在这里插入图片描述](assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcmtfeWFuZ3l4,size_16,color_FFFFFF,t_70.png)
+
+![image-20230925090610089](assets/image-20230925090610089.png)
+
+[浏览器和Node 事件循环的区别_node事件循环机制与浏览器的区别是什么-CSDN博客](https://blog.csdn.net/Mark_yangyx/article/details/103026712#:~:text=浏览器和Node 事件循环的区别 解题： 思路一： 其中一个主要的区别在于浏览器的event loop 和nodejs的event,loop 在处理异步事件的顺序是不同的%2Cnodejs中有micro event%3B其中Promise属于micro event 该异步事件的处理顺序就和浏览器不同.nodejs V11.0以上 这两者之间的顺序就相同了)

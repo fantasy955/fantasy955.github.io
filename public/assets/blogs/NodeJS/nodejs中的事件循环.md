@@ -289,6 +289,18 @@ setImmediate(function immediate () {
 
 这时，timeout 会先打印，然后再执行 check 阶段的 immediate。12
 
+nodejs中也有宏任务与微任务的区别，但是宏任务由多个队列组成
+
+### 宏任务执行顺序
+
+![在这里插入图片描述](assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01hcmtfeWFuZ3l4,size_16,color_FFFFFF,t_70.png)
+
+### 微任务执行顺序
+
+![image-20230925090610089](assets/image-20230925090610089-16956043542713.png)
+
+[浏览器和Node 事件循环的区别_node事件循环机制与浏览器的区别是什么-CSDN博客](
+
 ## 对比浏览器的事件循环
 
 ### 定时器差异
@@ -305,7 +317,7 @@ setImmediate(function immediate () {
 
 在 Node.js 中，每次事件循环只有一个阶段会执行任务队列中的任务，就是 timers 阶段。
 
-所以，在 Node.js 中，如果有多个定时器到期，它们会被放入同一个任务队列中，并且 timers 阶段会尝试执行所有的定时器回调，直到任务队列为空或者达到了最大执行限制。
+所以，在 Node.js 中，如果有多个定时器到期，它们会被放入同一个任务队列中，并且 timers 阶段会尝试执行所有的定时器回调，直到任务队列为空或者达到了**最大执行限制**。
 
 然后事件循环会转移到下一个阶段，并且不会检查是否有微任务需要执行。
 
@@ -315,5 +327,4 @@ setImmediate(function immediate () {
 
 **在timers阶段创建了新的定时器：**
 
-在timers阶段使用`setTimeout(callback, 0)`创建了新的到期的定时器，那么只要timers阶段在执行完闭后还有时间，就会执行这个新的到期的定时器回调。
-
+在timers阶段使用`setTimeout(callback, 0)`创建了新的到期的定时器，**那么只要timers阶段在执行完闭后还有时间**，就会执行这个新的到期的定时器回调。

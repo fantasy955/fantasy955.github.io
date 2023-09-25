@@ -869,6 +869,53 @@ class MyPromise {
 module.exports = MyPromise;
 ```
 
+**[2023.9.25补充]**[javascript - Promise 简单实现 - 前端 - SegmentFault 思否](https://segmentfault.com/a/1190000017458611)
+
+### async await
+
+[async、await 实现原理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/115112361)
+
+async函数是generator函数的语法糖（*和yeild），把async替换成\*号，把await替换成yeild，但是替换之后的函数不能自执行；
+
+语法糖就是要把generator函数变成自执行的。
+
+```js
+function* readFileThunkWithGen() {
+  try {
+    const content1 = yield readFileThunk('/etc/passwd', 'utf8')
+    console.log(content1)
+    const content2 = yield readFileThunk('/etc/profile', 'utf8')
+    console.log(content2)
+    return 'done'
+  } catch (err) {
+    console.error(err)
+    return 'fail'
+  }  
+}
+
+const run = generator => {
+  return new Promise((resolve, reject) => {
+    const g = generator()  // generator是一个生成器函数
+    const next = res => {
+      const result = g.next(res)  // await后跟的是一个异步函数（Promise或者async函数）
+      if (result.done) {
+        return resolve(result.value)
+      }
+      result.value
+        .then(
+          next,
+          err => reject(gen.throw(err).value)
+        )
+    }
+    next()
+  })
+}
+
+run(readFileThunkWithGen)  // 自执行genrator函数
+```
+
+这里还有一点注意的是，[next函数传值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Generator/next)。
+
 ## DOM操作
 
 ### 获取子节点
